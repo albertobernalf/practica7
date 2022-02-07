@@ -19,7 +19,69 @@ const form2 = document.getElementById('formClinicos')
 console.log(form)
 console.log(form2)
 
+function AjaxUsuario()
+{
+      alert("entre AjaxUsuario");
+	var envios = new FormData();
 
+	var tipoDoc = document.getElementById("tipoDoc").value;
+	var documento = document.getElementById("documento").value;
+
+	alert(documento);
+
+<!--
+window.location.pathname,
+-->
+
+	$.ajax({
+		type: 'POST',
+    	url: '/guardarUsuariosModal/tipoDoc,documento',
+		data: {'tipoDoc':tipoDoc,'documento':documento},
+		success: function (respuesta) {
+
+
+              $('#mensaje1').val(respuesta);
+
+			$('#exampleModal1').modal().hide();
+			 window.location.reload();
+             $('#mensaje1').val(respuesta);
+
+                    },
+	   		    error: function (request, status, error) {
+	   	    	}
+	});
+};
+
+
+
+
+ $('.eBtn').on('click',function(event)
+	        {
+			event.preventDefault();
+			var href = $(this).attr('href');
+			console.log("Entre AlBERTO BERNAL F Cargue la Forma Modal Usuarios");
+
+			$.get(href, function(Usuarios,status)
+			 {
+			 alert("entre");
+
+
+                $('#tipoDoc').val(Usuarios.tipoDoc);
+				$('#documento').val(Usuarios.documento);
+				$('#nombre').val(Usuarios.nombre);
+				$('#genero').val(Usuarios.genero);
+				$('#direccion').val(Usuarios.direccion);
+				$('#telefono').val(Usuarios.telefono);
+				$('#contacto').val(Usuarios.contacto);
+				$('#centros_id').val(Usuarios.centros_id);
+				$('#tiposUsuario_id').val(Usuarios.tiposUsuario_id);
+
+				}
+			);
+
+			 $('#usuariosModal').modal({show:true});
+
+			  });
 
 
 $(document).on('change', '#busServicio', function(event) {

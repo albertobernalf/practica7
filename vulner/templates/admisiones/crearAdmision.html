@@ -2,19 +2,132 @@
 {% load static %}
 
 {% block content %}
+<!--
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <!-- <div class="form-group"> -->
 
 
-<form class="form-inline" action="" method="POST" id="grabacionForma">
+<!--  inici modal -->
 
-    <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
-    <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
-    <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
-    <input type="hidden" id="Username" name="Username" value="{{Username}}">
-    <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
+<div class="container">
+    <div class="card">
 
-    <table class="table  " style="height: 100px; background-color:LightGray;  width:100%;">
+
+        <div class="myForm">
+
+            <form id="ModalCaptura" method="POST" onsubmit="AjaxUsuario()">
+
+                <div class="modal fade" id="usuariosModal" tabindex="-1"
+                     role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Actualiza
+                                    Usuario</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <div class="form-group">
+                                    <label for="tipoDoc_id" class="col-form-label">Tipo Doc:</label>
+                                    <input type="text" class="form-control" id="tipoDoc_id" name="tipoDoc_id"
+                                           value="">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="documento" class="col-form-label">Documento:</label>
+                                    <input type="text" class="form-control" id="documento" name="documento"
+                                           value="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mombre" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="mombre" name="mombre"
+                                           value="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="genero" class="col-form-label">Genero:</label>
+                                    <input type="text" class="form-control" id="genero" name="genero"
+                                           value="">
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="direccion" class="col-form-label">Direccion:</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion"
+                                       value="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefono" class="col-form-label">Telefono:</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono"
+                                       value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="contacto" class="col-form-label">Contacto:</label>
+                                <input type="text" class="form-control" id="contacto" name="contacto"
+                                       value="">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="centrosc_id" class="col-form-label">Centros:</label>
+                                <input type="text" class="form-control" id="centrosc_id" name="centrosc_id"
+                                       value="">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="tiposUsuario_id" class="col-form-label">Tipos Usuario:</label>
+                                <input type="text" class="form-control" id="tiposUsuario_id" name="tiposUsuario_id"
+                                       value="">
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">Close
+                            </button>
+                            <input type="button" class="btn btn-primary" value="save" onclick="AjaxUsuario()">
+                        </div>
+                    </div>
+                </div>
+
+        </form>
+    </div>
+
+
+</div>
+</div>
+
+<!-- fin modal  -->
+
+
+<table class="table  " style="height: 100px; background-color:LightGray;  width:100%;">
+    <form class="form-inline" action="" method="POST" id="grabacionForma">
+
+        <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
+        <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
+        <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
+        <input type="hidden" id="Username" name="Username" value="{{Username}}">
+        <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
 
 
         <td></td>
@@ -29,9 +142,9 @@
                             Sede:
 
                             {{Sede}}
-                        {% for nombreSede in NombreSede%}
-             {{ nombreSede.nombre}}
-        {% endfor %}
+                            {% for nombreSede in NombreSede%}
+                            {{ nombreSede.nombre}}
+                            {% endfor %}
 
                         <td>
 
@@ -46,7 +159,7 @@
 
                         </td>
 
-                         <td>
+                        <td>
 
                             <label for="busSubServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SubServicios:</label>
                             <select id="busSubServicio2" name="busSubServicio2">
@@ -58,16 +171,12 @@
                         </td>
 
 
-
-
                         <td>
                             {{ form.dependenciasIngreso.label }}
                             {{form.dependenciasIngreso}}
 
 
-
                         </td>
-
 
 
                     </div>
@@ -77,14 +186,26 @@
 
                     <div class="form-group row">
                         <td>
-                            {{ form.tipoDoc.label }}
-                            {{form.tipoDoc}}
+
                         </td>
 
                         <td>
-                            {{ form.documento.label }}
-                            {{form.documento}}
+
+                            <input type="text" class="form-control" id="documento" name="documento"
+                                   value="  ">
+                            <input type="text" class="form-control" id="tipoDoc" name="tipoDoc"
+                                   value="   ">
+
                         </td>
+
+                        <td>
+                            <a href="/findOneUsuario/'1' , '19465673'" role="button"
+                               class="btn btn-primary eBtn" data-toggle="modal"
+                               onclick='$("#usuariosModal").modal("show")'>
+                                Editar
+                            </a>
+                        </td>
+
 
                         <td>
                             {{ form.fechaIngreso.label }}
@@ -121,7 +242,14 @@
 
 
                 </tr>
-</form>
+                </td>
+            </table>
+
+        <td></td>
+
+    </form>
+
+</table>
 
 
 <form class="form-inline" action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }} "
@@ -136,14 +264,14 @@
     <input type="hidden" id="Username" name="Username" value="{{Username}}">
     <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
 
+    <td></td>
     <td><input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input></td>
 
 
 </form>
 
 
-</table>
-</td>
-<td></td>
-</table>
+
+
+
 {% endblock %}
