@@ -86,7 +86,7 @@ $(document).on('change', '#busSubServicio', function(event) {
 
         $.ajax({
 	           url: '/buscarHabitaciones',
-	            data : {Serv:Serv, Sede:Sede, SubServ:SubServ},
+	            data : {Serv:Serv, Sede:Sede, SubServ:SubServ, Exc:'N'},
 	           type: 'GET',
 	           dataType : 'json',
 
@@ -192,7 +192,7 @@ $(document).on('change', '#busSubServicio2', function(event) {
 
         $.ajax({
 	           url: '/buscarHabitaciones',
-	            data : {Serv:Serv, Sede:Sede, SubServ:SubServ},
+	            data : {Serv:Serv, Sede:Sede, SubServ:SubServ, Exc:'S'},
 	           type: 'GET',
 	           dataType : 'json',
 

@@ -1024,6 +1024,8 @@ def buscarHabitaciones(request):
 
 
     context = {}
+    Exc = request.GET["Exc"]
+    print ("Excluir = ", Exc)
     Serv = request.GET["Serv"]
     SubServ = request.GET["SubServ"]
     Sede = request.GET["Sede"]
@@ -1036,8 +1038,18 @@ def buscarHabitaciones(request):
 
     miConexiont = MySQLdb.connect(host='192.168.0.13', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
-    comando = "SELECT dep.id id ,dep.numero nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub , sitios_dependencias dep  Where sed.sedesClinica_id ='" + str(
+
+    if Exc == 'N':
+
+      comando = "SELECT dep.id id ,dep.numero nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub , sitios_dependencias dep  Where sed.sedesClinica_id ='" + str(
         Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id and  dep.sedesClinica_id=sed.sedesClinica_id and dep.servicios_id = sub.servicios_id and dep.subServicios_id =sub.id  and dep.subServicios_id = '" +str(SubServ) + "'"
+
+    else:
+        comando = "SELECT dep.id id ,dep.numero nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub , sitios_dependencias dep  Where sed.sedesClinica_id ='" + str(
+            Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id and  dep.sedesClinica_id=sed.sedesClinica_id and dep.servicios_id = sub.servicios_id and dep.subServicios_id =sub.id  and dep.subServicios_id = '" + str(
+            SubServ) + "'"
+
+
     curt.execute(comando)
     print(comando)
 
