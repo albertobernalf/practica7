@@ -182,7 +182,7 @@ def validaAcceso(request):
 
             miConexion2 = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
             cur2 = miConexion1.cursor()
-            comando = "select perf.tiposPlanta_id  perfil from planta_planta p , planta_perfilesplanta perf , planta_tiposPlanta tp where p.sedesClinica_id ='" + str(sede) + "' AND p.documento =  '" + str(username) + "' AND tp.id =perf.tiposPlanta_id AND  perf.tiposPlanta_id = " + str(perfilConseguido)
+            comando = "select perf.tiposPlanta_id  perfil from planta_planta p , planta_perfilesplanta perf , planta_tiposPlanta tp where  p.sedesClinica_id = perf.sedesClinica_id and  p.sedesClinica_id ='" + str(sede) + "' AND p.documento =  '" + str(username) + "' AND perf.planta_id = p.id AND  perf.tiposPlanta_id = " + str(perfilConseguido)
             print(comando)
             cur2.execute(comando)
 
@@ -291,11 +291,12 @@ def validaAcceso(request):
                 # Combo Habitaciones
                 miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
                 curt = miConexiont.cursor()
-                comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(Sede) +"' AND dependenciasTipo_id = 1"
+                comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(Sede) +"' AND dependenciasTipo_id = 2"
                 curt.execute(comando)
                 print(comando)
 
                 habitaciones = []
+                habitaciones.append({'id': '', 'nombre': ''})
 
                 for id, nombre in curt.fetchall():
                     habitaciones.append({'id': id, 'nombre': nombre})
@@ -304,6 +305,7 @@ def validaAcceso(request):
                 print(habitaciones)
 
                 context['Habitaciones'] = habitaciones
+
 
                 # Fin combo Habitaciones
 
@@ -331,7 +333,7 @@ def validaAcceso(request):
                 # Combo Medicos
                 miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
                 curt = miConexiont.cursor()
-                comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE perf.sedesClinica_id = '" + str(Sede) + "' AND perf.tiposPlanta_id = 6 "
+                comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE p.sedesClinica_id = perf.sedesClinica_id and  perf.sedesClinica_id = '" + str(Sede) + "' AND perf.tiposPlanta_id = 6 "
 
                 curt.execute(comando)
                 print(comando)
@@ -392,7 +394,7 @@ def validaAcceso(request):
 
 
 
-def retornarAdmision(request, Sede, Perfil, Username, Username_id):
+def retornarAdmision(request, Sede, Perfil, Username, Username_id, NombreSede):
 
 
     print ("Entre Retornar Admision")
@@ -410,7 +412,8 @@ def retornarAdmision(request, Sede, Perfil, Username, Username_id):
     context['Sede'] = Sede
     context['Username'] = Username
     context['Username_id'] = Username_id
-
+    context['NombreSede'] = NombreSede
+    print("NombreSede = ", NombreSede)
 
     # Consigo la sede Nombre
 
@@ -494,6 +497,28 @@ def retornarAdmision(request, Sede, Perfil, Username, Username_id):
 
     # Fin combo servicios
 
+    # Combo de SubServicios
+    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    curt = miConexiont.cursor()
+    comando = "SELECT sub.id id ,sub.nombre nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub Where sed.sedesClinica_id ='" + str(
+        Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id"
+    curt.execute(comando)
+    print(comando)
+
+    subServicios = []
+    subServicios.append({'id': '', 'nombre': ''})
+
+    for id, nombre in curt.fetchall():
+        subServicios.append({'id': id, 'nombre': nombre})
+
+    miConexiont.close()
+    print(subServicios)
+
+    context['SubServicios'] = subServicios
+
+    # Fin combo SubServicios
+
+
     # Combo TiposDOc
     miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
@@ -518,7 +543,7 @@ def retornarAdmision(request, Sede, Perfil, Username, Username_id):
     miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(
-        Sede) + "' AND dependenciasTipo_id = 1"
+        Sede) + "' AND dependenciasTipo_id = 2"
     curt.execute(comando)
     print(comando)
 
@@ -743,25 +768,6 @@ def Modal(request, username, password):
         # return HttpResponse(UsuariosHc)
 
 
-def admHospProvisional(request,Documento, Perfil,  Sede, Servicio):
-
-    print("admHospProvisional")
-    print(Documento)
-    context1 = {}
-    context1['Documento'] = Documento
-    context1['Perfil'] = Perfil
-    print (Perfil)
-    context1['Sede'] = Sede
-    print ("En admHospProvisional la sede = a ", Sede)
-    print("En admHospProvisional la sede Context = a ", context1['Sede'] )
-    #context1['NombreSede'] = NombreSede
-    context1['Servicio'] = Servicio
-
-
-
-
-    return render(request, "admisiones/panelHospAdmisiones.html", context1)
-
 
 
 def buscarAdmision(request):
@@ -769,9 +775,11 @@ def buscarAdmision(request):
 
 
     print("Entre Buscar Admision" )
-    BusHabitacion = request.POST["busHabitacion"]
     BusTipoDoc = request.POST["busTipoDoc"]
     BusDocumento = request.POST["busDocumento"]
+    BusHabitacion = request.POST["busHabitacion"]
+
+
     BusDesde = request.POST["busDesde"]
     BusHasta = request.POST["busHasta"]
     BusEspecialidad = request.POST["busEspecialidad"]
@@ -781,6 +789,36 @@ def buscarAdmision(request):
     Perfil = request.POST['Perfil']
 
     Sede = request.POST["Sede"]
+    context['Sede'] = Sede
+
+    # Consigo la sede Nombre
+
+    miConexion = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    cur = miConexion.cursor()
+    comando = "SELECT nombre   FROM sitios_sedesClinica WHERE id ='" + Sede + "'"
+    cur.execute(comando)
+    print(comando)
+
+    nombreSedes = []
+
+    for nombre in cur.fetchall():
+        nombreSedes.append({'nombre': nombre})
+
+    miConexion.close()
+    print(nombreSedes)
+    nombresede1 = nombreSedes[0]
+
+    context['NombreSede'] = nombresede1
+
+
+    Username = request.POST["Username"]
+    context['Username'] = Username
+    Username_id = request.POST["Username_id"]
+    context['Username_id'] = Username_id
+
+
+
+
     print("Sede  = ", Sede)
 
     print("BusHabitacion= ", BusHabitacion)
@@ -816,6 +854,28 @@ def buscarAdmision(request):
 
     # Fin combo servicios
 
+    # Combo de SubServicios
+    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    curt = miConexiont.cursor()
+    comando = "SELECT sub.id id ,sub.nombre nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub Where sed.sedesClinica_id ='" + str(
+        Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id"
+    curt.execute(comando)
+    print(comando)
+
+    subServicios = []
+    subServicios.append({'id': '', 'nombre': ''})
+
+    for id, nombre in curt.fetchall():
+        subServicios.append({'id': id, 'nombre': nombre})
+
+    miConexiont.close()
+    print(subServicios)
+
+    context['SubServicios'] = subServicios
+
+    # Fin combo SubServicios
+
+
     # Combo TiposDOc
     miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
@@ -840,7 +900,7 @@ def buscarAdmision(request):
     # Combo Habitaciones
     miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
-    comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(Sede) +"' AND dependenciasTipo_id = 1"
+    comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(Sede) +"' AND dependenciasTipo_id = 2"
     curt.execute(comando)
     print(comando)
 
@@ -881,7 +941,9 @@ def buscarAdmision(request):
     # Combo Medicos
     miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
-    comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE perf.sedesClinica_id = '" + str(Sede) +"' AND perf.tiposPlanta_id = 6 "
+    comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE p.sedesClinica_id = perf.sedesClinica_id and  perf.sedesClinica_id = '" + str(
+        Sede) + "' AND perf.tiposPlanta_id = 6 "
+
     curt.execute(comando)
     print(comando)
 
@@ -1147,6 +1209,11 @@ class crearAdmision(TemplateView):
         salidaClinica = "N"
         salidaDefinitiva = "N"
 
+        especialidadesMedicos = request.POST['especialidadesMedicosIngreso']
+
+        especialidadesMedicosSalida = ""
+        especialidadesMedicosActual = ""
+
         usuarioRegistro = Username_id
 
         print("usuarioRegistro =", usuarioRegistro)
@@ -1174,12 +1241,15 @@ class crearAdmision(TemplateView):
                          dependenciasIngreso_id=dependenciasIngreso,
                          dxIngreso_id=dxIngreso,
                          medicoIngreso_id=medicoIngreso,
+                         especialidadesMedicosIngreso_id=especialidadesMedicos,
                          dependenciasActual_id=dependenciasActual,
                          dxActual_id = dxActual,
                          medicoActual_id=medicoActual,
+                         especialidadesMedicosActual_id="",
                          dependenciasSalida_id = dependenciasSalida,
                          dxSalida_id = dxSalida,
                          medicoSalida_id=medicoSalida,
+                         especialidadesMedicosSalida_id="",
                          estadoSalida_id = estadoSalida,
 
                          salidaClinica = salidaClinica,
@@ -1320,6 +1390,27 @@ class crearAdmision(TemplateView):
 
         # Fin combo servicios
 
+        # Combo de SubServicios
+        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT sub.id id ,sub.nombre nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub Where sed.sedesClinica_id ='" + str(
+            Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id"
+        curt.execute(comando)
+        print(comando)
+
+        subServicios = []
+        subServicios.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            subServicios.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(subServicios)
+
+        context['SubServicios'] = subServicios
+
+        # Fin combo SubServicios
+
         # Combo TiposDOc
         miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
@@ -1344,7 +1435,7 @@ class crearAdmision(TemplateView):
         miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
         comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(
-            Sede) + "' AND dependenciasTipo_id = 1"
+            Sede) + "' AND dependenciasTipo_id = 2"
         curt.execute(comando)
         print(comando)
 
@@ -1383,7 +1474,8 @@ class crearAdmision(TemplateView):
         # Combo Medicos
         miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
-        comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE perf.sedesClinica_id = '" + str(
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE p.sedesClinica_id = perf.sedesClinica_id and  perf.sedesClinica_id = '" + str(
             Sede) + "' AND perf.tiposPlanta_id = 6 "
 
         curt.execute(comando)
@@ -1418,6 +1510,26 @@ class crearAdmision(TemplateView):
         context = super().get_context_data(**kwargs)
         print(context['Sede'])
         Sede = context['Sede']
+
+        # Consigo la sede Nombre
+
+        miConexion = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        cur = miConexion.cursor()
+        comando = "SELECT id, nombre   FROM sitios_sedesClinica WHERE id ='" + Sede + "'"
+        cur.execute(comando)
+        print(comando)
+
+        nombreSedes = []
+
+        for id, nombre in cur.fetchall():
+            nombreSedes.append({'id': id, 'nombre': nombre})
+
+        miConexion.close()
+        print(nombreSedes)
+
+        context['NombreSede'] = nombreSedes
+
+        print (context['NombreSede'])
 
         # Combo de Servicios
         miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')

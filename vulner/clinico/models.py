@@ -17,11 +17,15 @@ class Servicios(models.Model):
 
 class EspecialidadesMedicos(models.Model):
     id = models.AutoField(primary_key=True)
-    id_especialidad = models.ForeignKey('Especialidades', on_delete=models.PROTECT, null=True)
-    id_medico = models.ForeignKey('planta.Planta', on_delete = models.PROTECT, null = True)
+    especialidades = models.ForeignKey('clinico.Especialidades', on_delete=models.PROTECT, null=True,related_name ='especialidadesMedicos1')
+    planta = models.ForeignKey('planta.Planta', on_delete = models.PROTECT, null = True)
+    nombre = models.CharField(max_length=30, default="")
+    fechaRegistro = models.DateTimeField(default=now, editable=False)
+    usuarioRegistro = models.ForeignKey('planta.Planta', default=1, on_delete=models.PROTECT, null=True ,related_name ='usuarioRegistroPlanta')
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
     def __integer__(self):
-        return self.id_medico
+        return self.nombre
 
 
 class Especialidades(models.Model):

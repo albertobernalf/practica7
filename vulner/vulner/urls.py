@@ -62,14 +62,12 @@ urlpatterns = [
 
     # Admisiones
 
-    path('admHospProvisional/<str:Documento>,<str:Perfil>,<str:Sede>,<str:Servicio>',
-         viewsAdmisiones.admHospProvisional),
 
     path('chaining/', include('smart_selects.urls')),
     path('menuAcceso/', viewsAdmisiones.menuAcceso),
     path('validaAcceso/', viewsAdmisiones.validaAcceso),
 
-    path('retornarAdmision/<str:Sede>,<str:Perfil> , <str:Username>, <str:Username_id>', viewsAdmisiones.retornarAdmision),
+    path('retornarAdmision/<str:Sede>,<str:Perfil> , <str:Username>, <str:Username_id>, <str:NombreSede>', viewsAdmisiones.retornarAdmision),
 
     path('salir/', viewsAdmisiones.salir),
     path('grabar1/<str:username>,<str:contrasenaAnt>,<str:contrasenaNueva>,<str:contrasenaNueva2>',

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from admisiones.models import Ingresos
 from usuarios.models import TiposDocumento
 from sitios.models import SedesClinica, Dependencias
-from clinico.models import Diagnosticos, EstadosSalida, Servicios
+from clinico.models import Diagnosticos, EstadosSalida, Servicios, EspecialidadesMedicos
 from planta.models import Planta
 
 import datetime
@@ -47,6 +47,12 @@ class crearAdmisionForm(forms.ModelForm):
         medicoIngreso = forms.ModelChoiceField(label="Med.Ingreso : ",queryset=Planta.objects.all())
         medicoActual =forms.ModelChoiceField(label="Med Actual : ",queryset=Planta.objects.all())
         medicoSalida = forms.ModelChoiceField(label="Med.Salida : ",queryset=Planta.objects.all())
+        especialidadesMedicosIngreso = forms.ModelChoiceField(label="Esp Actual : ",
+                                                             queryset=EspecialidadesMedicos.objects.all())
+        especialidadesMedicosActual  = forms.ModelChoiceField(label="Esp Actual : ",queryset=EspecialidadesMedicos.objects.all())
+        especialidadesMedicosSalida = forms.ModelChoiceField(label="Esp Actual : ",
+                                                             queryset=EspecialidadesMedicos.objects.all())
+
         salidaDefinitiva = forms.CharField(label='Salida Definitiva', initial='N', max_length=1)
         usuarioRegistro = forms.CharField(label='SUsuario Registra', initial='N')
         fechaRegistro = forms.CharField(label='Fecha Registro', disabled=True)

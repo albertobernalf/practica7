@@ -8,12 +8,30 @@
 
 -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
 <!-- <div class="form-group"> -->
+
+<style>
+th ,tr{
+  border-style:solid;
+  border-color: #96D4D4;
+}
+</style>
 
 
 <!--  inici modal -->
@@ -110,17 +128,32 @@
                     </div>
                 </div>
 
-        </form>
+            </form>
+        </div>
+
+
     </div>
 
-
-</div>
-</div>
 
 <!-- fin modal  -->
 
 
+
+
 <table class="table  " style="height: 100px; background-color:LightGray;  width:100%;">
+  <tr>
+    <td>
+
+    </td>
+        <td>
+
+    </td>
+    <td>
+
+
+    <table class="table  " style="height: 100px; background-color:LightGray; BORDERCOLOR=RED ; border: 8px solid black; border-color: #96D4D4;  width:99%;">
+
+
     <form class="form-inline" action="" method="POST" id="grabacionForma">
 
         <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
@@ -130,132 +163,109 @@
         <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
 
 
-        <td></td>
-        <td>
-            <table class="table  "
-                   style="height: 100px; background-color:LightGray; border: 2px solid black; border-radius: 100px; width:100%;">
+
+              <div class="row">
+                <div class="form-group ">
 
 
-                <tr>
-                    <div class="form-group row">
-                        <td>
-                            Sede:
 
-                            {{Sede}}
-                            {% for nombreSede in NombreSede%}
-                            {{ nombreSede.nombre}}
-                            {% endfor %}
-
-                        <td>
-
-                        <td>
-
-                            <label for="busServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Servicio:</label>
-                            <select id="busServicio2" name="busServicio2">
-                                {% for servicios in Servicios %}
-                                <option value="{{servicios.id}}"> {{servicios.nombre}}</option>
-                                {% endfor %}
-                            </select>
-
-                        </td>
-
-                        <td>
-
-                            <label for="busSubServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SubServicios:</label>
-                            <select id="busSubServicio2" name="busSubServicio2">
-                                {% for subServicios in SubServicios %}
-                                <option value="{{subServicios.id}}"> {{subServicios.nombre}}</option>
-                                {% endfor %}
-                            </select>
-
-                        </td>
+                    <label for="busServicio2"
+                           class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Servicio:</label>
+                    <select id="busServicio2" name="busServicio2">
+                        {% for servicios in Servicios %}
+                        <option value="{{servicios.id}}"> {{servicios.nombre}}</option>
+                        {% endfor %}
+                    </select>
 
 
-                        <td>
-                            {{ form.dependenciasIngreso.label }}
-                            {{form.dependenciasIngreso}}
+                    <label for="busSubServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SubServicios:</label>
+                    <select id="busSubServicio2" name="busSubServicio2">
+                        {% for subServicios in SubServicios %}
+                        <option value="{{subServicios.id}}"> {{subServicios.nombre}}</option>
+                        {% endfor %}
+                    </select>
 
 
-                        </td>
 
 
-                    </div>
-                </tr>
-
-                <tr>
-
-                    <div class="form-group row">
-                        <td>
-
-                        </td>
-
-                        <td>
-
-                            <input type="text" class="form-control" id="documento" name="documento"
-                                   value="  ">
-                            <input type="text" class="form-control" id="tipoDoc" name="tipoDoc"
-                                   value="   ">
-
-                        </td>
-
-                        <td>
-                            <a href="/findOneUsuario/'1' , '19465673'" role="button"
-                               class="btn btn-primary eBtn" data-toggle="modal"
-                               onclick='$("#usuariosModal").modal("show")'>
-                                Editar
-                            </a>
-                        </td>
+                    {{ form.dependenciasIngreso.label }}
+                    {{form.dependenciasIngreso}}
 
 
-                        <td>
-                            {{ form.fechaIngreso.label }}
-                            <input type="date" class="form-control" id="fechaIngreso" name="fechaIngreso" value={{
-                                   form.fechaIngreso }}/>
+                </div>
+              </div>
 
-                        </td>
+                 <div class="row">
 
-                        <td>
-                            {{ form.dxIngreso.label }}
-                            {{form.dxIngreso}}
-                        </td>
+                <div class="form-group ">
 
-                        <td>
-                            {{ form.medicoIngreso.label }}
-                            {{form.medicoIngreso}}
-                        </td>
+
+
+
+                          {{ form.tipoDoc.label }}
+                          {{ form.tipoDoc }}
+
+
+
+                        {{ form.documento.label }}
+                          {{ form.documento }}
+
+                        {{ form.fechaIngreso.label }}
+
+
+                     <input type="date" id="fechaIngreso" name="fechaIngreso" value="{{form.fechaIngreso }}"></input>
+
+
+
+                    <a href="/findOneUsuario/ '',   ''" role="button"  class="btn btn-primary eBtn" data-toggle="modal"
+                       onclick='$("#usuariosModal").modal("show")'>  Verificar documento     </a>
 
 
                     </div>
-                </tr>
 
-                <tr>
-                    <div class="form-group row">
-                        <td>
-                            {{ form.estadoSalida.label }}
-                            {{form.estadoSalida}}
-                        </td>
                     </div>
 
-                </tr>
-                <tr>
-                    <td><input type="submit" id="guardarAdmision" name="guardarAdmision" value="GRABAR"></input></td>
+                    <div class="row">
+
+                <div class="form-group ">
 
 
-                </tr>
-                </td>
-            </table>
+                        {{ form.dxIngreso.label }}
+                          {{ form.dxIngreso }}
 
-        <td></td>
+
+
+                      {{ form.especialidadesMedicosIngreso.label }}
+                          {{ form.especialidadesMedicosIngreso }}
+
+
+                       {{ form.medicoIngreso.label }}
+                          {{ form.medicoIngreso }}
+
+                         {{ form.estadoSalida.label }}
+                          {{ form.estadoSalida }}
+
+
+                </div>
+                 </div>
+
+
+
+                     <center>
+
+
+                <input type="submit" id="guardarAdmision" name="guardarAdmision" value="GUARDAR"></input>
+                    </center>
+
+
+
+
+
 
     </form>
 
-</table>
-
-
-<form class="form-inline" action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }} "
-      method="POST"
-      id="login-form"><input type="hidden"
-                             name="csrfmiddlewaretoken"
+        <form class="form-inline" action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }}, {{NombreSede }} "
+      method="POST"  id="login-form"><input type="hidden"    name="csrfmiddlewaretoken"
                              value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
 
     <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
@@ -264,14 +274,24 @@
     <input type="hidden" id="Username" name="Username" value="{{Username}}">
     <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
 
-    <td></td>
-    <td><input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input></td>
-
+<center>
+    <input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input>
+</center>
 
 </form>
 
+</table>
+        </td>
+    <td>
+    </td>
+      <td>
+
+    </td>
+<tr>
+</table>
 
 
+</div>
 
 
 {% endblock %}

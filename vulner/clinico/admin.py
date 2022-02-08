@@ -54,8 +54,8 @@ class serviciosAdmin(admin.ModelAdmin):
     search_fields = ("id", "nombre")
 
 class especialidadesMedicosAdmin(admin.ModelAdmin):
-        list_display = ("id", "id_especialidad", "id_medico")
-        search_fields = ("id", "id_especialidad", "id_medico")
+        list_display = ("id", "especialidades", "planta","nombre","fechaRegistro")
+        search_fields = ("id", "especialidades", "planta","nombre","fechaRegistro")
 
 class diagnosticosAdmin(admin.ModelAdmin):
             list_display = ("id", "nombre")
