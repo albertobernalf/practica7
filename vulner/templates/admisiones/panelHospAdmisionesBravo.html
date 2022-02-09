@@ -2,12 +2,27 @@
 {% load static %}
 
 {% block content %}
+<script>
+window.onload = function(){
+  var fecha = new Date(); //Fecha actual
+  var mes = fecha.getMonth()+1; //obteniendo mes
+  var dia = fecha.getDate(); //obteniendo dia
+  var ano = fecha.getFullYear(); //obteniendo año
+  if(dia<10)
+    dia='0'+dia; //agrega cero si el menor de 10
+  if(mes<10)
+    mes='0'+mes //agrega cero si el menor de 10
+  document.getElementById('busDesde').value=ano+"-"+mes+"-"+dia;
+  document.getElementById('busHasta').value=ano+"-"+mes+"-"+dia;
+}
 
+
+</script>
 
 <!-- <div class="container">  -->
 </hr>
 
-<div class="row">
+<div class="row justify-content-center">
 
     <div class="col-lg-12" style="background-color:LightGray;">
         <div class="card-block">
@@ -19,10 +34,10 @@
                 <form class="form-inline" action="/buscarAdmision/" method="post" id="FormBuscar"><input type="hidden"
                                                                                                          name="csrfmiddlewaretoken"
                                                                                                          value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
-                 <div class="row">
+                 <div class="row justify-content-center">
                  </div>
 
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="form-group">
 
                             <label for="busServicio" class="col-form-label">Servicios:</label>
@@ -70,7 +85,7 @@
 
                     </div>
 
-                    <div class="row">
+                    <div class="row justify-content-center">
 
                         <div class="form-group">
                             <label class="required" for="busDesde">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Desde:&nbsp;&nbsp;&nbsp;</label>
@@ -203,20 +218,17 @@
                 <table class="table "
                        style="height: 100px, background-color:LightGray; border: 2px solid black; border-radius: 10px;width:99%;">
                     <form class="form-inline"
-                          action="/crearAdmision/{{Sede}} , {{Perfil}},  {{Username}}, {{Username_id}} " method="get"
-                          id="login-form"><input type="hidden"
-                                                 name="csrfmiddlewaretoken"
-                                                 value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
+                          action="/crearAdmision/{{Sede}} , {{Perfil}},  {{Username}}, {{Username_id}} " method="get"     id="login-form"><input type="hidden" name="csrfmiddlewaretoken"  value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
 
 
                         <tr>
-                            <input type="hidden" id="nombreSede" name="nombreSede" value="{{nombreSede}}">
+                            <input type="hidden" id="nombreSede" name="nombreSede" value="{{NombreSede}}">
 
                             <td></td>
 
-                            <td><input type="submit" id="btnCrearIngreso" name="btnCrearIngreso"
-                                       value="Crear Admision"> </input></td>
+                            <td><input type="submit" id="btnCrearIngreso" name="btnCrearIngreso" value="Crear Admision"> </input></td>
                     </form>
+
                     <form class="form-inline" action="/crearResponsables/" method="get" id="login-form"><input
                             type="hidden"
                             name="csrfmiddlewaretoken"
@@ -275,7 +287,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>Colaborador : {{Documento}}</td>
+                        <td>Colaborador : {{Documento}}  {{Username}} </td>
                         <td></td>
                     </tr>
 

@@ -52,6 +52,8 @@ urlpatterns = [
     path('reproduceAudio/', views.reproduceAudio),
     path('accesoEspecialidadMedico/<str:documento>', views.accesoEspecialidadMedico),
 
+
+
     # Actividaes Mecanicas
 
     path('prueba/', viewsClinico.prueba),
@@ -76,7 +78,7 @@ urlpatterns = [
     # path('buscarAdmision/<str:BusHabitacion>,<str:BusTipoDoc>,<str:BusDocumento>,<str:BusPaciente>,<str:BusDesde>,<str:BusHasta>', viewsAdmisiones.buscarAdmision),
     path('buscarAdmision/', viewsAdmisiones.buscarAdmision),
 
-
+    path('buscarEspecialidadesMedicos/', viewsAdmisiones.buscarEspecialidadesMedicos),
     path('buscarHabitaciones/', viewsAdmisiones.buscarHabitaciones),
     path('buscarSubServicios/', viewsAdmisiones.buscarSubServicios),
     path('crearAdmision/<str:Sede>,<str:Perfil>, <str:Username>, <str:Username_id>', viewsAdmisiones.crearAdmision.as_view()),

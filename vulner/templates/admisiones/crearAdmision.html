@@ -33,6 +33,43 @@ th ,tr{
 }
 </style>
 
+<script>
+window.onload = function(){
+  var fecha = new Date(); //Fecha actual
+  var mes = fecha.getMonth()+1; //obteniendo mes
+  var dia = fecha.getDate(); //obteniendo dia
+  var ano = fecha.getFullYear(); //obteniendo año
+
+
+  alert("fecha = ");
+  alert(fecha);
+
+  var hora = fecha.getHours();
+   alert ("Hora = ");
+   alert(hora);
+
+  var minutos = fecha.getMinutes();
+  var segundos = fecha.getSeconds();
+  alert ("Minutos = ");
+ alert(minutos);
+
+   alert ("Segundos = ");
+   alert(segundos);
+
+
+  if(dia<10)
+    dia='0'+dia; //agrega cero si el menor de 10
+  if(mes<10)
+    mes='0'+mes //agrega cero si el menor de 10
+  document.getElementById('fechaIngreso').value=ano+"-"+mes+"-"+dia + " " +hora+":"+minutos+":"+segundos ;
+
+
+}
+
+
+</script>
+
+
 
 <!--  inici modal -->
 
@@ -233,14 +270,22 @@ th ,tr{
                         {{ form.dxIngreso.label }}
                           {{ form.dxIngreso }}
 
-
-
-                      {{ form.especialidadesMedicosIngreso.label }}
+             {{ form.especialidadesMedicosIngreso.label }}
                           {{ form.especialidadesMedicosIngreso }}
 
 
-                       {{ form.medicoIngreso.label }}
-                          {{ form.medicoIngreso }}
+
+                     <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medicos: &nbsp;&nbsp;&nbsp;</label>
+                            <select id="medicoIngreso" name="medicoIngreso">
+                                {% for medicos in Medicos %}
+                                <option value="{{medicos.id}}"> {{medicos.nombre}}</option>
+                                {% endfor %}
+                            </select>
+
+
+
+
+
 
                          {{ form.estadoSalida.label }}
                           {{ form.estadoSalida }}
@@ -273,6 +318,7 @@ th ,tr{
     <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
     <input type="hidden" id="Username" name="Username" value="{{Username}}">
     <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
+
 
 <center>
     <input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input>

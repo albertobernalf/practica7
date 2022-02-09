@@ -84,6 +84,60 @@ window.location.pathname,
 			  });
 
 
+$(document).on('change', '#id_especialidadesMedicosIngreso', function(event) {
+
+        alert("Entre cambio especialdiad");
+
+
+       var Esp =   $(this).val()
+
+        var Sede =  document.getElementById("Sede").value;
+       // var Sede1 = document.getElementById("FormBuscar").elements["Sede"];
+
+
+
+        $.ajax({
+	           url: '/buscarEspecialidadesMedicos',
+	            data : {Esp:Esp, Sede:Sede},
+	           type: 'GET',
+	           dataType : 'json',
+
+	  		success: function (respuesta) {
+
+	  		   var options = '<option value="=================="></option>';
+
+	  		  var dato = JSON.parse(respuesta);
+
+
+                     const $id2 = document.querySelector("#medicoIngreso");
+
+
+ 	      		     $("#medicoIngreso").empty();
+
+
+	                 $.each(dato, function(key,value) {
+                                    options +='<option value="' + value.id + '">' + value.nombre + '</option>';
+                                    option = document.createElement("option");
+                                    option.value = value.id;
+                                    option.text = value.nombre;
+                                    $id2.appendChild(option);
+ 	      		      });
+
+
+
+
+
+                    },
+	   		    error: function (request, status, error) {
+
+	   			    $("#mensajes").html(" !  Reproduccion  con error !");
+	   	    	}
+
+	     });
+});
+
+
+
 $(document).on('change', '#busServicio', function(event) {
 
 
