@@ -19,30 +19,45 @@ const form2 = document.getElementById('formClinicos')
 console.log(form)
 console.log(form2)
 
-function AjaxUsuario()
+
+function valida(forma)
 {
-      alert("entre AjaxUsuario");
+
+
+
+	};
+
+
+function AUsuario()
+{
+      alert("entre AUsuario");
 	var envios = new FormData();
 
 	var tipoDoc = document.getElementById("tipoDoc").value;
 	var documento = document.getElementById("documento").value;
+    var nombre = document.getElementById("nombre").value;
+	var genero = document.getElementById("genero").value;
+	var direccion = document.getElementById("direccion").value;
+	var telefono = document.getElementById("telefono").value;
+	var contacto = document.getElementById("contacto").value;
+	var centrosc = document.getElementById("centrosc").value;
+	var tiposUsuario = document.getElementById("tiposUsuario").value;
+
+
+
+
 
 	alert(documento);
-
-<!--
-window.location.pathname,
--->
+	alert(tipoDoc);
 
 	$.ajax({
 		type: 'POST',
-    	url: '/guardarUsuariosModal/tipoDoc,documento',
-		data: {'tipoDoc':tipoDoc,'documento':documento},
+    	url: '/guardarUsuariosModal/',
+		data: {'tipoDoc':tipoDoc,'documento':documento,'nombre':nombre,'genero':genero,'direccion':direccion,'telefono':telefono, 'contacto':contacto, 'centrosc':centrosc, 'tiposUsuario':tiposUsuario},
 		success: function (respuesta) {
-
-
               $('#mensaje1').val(respuesta);
 
-			$('#exampleModal1').modal().hide();
+			$('#usuariosModal').modal().hide();
 			 window.location.reload();
              $('#mensaje1').val(respuesta);
 
@@ -54,27 +69,27 @@ window.location.pathname,
 
 
 
-
  $('.eBtn').on('click',function(event)
 	        {
 			event.preventDefault();
 			var href = $(this).attr('href');
 			console.log("Entre AlBERTO BERNAL F Cargue la Forma Modal Usuarios");
+			alert("Entre carga MODAL");
 
 			$.get(href, function(Usuarios,status)
 			 {
-			 alert("entre");
+			 alert("entre DATOS MODAL");
 
 
-                $('#tipoDoc').val(Usuarios.tipoDoc);
+                $('#tipoDoc').val(Usuarios.tipoDoc_id);
 				$('#documento').val(Usuarios.documento);
 				$('#nombre').val(Usuarios.nombre);
 				$('#genero').val(Usuarios.genero);
 				$('#direccion').val(Usuarios.direccion);
 				$('#telefono').val(Usuarios.telefono);
 				$('#contacto').val(Usuarios.contacto);
-				$('#centros_id').val(Usuarios.centros_id);
-				$('#tiposUsuario_id').val(Usuarios.tiposUsuario_id);
+				$('#centrosc').val(Usuarios.centrosc_id);
+				$('#tiposUsuario').val(Usuarios.tiposUsuario_id);
 
 				}
 			);

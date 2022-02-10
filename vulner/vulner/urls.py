@@ -20,6 +20,8 @@ from camara import views
 
 from admisiones import views as viewsAdmisiones
 
+from usuarios import views as viewsUsuarios
+
 from django.conf  import settings
 from django.conf.urls.static import  static
 from clinico import views as viewsClinico
@@ -82,13 +84,19 @@ urlpatterns = [
     path('buscarHabitaciones/', viewsAdmisiones.buscarHabitaciones),
     path('buscarSubServicios/', viewsAdmisiones.buscarSubServicios),
     path('crearAdmision/<str:Sede>,<str:Perfil>, <str:Username>, <str:Username_id>', viewsAdmisiones.crearAdmision.as_view()),
-    path('findOneUsuario/<str:tipoDoc> , <str:documento>', viewsAdmisiones.UsuariosModal),
+    path('findOneUsuario/<str:tipoDoc>, <str:documento>/', viewsAdmisiones.UsuariosModal),
+    path('guardarUsuariosModal/', viewsAdmisiones.guardarUsuariosModal),
 
     path('crearResponsables/', viewsAdmisiones.crearResponsables),
 
     # Facturacion
 
     # Citas Medicas
+
+    # Usuarios
+
+
+    path('crearUsuarios/', viewsUsuarios.crearUsuarios),
 
 ]
 

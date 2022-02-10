@@ -1,39 +1,22 @@
 {% extends "admisiones/menuAdmisiones.html" %}
 {% load static %}
 
+
 {% block content %}
-<!--
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
--->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
--->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-
-<!-- <div class="form-group"> -->
 
 <style>
 th ,tr{
   border-style:solid;
   border-color: #96D4D4;
 }
+
 </style>
 
+
 <script>
+
+
+
 window.onload = function(){
   var fecha = new Date(); //Fecha actual
   var mes = fecha.getMonth()+1; //obteniendo mes
@@ -41,34 +24,35 @@ window.onload = function(){
   var ano = fecha.getFullYear(); //obteniendo año
 
 
-  alert("fecha = ");
-  alert(fecha);
 
   var hora = fecha.getHours();
-   alert ("Hora = ");
-   alert(hora);
+
 
   var minutos = fecha.getMinutes();
   var segundos = fecha.getSeconds();
-  alert ("Minutos = ");
- alert(minutos);
 
-   alert ("Segundos = ");
-   alert(segundos);
 
 
   if(dia<10)
     dia='0'+dia; //agrega cero si el menor de 10
   if(mes<10)
     mes='0'+mes //agrega cero si el menor de 10
+     if(hora<10)
+    hora='0'+hora //agrega cero si el menor de 10
+     if(minutos<10)
+    minutos='0'+minutos //agrega cero si el menor de 10
+     if(segundos<10)
+    segundos='0'+segundos //agrega cero si el menor de 10
+
   document.getElementById('fechaIngreso').value=ano+"-"+mes+"-"+dia + " " +hora+":"+minutos+":"+segundos ;
+
 
 
 }
 
 
-</script>
 
+</script>
 
 
 <!--  inici modal -->
@@ -79,7 +63,7 @@ window.onload = function(){
 
         <div class="myForm">
 
-            <form id="ModalCaptura" method="POST" onsubmit="AjaxUsuario()">
+            <form id="ModalCaptura" method="POST" onsubmit="AUsuario()">
 
                 <div class="modal fade" id="usuariosModal" tabindex="-1"
                      role="dialog" aria-labelledby="exampleModalLabel"
@@ -98,8 +82,8 @@ window.onload = function(){
 
 
                                 <div class="form-group">
-                                    <label for="tipoDoc_id" class="col-form-label">Tipo Doc:</label>
-                                    <input type="text" class="form-control" id="tipoDoc_id" name="tipoDoc_id"
+                                    <label for="tipoDoc" class="col-form-label">Tipo Doc:</label>
+                                    <input type="text" class="form-control" id="tipoDoc" name="tipoDoc"
                                            value="">
                                 </div>
 
@@ -109,10 +93,11 @@ window.onload = function(){
                                     <input type="text" class="form-control" id="documento" name="documento"
                                            value="">
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="mombre" class="col-form-label">Nombre:</label>
-                                    <input type="text" class="form-control" id="mombre" name="mombre"
-                                           value="">
+                                    <label for="mombre" class="col-form-label">  Paciente :</label>
+
+                                    <input type="text" class="form-control"  id="mombre"  name="mombre" value="">
                                 </div>
 
                                 <div class="form-group">
@@ -121,50 +106,49 @@ window.onload = function(){
                                            value="">
                                 </div>
 
+
+                                <div class="form-group">
+                                    <label for="direccion" class="col-form-label">Direccion:</label>
+                                    <input type="text" class="form-control" id="direccion" name="direccion"
+                                           value="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="telefono" class="col-form-label">Telefono:</label>
+                                    <input type="text" class="form-control" id="telefono" name="telefono"
+                                           value="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contacto" class="col-form-label">Contacto:</label>
+                                    <input type="text" class="form-control" id="contacto" name="contacto"
+                                           value="">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="centrosc" class="col-form-label">Centros:</label>
+                                    <input type="text" class="form-control" id="centrosc" name="centrosc"
+                                           value="">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="tiposUsuario" class="col-form-label">Tipos Usuario:</label>
+                                    <input type="text" class="form-control" id="tiposUsuario" name="tiposUsuario"
+                                           value="">
+                                </div>
+
+
                             </div>
-
-                            <div class="form-group">
-                                <label for="direccion" class="col-form-label">Direccion:</label>
-                                <input type="text" class="form-control" id="direccion" name="direccion"
-                                       value="">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close
+                                </button>
+                                <input type="button" class="btn btn-primary" value="save" onclick="AUsuario()">
                             </div>
-
-                            <div class="form-group">
-                                <label for="telefono" class="col-form-label">Telefono:</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono"
-                                       value="">
-                            </div>
-                            <div class="form-group">
-                                <label for="contacto" class="col-form-label">Contacto:</label>
-                                <input type="text" class="form-control" id="contacto" name="contacto"
-                                       value="">
-                            </div>
-
-
-                            <div class="form-group">
-                                <label for="centrosc_id" class="col-form-label">Centros:</label>
-                                <input type="text" class="form-control" id="centrosc_id" name="centrosc_id"
-                                       value="">
-                            </div>
-
-
-                            <div class="form-group">
-                                <label for="tiposUsuario_id" class="col-form-label">Tipos Usuario:</label>
-                                <input type="text" class="form-control" id="tiposUsuario_id" name="tiposUsuario_id"
-                                       value="">
-                            </div>
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">Close
-                            </button>
-                            <input type="button" class="btn btn-primary" value="save" onclick="AjaxUsuario()">
                         </div>
                     </div>
                 </div>
-
             </form>
         </div>
 
@@ -172,169 +156,168 @@ window.onload = function(){
     </div>
 
 
-<!-- fin modal  -->
+    <!-- fin modal  -->
 
 
+    <table class="table  " style="height: 100px; background-color:LightGray;  width:100%;">
+        <tr>
+            <td>
 
+            </td>
+            <td>
 
-<table class="table  " style="height: 100px; background-color:LightGray;  width:100%;">
-  <tr>
-    <td>
+            </td>
+            <td>
 
-    </td>
-        <td>
 
-    </td>
-    <td>
+                <table class="table  "
+                       style="height: 100px; background-color:LightGray; BORDERCOLOR=RED ; border: 8px solid black; border-color: #96D4D4;  width:99%;">
 
 
-    <table class="table  " style="height: 100px; background-color:LightGray; BORDERCOLOR=RED ; border: 8px solid black; border-color: #96D4D4;  width:99%;">
+                    <form class="form-inline" action="" method="POST" id="grabacionForma">
 
+                        <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
+                        <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
+                        <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
+                        <input type="hidden" id="Username" name="Username" value="{{Username}}">
+                        <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
+                        <input type="hidden" id="nombreSede" name="nombreSede" value="{{NombreSede}}">
 
-    <form class="form-inline" action="" method="POST" id="grabacionForma">
 
-        <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
-        <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
-        <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
-        <input type="hidden" id="Username" name="Username" value="{{Username}}">
-        <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
+                        <div class="row">
+                            <div class="form-group ">
 
 
+                                <label for="busServicio2"
+                                       class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Servicio:</label>
+                                <select id="busServicio2" name="busServicio2">
+                                    {% for servicios in Servicios %}
+                                    <option value="{{servicios.id}}"> {{servicios.nombre}}</option>
+                                    {% endfor %}
+                                </select>
 
-              <div class="row">
-                <div class="form-group ">
 
+                                <label for="busSubServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SubServicios:</label>
+                                <select id="busSubServicio2" name="busSubServicio2">
+                                    {% for subServicios in SubServicios %}
+                                    <option value="{{subServicios.id}}"> {{subServicios.nombre}}</option>
+                                    {% endfor %}
+                                </select>
 
 
-                    <label for="busServicio2"
-                           class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Servicio:</label>
-                    <select id="busServicio2" name="busServicio2">
-                        {% for servicios in Servicios %}
-                        <option value="{{servicios.id}}"> {{servicios.nombre}}</option>
-                        {% endfor %}
-                    </select>
+                                {{ form.dependenciasIngreso.label }}
+                                {{form.dependenciasIngreso}}
 
 
-                    <label for="busSubServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SubServicios:</label>
-                    <select id="busSubServicio2" name="busSubServicio2">
-                        {% for subServicios in SubServicios %}
-                        <option value="{{subServicios.id}}"> {{subServicios.nombre}}</option>
-                        {% endfor %}
-                    </select>
+                            </div>
+                        </div>
 
+                        <div class="row">
 
+                            <div class="form-group ">
 
 
-                    {{ form.dependenciasIngreso.label }}
-                    {{form.dependenciasIngreso}}
+                                {{ form.tipoDoc.label }}
+                                {{ form.tipoDoc }}
 
+                                <!--
 
-                </div>
-              </div>
+                                                        {{ form.documento.label }}
+                                                          {{ form.documento }}
+                                                          -->
 
-                 <div class="row">
+                                <label class="required"
+                                       for="busDocumentoSel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suministre
+                                    Documento:</label>
 
-                <div class="form-group ">
+                                <input type="text" id="busDocumentoSel" name="busDocumentoSel"></input>
 
 
+                                {{ form.fechaIngreso.label }}
 
 
-                          {{ form.tipoDoc.label }}
-                          {{ form.tipoDoc }}
+                                <input type="datetime-local" id="fechaIngreso" name="fechaIngreso"
+                                       value="{{form.fechaIngreso }}"> </input>
 
 
+                            </div>
 
-                        {{ form.documento.label }}
-                          {{ form.documento }}
 
-                        {{ form.fechaIngreso.label }}
+                            <a href="/findOneUsuario/1, <script>function(){ var seldoc = document.getElementById("busDocumentoSel").value;      return seldoc; } </script>" role="button" class="btn btn-primary eBtn" data-toggle="modal"
+                               onclick='$("#usuariosModal").modal("show")'>
+                                Verificar Documento
+                            </a>
 
+                        </div>
 
-                     <input type="date" id="fechaIngreso" name="fechaIngreso" value="{{form.fechaIngreso }}"></input>
+                        <div class="row">
 
+                            <div class="form-group ">
 
 
-                    <a href="/findOneUsuario/ '',   ''" role="button"  class="btn btn-primary eBtn" data-toggle="modal"
-                       onclick='$("#usuariosModal").modal("show")'>  Verificar documento     </a>
+                                {{ form.dxIngreso.label }}
+                                {{ form.dxIngreso }}
 
+                                {{ form.especialidadesMedicosIngreso.label }}
+                                {{ form.especialidadesMedicosIngreso }}
 
-                    </div>
 
-                    </div>
+                                <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medicos:
+                                    &nbsp;&nbsp;&nbsp;</label>
+                                <select id="medicoIngreso" name="medicoIngreso">
+                                    {% for medicos in Medicos %}
+                                    <option value="{{medicos.id}}"> {{medicos.nombre}}</option>
+                                    {% endfor %}
+                                </select>
 
-                    <div class="row">
 
-                <div class="form-group ">
+                                {{ form.estadoSalida.label }}
+                                {{ form.estadoSalida }}
 
 
-                        {{ form.dxIngreso.label }}
-                          {{ form.dxIngreso }}
+                            </div>
+                        </div>
 
-             {{ form.especialidadesMedicosIngreso.label }}
-                          {{ form.especialidadesMedicosIngreso }}
 
+                        <center>
 
 
-                     <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medicos: &nbsp;&nbsp;&nbsp;</label>
-                            <select id="medicoIngreso" name="medicoIngreso">
-                                {% for medicos in Medicos %}
-                                <option value="{{medicos.id}}"> {{medicos.nombre}}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="submit" id="guardarAdmision" name="guardarAdmision" value="GUARDAR"></input>
 
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            Colaborador : {{Documento}}
+                        </center>
 
 
+                    </form>
 
+                    <form class="form-inline"
+                          action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }}, {{NombreSede }} "
+                          method="POST" id="login-form"><input type="hidden" name="csrfmiddlewaretoken"
+                                                               value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
 
+                        <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
+                        <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
+                        <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
+                        <input type="hidden" id="Username" name="Username" value="{{Username}}">
+                        <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
+                        <input type="hidden" id="nombreSede" name="nombreSede" value="{{NombreSede}}">
 
-                         {{ form.estadoSalida.label }}
-                          {{ form.estadoSalida }}
+                        <center>
+                            <input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input>
+                        </center>
 
+                    </form>
 
-                </div>
-                 </div>
+                </table>
+            </td>
+            <td>
+            </td>
+            <td>
 
-
-
-                     <center>
-
-
-                <input type="submit" id="guardarAdmision" name="guardarAdmision" value="GUARDAR"></input>
-                    </center>
-
-
-
-
-
-
-    </form>
-
-        <form class="form-inline" action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }}, {{NombreSede }} "
-      method="POST"  id="login-form"><input type="hidden"    name="csrfmiddlewaretoken"
-                             value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
-
-    <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
-    <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
-    <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
-    <input type="hidden" id="Username" name="Username" value="{{Username}}">
-    <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
-
-
-<center>
-    <input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input>
-</center>
-
-</form>
-
-</table>
-        </td>
-    <td>
-    </td>
-      <td>
-
-    </td>
-<tr>
-</table>
+            </td>
+        <tr>
+    </table>
 
 
 </div>
