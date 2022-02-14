@@ -32,20 +32,19 @@ function AUsuario()
 {
       alert("entre AUsuario");
 	var envios = new FormData();
+	alert("1");
 
 	var tipoDoc = document.getElementById("tipoDoc").value;
+
 	var documento = document.getElementById("documento").value;
-    var nombre = document.getElementById("nombre").value;
+   var nombre = document.getElementById("nombre1").value;
+
 	var genero = document.getElementById("genero").value;
 	var direccion = document.getElementById("direccion").value;
 	var telefono = document.getElementById("telefono").value;
 	var contacto = document.getElementById("contacto").value;
 	var centrosc = document.getElementById("centrosc").value;
 	var tiposUsuario = document.getElementById("tiposUsuario").value;
-
-
-
-
 
 	alert(documento);
 	alert(tipoDoc);
@@ -55,17 +54,75 @@ function AUsuario()
     	url: '/guardarUsuariosModal/',
 		data: {'tipoDoc':tipoDoc,'documento':documento,'nombre':nombre,'genero':genero,'direccion':direccion,'telefono':telefono, 'contacto':contacto, 'centrosc':centrosc, 'tiposUsuario':tiposUsuario},
 		success: function (respuesta) {
-              $('#mensaje1').val(respuesta);
+
 
 			$('#usuariosModal').modal().hide();
-			 window.location.reload();
-             $('#mensaje1').val(respuesta);
+				$('#busDocumentoSel').val(111111111222);
+                $('#mensaje1').html('<span> respuesta</span>');
+			     window.location.reload();
+
+              	$('#busDocumentoSel').val(111111111222);
+                $('#mensaje1').html('<span> respuesta</span>');
 
                     },
 	   		    error: function (request, status, error) {
 	   	    	}
 	});
 };
+
+
+
+function findOneUsuario1()
+{
+      alert("entre findOneUsuario1");
+	var envios = new FormData();
+
+
+
+	 var select = document.getElementById("id_tipoDoc"); /*Obtener el SELECT */
+
+       var tipoDoc = select.options[select .selectedIndex].value; /* Obtener el valor */
+
+	var documento = document.getElementById("busDocumentoSel").value;
+    alert("4 y el documento es :");
+	alert(documento);
+	alert(tipoDoc);
+
+	$.ajax({
+		type: 'POST',
+    	url: '/findOneUsuario/',
+		data: {'tipoDoc':tipoDoc,'documento':documento},
+		success: function (Usuarios) {
+
+
+
+			 alert("entre DATOS MODAL y el nombre es = ");
+
+                $('#tipoDoc').val(Usuarios.tipoDoc_id);
+				$('#documento').val(Usuarios.documento);
+
+				alert(Usuarios.nombre);
+
+				$('#nombre1').val(Usuarios.nombre);
+
+				$('#genero').val(Usuarios.genero);
+				$('#direccion').val(Usuarios.direccion);
+				$('#telefono').val(Usuarios.telefono);
+				$('#contacto').val(Usuarios.contacto);
+				$('#centrosc').val(Usuarios.centrosc_id);
+				$('#tiposUsuario').val(Usuarios.tiposUsuario_id);
+
+				 $('#usuariosModal').modal({show:true});
+
+
+
+
+                    },
+	   		    error: function (request, status, error) {
+	   	    	}
+	});
+};
+
 
 
 
@@ -78,11 +135,14 @@ function AUsuario()
 
 			$.get(href, function(Usuarios,status)
 			 {
-			 alert("entre DATOS MODAL");
+			 alert("entre DATOS MODAL y el nombre es = ");
 
 
                 $('#tipoDoc').val(Usuarios.tipoDoc_id);
 				$('#documento').val(Usuarios.documento);
+
+				alert(Usuarios.nombre);
+
 				$('#nombre').val(Usuarios.nombre);
 				$('#genero').val(Usuarios.genero);
 				$('#direccion').val(Usuarios.direccion);

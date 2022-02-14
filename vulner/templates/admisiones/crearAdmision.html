@@ -10,6 +10,7 @@ th ,tr{
   border-color: #96D4D4;
 }
 
+
 </style>
 
 
@@ -49,6 +50,7 @@ window.onload = function(){
 
 
 }
+
 
 
 
@@ -95,9 +97,9 @@ window.onload = function(){
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="mombre" class="col-form-label">  Paciente :</label>
+                                    <label for="nombre1" class="col-form-label"> Paciente :</label>
 
-                                    <input type="text" class="form-control"  id="mombre"  name="mombre" value="">
+                                    <input type="text" class="form-control" id="nombre1" name="nombre1" value="">
                                 </div>
 
                                 <div class="form-group">
@@ -189,7 +191,7 @@ window.onload = function(){
 
 
                                 <label for="busServicio2"
-                                       class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Servicio:</label>
+                                       class="col-form-label">Servicio:</label>
                                 <select id="busServicio2" name="busServicio2">
                                     {% for servicios in Servicios %}
                                     <option value="{{servicios.id}}"> {{servicios.nombre}}</option>
@@ -230,10 +232,12 @@ window.onload = function(){
                                        for="busDocumentoSel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suministre
                                     Documento:</label>
 
-                                <input type="text" id="busDocumentoSel" name="busDocumentoSel"></input>
+                                <input type="text" id="busDocumentoSel" name="busDocumentoSel">
+                                  <a href="*" role="button" class="btn btn-primary eBtn1" data-toggle="modal"
+                                   onclick='findOneUsuario1()'> Verificar    </a>
 
 
-                                {{ form.fechaIngreso.label }}
+                              {{ form.fechaIngreso.label }}
 
 
                                 <input type="datetime-local" id="fechaIngreso" name="fechaIngreso"
@@ -243,11 +247,6 @@ window.onload = function(){
                             </div>
 
 
-                            <a href="/findOneUsuario/1, <script>function(){ var seldoc = document.getElementById("busDocumentoSel").value;      return seldoc; } </script>" role="button" class="btn btn-primary eBtn" data-toggle="modal"
-                               onclick='$("#usuariosModal").modal("show")'>
-                                Verificar Documento
-                            </a>
-
                         </div>
 
                         <div class="row">
@@ -255,14 +254,23 @@ window.onload = function(){
                             <div class="form-group ">
 
 
+
+
+
+
+
                                 {{ form.dxIngreso.label }}
                                 {{ form.dxIngreso }}
 
-                                {{ form.especialidadesMedicosIngreso.label }}
+                                <label for="especialidadesMedicosIngreso" class="col-form-label">Especialidad:
+                                </label>
+
+
+
                                 {{ form.especialidadesMedicosIngreso }}
 
 
-                                <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medicos:
+                                <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medico:
                                     &nbsp;&nbsp;&nbsp;</label>
                                 <select id="medicoIngreso" name="medicoIngreso">
                                     {% for medicos in Medicos %}
@@ -271,8 +279,6 @@ window.onload = function(){
                                 </select>
 
 
-                                {{ form.estadoSalida.label }}
-                                {{ form.estadoSalida }}
 
 
                             </div>
@@ -281,7 +287,7 @@ window.onload = function(){
 
                         <center>
 
-
+                            <span id="mensaje1" name="mensaje1"></span>
                             <input type="submit" id="guardarAdmision" name="guardarAdmision" value="GUARDAR"></input>
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -289,9 +295,11 @@ window.onload = function(){
                         </center>
 
 
+
                     </form>
 
-                    <form class="form-inline"
+
+                          <form class="form-inline"
                           action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }}, {{NombreSede }} "
                           method="POST" id="login-form"><input type="hidden" name="csrfmiddlewaretoken"
                                                                value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
@@ -308,6 +316,7 @@ window.onload = function(){
                         </center>
 
                     </form>
+
 
                 </table>
             </td>

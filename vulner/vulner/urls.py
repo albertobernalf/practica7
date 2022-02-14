@@ -84,7 +84,7 @@ urlpatterns = [
     path('buscarHabitaciones/', viewsAdmisiones.buscarHabitaciones),
     path('buscarSubServicios/', viewsAdmisiones.buscarSubServicios),
     path('crearAdmision/<str:Sede>,<str:Perfil>, <str:Username>, <str:Username_id>', viewsAdmisiones.crearAdmision.as_view()),
-    path('findOneUsuario/<str:tipoDoc>, <str:documento>/', viewsAdmisiones.UsuariosModal),
+    path('findOneUsuario/', viewsAdmisiones.UsuariosModal),
     path('guardarUsuariosModal/', viewsAdmisiones.guardarUsuariosModal),
 
     path('crearResponsables/', viewsAdmisiones.crearResponsables),
