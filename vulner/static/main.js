@@ -116,13 +116,12 @@ function findOneUsuario1()
  //   var  bakmedicoIngreso = document.getElementById("medicoIngreso").value;
 
 
-	 var select = document.getElementById("id_tipoDoc"); /*Obtener el SELECT */
+	 var select = document.getElementById("tipoDoc"); /*Obtener el SELECT */
 
 
 
        var tipoDoc = select.options[select.selectedIndex].value; /* Obtener el valor */
 
-        alert(tipoDoc);
 
 	var documento = document.getElementById("busDocumentoSel").value;
 

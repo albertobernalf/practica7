@@ -15,15 +15,11 @@ class historiaForm(forms.ModelForm):
     class Meta:
         model = Historia
 
-        id_tipo_doc = forms.ModelChoiceField(queryset=TiposDocumento.objects.all())
+        tipoDoc = forms.ModelChoiceField(queryset=TiposDocumento.objects.all())
         documento = forms.IntegerField(label='No Documento')
+        consecAdmision = forms.IntegerField(label='Admision No', disabled=True, initial=0)
         folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
         fecha = forms.DateTimeField()
-
-        id_especialidad = forms.ModelChoiceField(queryset=Especialidades.objects.all())
-        id_medico = forms.ModelChoiceField(queryset=Medicos.objects.all())
-       # folio = forms.IntegerField(label='No Folio',  initial=0)
-        estado_folio = forms.CharField(label='Estado del Folio', disabled=True, initial='A', max_length=1)
 
         fields = '__all__'
 
@@ -59,26 +55,6 @@ class historiaForm(forms.ModelForm):
 
         return fecha
 
-    def clean_estado_folio(self):
-        print("Entre Historia1View validar estado_folio")
-        estado_folio = self.cleaned_data.get('estado_folio')
-        print(estado_folio)
-
-        return estado_folio
-
-    def clean_id_especialidad(self):
-        print("Entre Historia1View validar clean_id_especialidad")
-        id_especialidad = self.cleaned_data.get('id_especialidad')
-        print(id_especialidad)
-
-        return id_especialidad
-
-    def clean_id_medico(self):
-        print("Entre Historia1View validar clean_id_medico")
-        id_medico = self.cleaned_data.get('id_medico')
-        print(id_medico)
-
-        return id_medico
 
     def clean_motivo(self):
         print("Entre Historia1View validar motivo")

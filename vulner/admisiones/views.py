@@ -1844,13 +1844,9 @@ class crearAdmision(TemplateView):
         print (context)
         return context
 
-
-
-
 def crearResponsables(request):
     print("Entre crear Responsables")
     pass
-
 
 
 def UsuariosModal(request):

@@ -17,12 +17,13 @@ from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, Es
 from usuarios.models import Usuarios, TiposDocumento
 
 from django.contrib import messages
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import  render, get_object_or_404, redirect, HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.urls import reverse, reverse_lazy
 # from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
 from django.http import JsonResponse
+import MySQLdb
 
 # Create your views here.
 
@@ -382,3 +383,72 @@ class crearHistoriaClinica(TemplateView):
 
         return context
 
+
+
+class crearHistoriaClinica1(TemplateView):
+    print("Entre a Crear Historia Clinica1")
+
+    template_name = 'clinico/historiaClinica.html'
+    print("Entre a Registrar Historia")
+
+    def post(self, request, *args, **kwargs):
+        print("Entre POST de Crear Admisiones")
+        data = {}
+        context = {}
+        return HttpResponse(json.dumps(data))
+
+    def get_context_data(self,  **kwargs):
+        print("Entre a Contexto Historia Clinica")
+
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Mi gran Template'
+        context['historiaForm'] = historiaForm
+
+        # Combo Diagnosticos
+
+        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM clinico_diagnosticos p"
+
+        curt.execute(comando)
+        print(comando)
+
+        diagnosticos = []
+        diagnosticos.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            diagnosticos.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(diagnosticos)
+
+        context['Diagnosticos'] = diagnosticos
+
+        # Fin combo Diagnosticos
+
+        # Combo Laboratorios
+
+        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='2'"
+
+        curt.execute(comando)
+        print(comando)
+
+        laboratorios = []
+        laboratorios.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            laboratorios.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(laboratorios)
+
+        context['Laboratorios'] = laboratorios
+
+        # Fin combo Laboratorios
+
+
+        return context
