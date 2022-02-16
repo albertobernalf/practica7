@@ -5,11 +5,10 @@ from django.utils.timezone import now
 
 
 
-
 class Servicios(models.Model):
     id = models.AutoField(primary_key=True)
     #sedesClinica = models.ForeignKey('sitios.SedesClinica', default=1, on_delete=models.PROTECT, null=True)
-    nombre = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=30, null = False)
 
 
     def __str__(self):
@@ -17,11 +16,11 @@ class Servicios(models.Model):
 
 class EspecialidadesMedicos(models.Model):
     id = models.AutoField(primary_key=True)
-    especialidades = models.ForeignKey('clinico.Especialidades', on_delete=models.PROTECT, null=True,related_name ='especialidadesMedicos1')
-    planta = models.ForeignKey('planta.Planta', on_delete = models.PROTECT, null = True)
-    nombre = models.CharField(max_length=30, default="")
+    especialidades = models.ForeignKey('clinico.Especialidades', on_delete=models.PROTECT, null=False,related_name ='especialidadesMedicos1')
+    planta = models.ForeignKey('planta.Planta', on_delete = models.PROTECT, null = False)
+    nombre = models.CharField(max_length=30, default="" , null = False)
     fechaRegistro = models.DateTimeField(default=now, editable=False)
-    usuarioRegistro = models.ForeignKey('planta.Planta', default=1, on_delete=models.PROTECT, null=True ,related_name ='usuarioRegistroPlanta')
+    usuarioRegistro = models.ForeignKey('planta.Planta', default=1, on_delete=models.PROTECT, null=False ,related_name ='usuarioRegistroPlanta')
     estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
     def __integer__(self):
@@ -30,7 +29,7 @@ class EspecialidadesMedicos(models.Model):
 
 class Especialidades(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=30 , null = False)
 
     def __str__(self):
         return self.nombre
@@ -52,17 +51,97 @@ class Medicos(models.Model):
         def __str__(self):
             return self.nombre
 
+
+
+class EstadoExamenes(models.Model):
+      id = models.AutoField(primary_key=True)
+      nombre = models.CharField(max_length=30, null=False)
+      estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+      def __str__(self):
+          return self.nombre
+
+
+class Enfermedades(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=80, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+
+
 class TiposExamen(models.Model):
             id = models.AutoField(primary_key=True)
-            nombre = models.CharField(max_length=30)
+            nombre = models.CharField(max_length=30, null=False)
+            estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
             def __str__(self):
                 return self.nombre
 
+
+class TiposFolio(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=30, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+
+class TiposAntecedente(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=30, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+
+class Antecedentes(models.Model):
+    id = models.AutoField(primary_key=True)
+    tiposAntecedente = models.ForeignKey('clinico.TiposAntecedente', default=1, on_delete=models.PROTECT, null=False)
+    nombre = models.CharField(max_length=50, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+
+class CausasExterna(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+class Vias(models.Model):
+        id = models.AutoField(primary_key=True)
+        nombre = models.CharField(max_length=50, null=False)
+        estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+        def __str__(self):
+            return self.nombre
+
+
+class TiposIncapacidad(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+
+
+
 class Examenes(models.Model):
                 id = models.AutoField(primary_key=True)
-                id_TipoExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT, null=True)
-                nombre = models.CharField(max_length=30)
+                TiposExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT, null=False)
+                codigo = models.CharField(max_length=20, null=False, default=0)
+                nombre = models.CharField(max_length=80)
 
                 def __str__(self):
                     return self.nombre
@@ -72,61 +151,86 @@ class Examenes(models.Model):
 
 class Historia(models.Model):
                 id = models.AutoField(primary_key=True)
-                id_tipo_doc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT,null=True)
-                documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT,null=True)
+                tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
+                documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,
+                                              related_name='DocumentoHistoria')
+                consecAdmision = models.IntegerField(default=0)
                 folio =  models.IntegerField(default=0)
                 fecha = models.DateTimeField()
-                id_especialidad = models.ForeignKey('clinico.Especialidades', default=1, on_delete=models.PROTECT, null=True)
-                id_medico  = models.ForeignKey('clinico.Medicos', default=1, on_delete=models.PROTECT, null=True)
+                tiposFolio = models.ForeignKey('clinico.TiposFolio', default=1, on_delete=models.PROTECT, null=False)
+                causasExterna = models.ForeignKey('clinico.causasExterna', default=1, on_delete=models.PROTECT, null=False)
+                dependenciasRealizado = models.ForeignKey('sitios.Dependencias', default=1, on_delete=models.PROTECT,        null=False)
+                especialidades = models.ForeignKey('clinico.Especialidades', default=1, on_delete=models.PROTECT, null=False)
+                planta   = models.ForeignKey('planta.Planta', default=1, on_delete=models.PROTECT, null=False)
                 motivo     = models.CharField(max_length=250, default='')
                 subjetivo  = models.CharField(max_length=250, default='')
                 objetivo   = models.CharField(max_length=250, default='')
                 analisis   = models.CharField(max_length=250, default='')
                 plan       = models.CharField(max_length=250, default='')
-                estado_folio = models.CharField(max_length=1, default='A')
+                fechaRegistro = models.DateTimeField(default=now, editable=False)
+                usuarioRegistro = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=True)
+                estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+
 
                 def __str__(self):
                     return self.motivo
 
                 class Meta:
-                    ordering = ["id_tipo_doc","documento","folio","fecha","id_especialidad","id_medico","motivo","subjetivo","objetivo","analisis","plan"]
+                    ordering = ["tipoDoc","documento","folio","fecha","especialidades","motivo","subjetivo","objetivo","analisis","plan"]
 
 class HistoriaExamenes(models.Model):
                 id = models.AutoField(primary_key=True)
-                id_tipo_doc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=True)
-                documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT,null=True)
+                tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
+                documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,
+                                              related_name='DocumentoHistoriaExamenes')
+                consecAdmision = models.IntegerField(default=0)
                 folio = models.IntegerField()
                 fecha = models.DateTimeField()
-                id_TipoExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT, null=True)
-                id_examen = models.ForeignKey('clinico.Examenes', default=1, on_delete=models.PROTECT, null=True)
+                tiposExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT, null=False)
+                examen = models.ForeignKey('clinico.Examenes', default=1, on_delete=models.PROTECT, null=False)
                 cantidad  = models.IntegerField()
-                estado_folio = models.CharField(max_length=1, default='A')
+                estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
 
                 def __str__(self):
                         return self.estado_folio
 
 class HistoriaResultados(models.Model):
                     id = models.AutoField(primary_key=True)
-                    id_tipo_doc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=True)
-                    documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT,null=True)
+
+                    tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT,
+                                                null=False)
+                    documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,
+                                                  related_name='DocumentoHistoriaResul')
+                    consecAdmision = models.IntegerField(default=0)
+                    dependenciasRealizado = models.ForeignKey('sitios.Dependencias', default=1, on_delete=models.PROTECT, null=False)
                     folio = models.IntegerField()
                     fecha = models.DateTimeField()
-                    consecutivo = models.IntegerField()
-                    id_TipoExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT,
-                                                      null=True)
-                    id_examen = models.ForeignKey('clinico.Examenes', default=1, on_delete=models.PROTECT, null=True)
+
+
+                    consecResultados = models.IntegerField(default=0)
+                    tiposExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT,
+                                                    null=False)
+                    examen = models.ForeignKey('clinico.Examenes', default=1, on_delete=models.PROTECT, null=False)
                     cantidad = models.IntegerField()
                     resultado = models.CharField(max_length=500, default='')
-                    estado  = models.CharField(max_length=1, default='A')
+                    interpretacion = models.CharField(max_length=500, default='')
+                    estadoExamenes =  models.ForeignKey('clinico.EstadoExamenes', default=1, on_delete=models.PROTECT, null=False)
+                    rutaArchivo =  models.CharField(max_length=100, default='')
+                    rutaVideo =  models.CharField(max_length=100, default='')
+                    estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
                     def __str__(self):
                         return self.resultado
 
 
+
+
 class Diagnosticos(models.Model):
     id = models.AutoField(primary_key=True)
     cie10  = models.CharField(max_length=15, default='')
-    nombre = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=30 , null=False)
     descripcion = models.CharField(max_length=80)
     fechaRegistro = models.DateTimeField(default=now, editable=False)
     #usuarioRegistro = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=True)
@@ -142,3 +246,38 @@ class EstadosSalida(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Incapacidades(models.Model):
+    id = models.AutoField(primary_key=True)
+    tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT,   null=False)
+    documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,  related_name='DocumentoIncapacidades')
+    consecAdmision = models.IntegerField()
+    dependenciasRealizado = models.ForeignKey('sitios.Dependencias', default=1, on_delete=models.PROTECT, null=False)
+    folio = models.IntegerField()
+    fecha = models.DateTimeField()
+    tiposIncapacidad =  models.ForeignKey('clinico.TiposIncapacidad', default=1, on_delete=models.PROTECT, null=False)
+    desdeFecha = models.DateTimeField()
+    hastaFecha = models.DateTimeField()
+    diagnosticos =  models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.documento
+
+
+class HistorialDiag(models.Model):
+    id = models.AutoField(primary_key=True)
+    tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT,   null=False)
+    documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,  related_name='DocumentoHistoriaDiag')
+    consecAdmision = models.IntegerField()
+    folio = models.IntegerField()
+    diagnosticosPpal =  models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxPpal')
+    diagnosticosSec1 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec1')
+    diagnosticosSec2 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec2')
+    diagnosticosSec3 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec3')
+    diagnosticosSec4 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec4')
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.documento

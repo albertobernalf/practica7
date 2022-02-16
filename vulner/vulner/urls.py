@@ -53,7 +53,7 @@ urlpatterns = [
     path('reconocerAudio/', views.reconocerAudio),
     path('reproduceAudio/', views.reproduceAudio),
     path('accesoEspecialidadMedico/<str:documento>', views.accesoEspecialidadMedico),
-
+    path('crearHistoriaClinica/', viewsClinico.crearHistoriaClinica.as_view()),
 
 
     # Actividaes Mecanicas

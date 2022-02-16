@@ -359,3 +359,26 @@ class nuevoView(TemplateView):
         context['form']  = historiaForm
         context['form2'] = historiaExamenesForm
         return context
+
+
+
+class crearHistoriaClinica(TemplateView):
+    print("Entre a Crear Historia Clinica")
+
+    template_name = 'clinico/historiaClinica.html'
+    print("Entre a Registrar Historia")
+
+    def post(self, request, *args, **kwargs):
+        print("Entre POST de Crear Admisiones")
+        data = {}
+        context = {}
+        return HttpResponse(json.dumps(data))
+
+    def get_context_data(self,  **kwargs):
+        print("Entre a Contexto Historia Clinica")
+
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Mi gran Template'
+
+        return context
+

@@ -2,82 +2,157 @@ from django.contrib import admin
 
 # Register your models here.
 
-from clinico.models import Medicos, Especialidades , TiposExamen, Examenes, Historia, HistoriaExamenes, HistoriaResultados, EspecialidadesMedicos, Servicios, Diagnosticos, EstadosSalida
+from clinico.models import Medicos, Especialidades , TiposExamen, Examenes, Historia, HistoriaExamenes, HistoriaResultados, EspecialidadesMedicos, Servicios, Diagnosticos, EstadosSalida,   EstadoExamenes,  Enfermedades, TiposFolio, TiposAntecedente, Antecedentes ,  CausasExterna, Vias , TiposIncapacidad
+
+@admin.register(Servicios)
+class serviciosAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre")
+    search_fields = ("id", "nombre")
+    # Filtrar
+    list_filter = ('nombre',)
 
 
+@admin.register(Especialidades)
 class especialidadesAdmin(admin.ModelAdmin):
 
         list_display = ("id", "nombre")
         search_fields = ("id", "nombre")
+        # Filtrar
+        list_filter = ('nombre',)
+
+@admin.register(EspecialidadesMedicos)
+class especialidadesMedicosAdmin(admin.ModelAdmin):
+    list_display = ("id", "especialidades", "planta", "nombre")
+    search_fields = ("id", "especialidades", "planta", "nombre")
+    # Filtrar
+    list_filter = ( "especialidades", "planta", "nombre")
 
 
-#class medicosAdmin(admin.ModelAdmin):
+@admin.register(EstadoExamenes)
+class estadoExamenesAdmin(admin.ModelAdmin):
 
-#    list_display = ("id","nombre","direccion","telefono","contacto")
-#    search_fields = ("id","nombre","direccion","telefono","contacto")
+        list_display = ("id", "nombre")
+        search_fields = ("id", "nombre")
+        # Filtrar
+        list_filter = ('nombre',)
 
+
+@admin.register(Enfermedades)
+class enfermedadesAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre")
+    search_fields = ("id", "nombre")
+    # Filtrar
+    list_filter = ('nombre',)
+
+
+
+
+@admin.register(TiposExamen)
 class tiposExamenAdmin(admin.ModelAdmin):
         list_display = ("id", "nombre")
         search_fields = ("id", "nombre")
-
-class examenesAdmin(admin.ModelAdmin):
-
-    list_display = ("id","nombre","id_TipoExamen")
-    search_fields = ("id","nombre","id_TipoExamen")
+        # Filtrar
+        list_filter = ('nombre',)
 
 
-class historiaExamenesAdmin(admin.ModelAdmin):
-    fields = ('id_TipoExamen', 'id_examen', 'cantidad',)
-    list_display = ("id", "id_tipo_doc", "documento", "folio", "fecha", "id_TipoExamen", "id_examen")
-    search_fields = ("id", "id_tipo_doc", "documento", "folio", "fecha", "id_TipoExamen", "id_examen")
-
-
-class historiaAdmin(admin.ModelAdmin):
-
-        list_display = ("id", "id_tipo_doc", "documento","folio","fecha","motivo")
-        search_fields = ("id", "id_tipo_doc", "documento","folio","fecha","motivo")
-
-
-
-
-class historiaResultadosAdmin(admin.ModelAdmin):
-    list_display = ("id", "id_tipo_doc", "documento", "folio", "fecha", "consecutivo","id_TipoExamen", "id_examen","resultado")
-    search_fields =  ("id", "id_tipo_doc", "documento", "folio", "fecha", "consecutivo","id_TipoExamen", "id_examen","resultado")
-
-class serviciosAdmin(admin.ModelAdmin):
+@admin.register(TiposFolio)
+class tiposFolioAdmin(admin.ModelAdmin):
         list_display = ("id", "nombre")
         search_fields = ("id", "nombre")
+        # Filtrar
+        list_filter = ('nombre',)
 
-
-class serviciosAdmin(admin.ModelAdmin):
-    list_display = ("id", "nombre")
-    search_fields = ("id", "nombre")
-
-class especialidadesMedicosAdmin(admin.ModelAdmin):
-        list_display = ("id", "especialidades", "planta","nombre","fechaRegistro")
-        search_fields = ("id", "especialidades", "planta","nombre","fechaRegistro")
-
-class diagnosticosAdmin(admin.ModelAdmin):
+@admin.register(TiposAntecedente)
+class tiposAntecedenteAdmin(admin.ModelAdmin):
             list_display = ("id", "nombre")
             search_fields = ("id", "nombre")
+            # Filtrar
+            list_filter = ('nombre',)
 
 
+@admin.register(Antecedentes)
+class antecedenteAdmin(admin.ModelAdmin):
+            list_display = ("id", "nombre","tiposAntecedente")
+            search_fields = ("id", "nombre","tiposAntecedente")
+            # Filtrar
+            list_filter = ('nombre','tiposAntecedente')
+
+@admin.register(CausasExterna)
+class causasExternaAdmin(admin.ModelAdmin):
+            list_display = ("id", "nombre")
+            search_fields = ("id", "nombre")
+            # Filtrar
+            list_filter = ('nombre',)
+
+@admin.register(Vias)
+class viasAdmin(admin.ModelAdmin):
+            list_display = ("id", "nombre")
+            search_fields = ("id", "nombre")
+            # Filtrar
+            list_filter = ('nombre',)
+
+@admin.register(TiposIncapacidad)
+class tiposIncapacidadAdmin(admin.ModelAdmin):
+            list_display = ("id", "nombre")
+            search_fields = ("id", "nombre")
+            # Filtrar
+            list_filter = ('nombre',)
+
+@admin.register(Examenes)
+class examenesAdmin(admin.ModelAdmin):
+
+    list_display = ("id","nombre","TiposExamen","codigo")
+    search_fields = ("id","nombre","TiposExamen" ,"codigo")
+    # Filtrar
+    list_filter = ('nombre','TiposExamen','codigo')
+
+
+
+@admin.register(HistoriaExamenes)
+class historiaExamenesAdmin(admin.ModelAdmin):
+
+    list_display = ("id", "tipoDoc", "documento", "folio", "fecha", "tiposExamen", "examen")
+    search_fields = ("id", "tipoDoc", "documento", "folio", "fecha", "tiposExamen", "examen")
+    # Filtrar
+    list_filter = ('id', 'tipoDoc', 'documento', 'folio', 'fecha', 'tiposExamen', 'examen')
+
+
+
+@admin.register(Historia)
+class historiaAdmin(admin.ModelAdmin):
+
+        list_display = ("id", "tipoDoc", "documento","folio","fecha","motivo","causasExterna","dependenciasRealizado")
+        search_fields = ("id", "tipoDoc", "documento","folio","fecha","motivo" ,"causasExterna","dependenciasRealizado")
+        # Filtrar
+        list_filter = ('id', 'tipoDoc', 'documento', 'folio', 'fecha', 'causasExterna','dependenciasRealizado')
+
+
+@admin.register(HistoriaResultados)
+class historiaResultadosAdmin(admin.ModelAdmin):
+    list_display = ("id", "tipoDoc", "documento", "folio", "fecha", "consecResultados","tiposExamen", "examen","resultado")
+    search_fields =  ("id", "tipoDoc", "documento", "folio", "fecha", "consecResultados","tiposExamen", "examen","resultado")
+    # Filtrar
+    list_filter = ('id', 'tipoDoc', 'documento', 'folio', 'fecha', 'tiposExamen', 'examen', 'resultado', 'interpretacion')
+
+
+
+
+@admin.register(Diagnosticos)
+class diagnosticosAdmin(admin.ModelAdmin):
+     list_display = ("id", "nombre")
+     search_fields = ("id", "nombre")
+      # Filtrar
+     list_filter = ('id', 'nombre',)
+
+@admin.register(EstadosSalida)
 class estadosSalidaAdmin(admin.ModelAdmin):
     list_display = ("id", "nombre")
     search_fields = ("id", "nombre")
 
+    # Filtrar
+    list_filter = ('id', 'nombre',)
 
 
-#admin.site.register(Medicos, medicosAdmin)
-admin.site.register(Especialidades, especialidadesAdmin)
-admin.site.register(TiposExamen, tiposExamenAdmin)
-admin.site.register(Examenes, examenesAdmin)
-admin.site.register(Historia, historiaAdmin)
-admin.site.register(HistoriaExamenes, historiaExamenesAdmin)
-admin.site.register(HistoriaResultados, historiaResultadosAdmin)
-admin.site.register(Servicios, serviciosAdmin)
-admin.site.register(EspecialidadesMedicos, especialidadesMedicosAdmin)
-admin.site.register(Diagnosticos, diagnosticosAdmin)
-admin.site.register(EstadosSalida, estadosSalidaAdmin)
+
 
 

@@ -8,6 +8,8 @@ from .forms import crearAdmisionForm
 from datetime import datetime
 from admisiones.models import Ingresos
 from django.db.models import Max
+from django.shortcuts import get_object_or_404
+
 
 from sitios.models import DependenciasActual, HistorialDependencias
 from usuarios.models import Usuarios
@@ -1201,9 +1203,9 @@ def buscarHabitaciones(request):
     return JsonResponse(json.dumps(Habitaciones), safe=False)
 
 
-
 class crearAdmision(TemplateView):
     print("Entre a Craer Admision")
+
 
     template_name = 'admisiones/crearAdmision.html'
     print("Entre a Registrar Admision")
@@ -1212,6 +1214,21 @@ class crearAdmision(TemplateView):
         print("Entre POST de Crear Admisiones")
         data = {}
         context = {}
+
+        forma = crearAdmisionForm(request.POST)
+
+
+        if forma.is_valid():
+
+            print("valido")
+        else:
+            print(" novalido")
+            #crearAdmisionForm1 = crearAdmisionForm()
+            #context['crearAdmisionForm'] = crearAdmisionForm1
+            #return render(request, 'admisiones/crearAdmision.html'  ,  context)
+
+
+
         #sedesClinica = request.POST['sedesClinica']
         sedesClinica = request.POST['Sede']
         Sede = request.POST['Sede']
@@ -1735,7 +1752,7 @@ class crearAdmision(TemplateView):
         print(comando)
 
         tiposDocumento = []
-        #tiposDocumento.append({'id': '', 'nombre': ''})
+        tiposDocumento.append({'id': '', 'nombre': ''})
 
         for id, nombre in curt.fetchall():
             tiposDocumento.append({'id': id, 'nombre': nombre})
@@ -1769,6 +1786,53 @@ class crearAdmision(TemplateView):
 
         # Fin combo Centros
 
+        # Combo Diagnosticos
+
+        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM clinico_diagnosticos p"
+
+        curt.execute(comando)
+        print(comando)
+
+        diagnosticos = []
+        diagnosticos.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            diagnosticos.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(diagnosticos)
+
+        context['Diagnosticos'] = diagnosticos
+
+        # Fin combo Diagnosticos
+
+        # Combo Dependencias
+
+        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.numero  nombre FROM sitios_dependencias p"
+
+        curt.execute(comando)
+        print(comando)
+
+
+        dependencias = []
+        dependencias.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            dependencias.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(dependencias)
+
+        context['Dependencias'] = dependencias
+
+        # Fin combo Dependencias
+
 
 
         context['title'] = 'Mi gran Template'
@@ -1779,6 +1843,8 @@ class crearAdmision(TemplateView):
         print("Se supone voya a cargar la forma")
         print (context)
         return context
+
+
 
 
 def crearResponsables(request):

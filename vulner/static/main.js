@@ -41,7 +41,7 @@ function AUsuario()
 	var envios = new FormData();
 
 
-	var tipoDoc = document.getElementById("tipoDoc").value;
+	var tipoDoc = document.getElementById("tipoDoc1").value;
 
 	var documento = document.getElementById("documento").value;
    var nombre = document.getElementById("nombre1").value;
@@ -118,7 +118,11 @@ function findOneUsuario1()
 
 	 var select = document.getElementById("id_tipoDoc"); /*Obtener el SELECT */
 
-       var tipoDoc = select.options[select .selectedIndex].value; /* Obtener el valor */
+
+
+       var tipoDoc = select.options[select.selectedIndex].value; /* Obtener el valor */
+
+        alert(tipoDoc);
 
 	var documento = document.getElementById("busDocumentoSel").value;
 
@@ -134,7 +138,7 @@ function findOneUsuario1()
 
 			 alert("entre DATOS MODAL y el nombre es = ");
 
-                $('#tipoDoc').val(Usuarios.tipoDoc_id);
+                $('#tipoDoc1').val(Usuarios.tipoDoc_id);
 				$('#documento').val(Usuarios.documento);
 
 
@@ -430,10 +434,10 @@ $(document).on('change', '#busSubServicio2', function(event) {
 	  		  var dato = JSON.parse(respuesta);
 
 
-                     const $id2 = document.querySelector("#id_dependenciasIngreso");
+                     const $id2 = document.querySelector("#dependenciasIngreso");
 
 
- 	      		     $("#id_dependenciasIngreso").empty();
+ 	      		     $("#dependenciasIngreso").empty();
 
 
 	                 $.each(dato, function(key,value) {
