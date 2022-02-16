@@ -11,6 +11,10 @@ th ,tr{
 }
 
 
+
+
+
+
 </style>
 
 
@@ -18,11 +22,13 @@ th ,tr{
 
 
 
-window.onload = function(){
+window.onload = function(pase, pase1){
   var fecha = new Date(); //Fecha actual
   var mes = fecha.getMonth()+1; //obteniendo mes
   var dia = fecha.getDate(); //obteniendo dia
   var ano = fecha.getFullYear(); //obteniendo año
+
+
 
 
 
@@ -47,9 +53,24 @@ window.onload = function(){
 
   document.getElementById('fechaIngreso').value=ano+"-"+mes+"-"+dia + " " +hora+":"+minutos+":"+segundos ;
 
+		document.getElementById("busServicio2").value = document.getElementById("bakbusServicio2").value;
+             document.getElementById("busSubServicio2").value = document.getElementById("bakbusSubServicio2").value;
+              document.getElementById("tipoDoc").value = document.getElementById("baktipoDoc").value;
+             document.getElementById("busDocumentoSel").value = document.getElementById("bakbusDocumentoSel").value;
+             document.getElementById("fechaIngreso").value = document.getElementById("bakfechaIngreso").value;
+
+
+        alert("Funcion ONLOAD");
+          $('#mensaje1').html('<span> respuesta</span>');
+
+
 
 
 }
+
+
+
+
 
 
 
@@ -65,7 +86,7 @@ window.onload = function(){
 
         <div class="myForm">
 
-            <form id="ModalCaptura" method="POST" onsubmit="AUsuario()">
+            <form id="ModalCaptura" method="POST" onsubmit="CierraModal()">
 
                 <div class="modal fade" id="usuariosModal" tabindex="-1"
                      role="dialog" aria-labelledby="exampleModalLabel"
@@ -85,8 +106,14 @@ window.onload = function(){
 
                                 <div class="form-group">
                                     <label for="tipoDoc" class="col-form-label">Tipo Doc:</label>
-                                    <input type="text" class="form-control" id="tipoDoc" name="tipoDoc"
-                                           value="">
+
+
+                                    <select class="form-control" id="tipoDoc" name="tipoDoc">
+                                        {% for tiposDocumento in TiposDocumento %}
+                                        <option value="{{tiposDocumento.id}}"> {{tiposDocumento.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
+
                                 </div>
 
 
@@ -104,8 +131,12 @@ window.onload = function(){
 
                                 <div class="form-group">
                                     <label for="genero" class="col-form-label">Genero:</label>
-                                    <input type="text" class="form-control" id="genero" name="genero"
-                                           value="">
+                                    <select class="form-control" id="genero" name="genero">
+                                        <option value="M"> Masculino</option>
+                                        <option value="F"> Femenino</option>
+                                    </select>
+
+
                                 </div>
 
 
@@ -129,22 +160,33 @@ window.onload = function(){
 
                                 <div class="form-group">
                                     <label for="centrosc" class="col-form-label">Centros:</label>
-                                    <input type="text" class="form-control" id="centrosc" name="centrosc"
-                                           value="">
+
+                                    <select class="form-control" id="centrosc" name="centrosc">
+                                        {% for centros in Centros %}
+                                        <option value="{{centros.id}}"> {{centros.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
+
+
                                 </div>
 
 
                                 <div class="form-group">
                                     <label for="tiposUsuario" class="col-form-label">Tipos Usuario:</label>
-                                    <input type="text" class="form-control" id="tiposUsuario" name="tiposUsuario"
-                                           value="">
+
+                                    <select class="form-control" id="tiposUsuario" name="tiposUsuario">
+                                        {% for tiposUsuario in TiposUsuario %}
+                                        <option value="{{tiposUsuario.id}}"> {{tiposUsuario.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
+
                                 </div>
 
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        onclick="CierraModal()">Close
                                 </button>
                                 <input type="button" class="btn btn-primary" value="save" onclick="AUsuario()">
                             </div>
@@ -185,27 +227,42 @@ window.onload = function(){
                         <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
                         <input type="hidden" id="nombreSede" name="nombreSede" value="{{NombreSede}}">
 
+                        <!-- VARIABLESD DE COPIA PARA RESTAURAR DATOS -->
 
-                        <div class="row">
-                            <div class="form-group ">
+                        <input type="hidden" id="bakbusServicio2" name="bakbusServicio2" value="">
+                        <input type="hidden" id="bakbusSubServicio2" name="bakbusSubServicio2" value="">
+                        <input type="hidden" id="bakdependenciasIngreso" name="bakdependenciasIngreso" value="">
+                        <input type="hidden" id="baktipoDoc" name="baktipoDoc" value="">
+                        <input type="hidden" id="bakbusDocumentoSel" name="bakbusDocumentoSel" value="">
+                        <input type="hidden" id="bakfechaIngreso" name="bakfechaIngreso" value="">
+                        <input type="hidden" id="bakdxIngreso" name="bakdxIngreso" value="">
+                        <input type="hidden" id="bakespecialidadesMedicosIngreso" name="bakespecialidadesMedicosIngreso"
+                               value="">
+                        <input type="hidden" id="bakmedicoIngreso" name="bakmedicoIngreso" value="">
+
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4 ">
 
 
                                 <label for="busServicio2"
                                        class="col-form-label">Servicio:</label>
-                                <select id="busServicio2" name="busServicio2">
+                                <select class="form-control" id="busServicio2" name="busServicio2">
                                     {% for servicios in Servicios %}
                                     <option value="{{servicios.id}}"> {{servicios.nombre}}</option>
                                     {% endfor %}
                                 </select>
-
+                            </div>
+                            <div class="form-group col-md-4 ">
 
                                 <label for="busSubServicio2" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SubServicios:</label>
-                                <select id="busSubServicio2" name="busSubServicio2">
+                                <select class="form-control" id="busSubServicio2" name="busSubServicio2">
                                     {% for subServicios in SubServicios %}
                                     <option value="{{subServicios.id}}"> {{subServicios.nombre}}</option>
                                     {% endfor %}
                                 </select>
-
+                            </div>
+                            <div class="form-group col-md-4 ">
 
                                 {{ form.dependenciasIngreso.label }}
                                 {{form.dependenciasIngreso}}
@@ -214,122 +271,126 @@ window.onload = function(){
                             </div>
                         </div>
 
-                        <div class="row">
 
-                            <div class="form-group ">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-4 ">
 
 
                                 {{ form.tipoDoc.label }}
                                 {{ form.tipoDoc }}
 
-                                <!--
-
-                                                        {{ form.documento.label }}
-                                                          {{ form.documento }}
-                                                          -->
+                            </div>
+                            <div class="form-group col-md-4 ">
 
                                 <label class="required"
                                        for="busDocumentoSel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suministre
                                     Documento:</label>
 
-                                <input type="text" id="busDocumentoSel" name="busDocumentoSel">
-                                  <a href="*" role="button" class="btn btn-primary eBtn1" data-toggle="modal"
-                                   onclick='findOneUsuario1()'> Verificar    </a>
-
-
-                              {{ form.fechaIngreso.label }}
-
-
-                                <input type="datetime-local" id="fechaIngreso" name="fechaIngreso"
-                                       value="{{form.fechaIngreso }}"> </input>
-
-
+                                <input type="text" class="form-control" id="busDocumentoSel" name="busDocumentoSel">
+                                <a href="*" role="button" class="btn btn-primary eBtn1" data-toggle="modal"
+                                   onclick='findOneUsuario1()'> Verificar </a>
                             </div>
+                            <div class="form-group col-md-4 ">
+                                {{ form.fechaIngreso.label }}
 
+
+                            <input type="datetime-local" class="form-control" id="fechaIngreso" name="fechaIngreso"
+                                   value="{{form.fechaIngreso }}" > </input>
+                             </div>
 
                         </div>
 
-                        <div class="row">
-
-                            <div class="form-group ">
 
 
 
+        <div class="form-row">
+
+             <div class="form-group col-md-4 ">
 
 
+              {{ form.dxIngreso.label }}
+                {{ form.dxIngreso }}
+             </div>
+
+             <div class="form-group col-md-4 ">
+
+               <label for="busEspecialidad" class="col-form-label">Especialidad:
+               </label>
 
 
-                                {{ form.dxIngreso.label }}
-                                {{ form.dxIngreso }}
+               <select class="form-control" id="busEspecialidad" name="busEspecialidad">
+                   {% for especialidades in Especialidades %}
+                 <option value="{{especialidades.id}}"> {{especialidades.nombre}}</option>
+                 {% endfor %}
+              </select>
+                </div>
 
-                                <label for="especialidadesMedicosIngreso" class="col-form-label">Especialidad:
-                                </label>
+             <div class="form-group col-md-4 ">
 
+                <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medico:
+                 &nbsp;&nbsp;&nbsp;</label>
+             <select class="form-control" id="medicoIngreso" name="medicoIngreso">
+                    {% for medicos in Medicos %}
+                   <option value="{{medicos.id}}"> {{medicos.nombre}}</option>
+                   {% endfor %}
+              </select>
+             </div>
 
-
-                                {{ form.especialidadesMedicosIngreso }}
-
-
-                                <label for="medicoIngreso" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medico:
-                                    &nbsp;&nbsp;&nbsp;</label>
-                                <select id="medicoIngreso" name="medicoIngreso">
-                                    {% for medicos in Medicos %}
-                                    <option value="{{medicos.id}}"> {{medicos.nombre}}</option>
-                                    {% endfor %}
-                                </select>
-
-
-
-
-                            </div>
-                        </div>
+         </div>
 
 
-                        <center>
+<center>
 
-                            <span id="mensaje1" name="mensaje1"></span>
-                            <input type="submit" id="guardarAdmision" name="guardarAdmision" value="GUARDAR"></input>
+    <span id="mensaje1" name="mensaje1">ESTE ES UN SPAN DE REEMPLAxo de info</span>
+    <input type="submit" id="guardarAdmision" name="guardarAdmision" value="GUARDAR"></input>
 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            Colaborador : {{Documento}}
-                        </center>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-
-
-                    </form>
+</center>
 
 
-                          <form class="form-inline"
-                          action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }}, {{NombreSede }} "
-                          method="POST" id="login-form"><input type="hidden" name="csrfmiddlewaretoken"
-                                                               value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
-
-                        <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
-                        <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
-                        <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
-                        <input type="hidden" id="Username" name="Username" value="{{Username}}">
-                        <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
-                        <input type="hidden" id="nombreSede" name="nombreSede" value="{{NombreSede}}">
-
-                        <center>
-                            <input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR"></input>
-                        </center>
-
-                    </form>
+</form>
 
 
-                </table>
-            </td>
-            <td>
-            </td>
-            <td>
+<form class="form-inline"
+      action="/retornarAdmision/{{Sede }},  {{Perfil }} , {{Username }},  {{Username_id }}, {{NombreSede }} "
+      method="POST" id="login-form"><input type="hidden" name="csrfmiddlewaretoken"
+                                           value="MJ1CwN7LHRoBZUnyQoPpHBnb4M3PwGYmsLJeNsN92l41zY9ZaUPztrhcMWyUTHxc">
 
-            </td>
-        <tr>
+    <input type="hidden" id="Sede" name="Sede" value="{{Sede}}">
+    <input type="hidden" id="Servicio" name="Servicio" value="{{Servicio}}">
+    <input type="hidden" id="Perfil" name="Perfil" value="{{Perfil}}">
+    <input type="hidden" id="Username" name="Username" value="{{Username}}">
+    <input type="hidden" id="Username_id" name="Username_id" value="{{Username_id}}">
+    <input type="hidden" id="nombreSede" name="nombreSede" value="{{NombreSede}}">
+
+    <center>
+        <input type="submit" id="retornarAdmision" name="retornarAdmision" value="CANCELAR">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp; Colaborador : {{Documento}}
+    </center>
+
+</form>
+
+
+</table>
+</td>
+<td>
+</td>
+<td>
+
+</td>
+<tr>
     </table>
 
 
-</div>
+    </div>
 
 
-{% endblock %}
+    {% endblock %}

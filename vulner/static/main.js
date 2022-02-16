@@ -28,11 +28,18 @@ function valida(forma)
 	};
 
 
+function CierraModal()
+{
+        alert("A cerrar");
+       	 $('#usuariosModal').modal(hide);
+           alert("Cerrado");
+}
+
 function AUsuario()
 {
-      alert("entre AUsuario");
+
 	var envios = new FormData();
-	alert("1");
+
 
 	var tipoDoc = document.getElementById("tipoDoc").value;
 
@@ -46,8 +53,6 @@ function AUsuario()
 	var centrosc = document.getElementById("centrosc").value;
 	var tiposUsuario = document.getElementById("tiposUsuario").value;
 
-	alert(documento);
-	alert(tipoDoc);
 
 	$.ajax({
 		type: 'POST',
@@ -57,12 +62,28 @@ function AUsuario()
 
 
 			$('#usuariosModal').modal().hide();
-				$('#busDocumentoSel').val(111111111222);
-                $('#mensaje1').html('<span> respuesta</span>');
-			     window.location.reload();
 
-              	$('#busDocumentoSel').val(111111111222);
+			document.getElementById("busServicio2").value = document.getElementById("bakbusServicio2").value;
+             document.getElementById("busSubServicio2").value = document.getElementById("bakbusSubServicio2").value;
+         //    document.getElementById("dependenciasIngreso").value = document.getElementById("bakdependenciasIngreso").value;
+             document.getElementById("tipoDoc").value = document.getElementById("baktipoDoc").value;
+             document.getElementById("busDocumentoSel").value = document.getElementById("bakbusDocumentoSel").value;
+             document.getElementById("fechaIngreso").value = document.getElementById("bakfechaIngreso").value;
+             var pase  = document.getElementById("bakbusServicio2").value;
+             var pase1 = document.getElementById("bakbusSubServicio2").value;
+
+
+      //      var  dependenciasIngreso = document.getElementById("bakdependenciasIngreso");
+        //    var dxIngreso = document.getElementById("bakdxIngreso");
+      //      var especialidadesMedicosIngreso = document.getElementById("bakespecialidadesMedicosIngreso");
+     //       var  medicoIngreso = document.getElementById("bakmedicoIngreso");
+
+
+
+
+
                 $('#mensaje1').html('<span> respuesta</span>');
+			     window.location.reload(document.getElementById("bakbusServicio2").value,document.getElementById("bakbusSubServicio2").value);
 
                     },
 	   		    error: function (request, status, error) {
@@ -72,11 +93,27 @@ function AUsuario()
 
 
 
+
 function findOneUsuario1()
 {
-      alert("entre findOneUsuario1");
+
 	var envios = new FormData();
 
+
+   document.getElementById("baktipoDoc").value  = document.getElementById("tipoDoc").value;
+   document.getElementById("bakbusDocumentoSel").value  = document.getElementById("busDocumentoSel").value;
+   document.getElementById("bakfechaIngreso").value  = document.getElementById("fechaIngreso").value;
+   document.getElementById("bakbusServicio2").value  = document.getElementById("busServicio2").value;
+   document.getElementById("bakbusSubServicio2").value  = document.getElementById("busSubServicio2").value;
+
+
+ //   var bakdxIngreso = document.getElementById("dxIngreso").value;
+  //  var bakespecialidadesMedicosIngreso = document.getElementById("especialidadesMedicosIngreso").value;
+  //  var  bakdependenciasIngreso = document.getElementById("dependenciasIngreso").value;
+
+
+
+ //   var  bakmedicoIngreso = document.getElementById("medicoIngreso").value;
 
 
 	 var select = document.getElementById("id_tipoDoc"); /*Obtener el SELECT */
@@ -84,9 +121,8 @@ function findOneUsuario1()
        var tipoDoc = select.options[select .selectedIndex].value; /* Obtener el valor */
 
 	var documento = document.getElementById("busDocumentoSel").value;
-    alert("4 y el documento es :");
-	alert(documento);
-	alert(tipoDoc);
+
+
 
 	$.ajax({
 		type: 'POST',
@@ -101,7 +137,7 @@ function findOneUsuario1()
                 $('#tipoDoc').val(Usuarios.tipoDoc_id);
 				$('#documento').val(Usuarios.documento);
 
-				alert(Usuarios.nombre);
+
 
 				$('#nombre1').val(Usuarios.nombre);
 
@@ -159,7 +195,7 @@ function findOneUsuario1()
 			  });
 
 
-$(document).on('change', '#id_especialidadesMedicosIngreso', function(event) {
+$(document).on('change', '#busEspecialidad', function(event) {
 
         alert("Entre cambio especialdiad");
 
