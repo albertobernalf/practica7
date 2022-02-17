@@ -179,17 +179,27 @@ class Historia(models.Model):
                 class Meta:
                     ordering = ["tipoDoc","documento","folio","fecha","especialidades","motivo","subjetivo","objetivo","analisis","plan"]
 
+
+class HistoriaExamenesCabezote(models.Model):
+           id = models.AutoField(primary_key=True)
+           tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
+           documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False, related_name='DocumentoHistoriaExamenesCabezote')
+           consecAdmision = models.IntegerField(default=0)
+           folio = models.IntegerField()
+           fecha = models.DateTimeField()
+           observaciones = models.CharField(max_length=200, default='', editable=True)
+           fechaRegistro = models.DateTimeField(default=now, editable=False)
+           usuarioRegistro = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False)
+           estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+
 class HistoriaExamenes(models.Model):
                 id = models.AutoField(primary_key=True)
-                tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
-                documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,
-                                              related_name='DocumentoHistoriaExamenes')
-                consecAdmision = models.IntegerField(default=0)
-                folio = models.IntegerField()
-                fecha = models.DateTimeField()
+                historiaExamenesCabezote = models.ForeignKey('clinico.HistoriaExamenesCabezote', default=1, on_delete=models.PROTECT, null=False)
                 tiposExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT, null=False)
                 examen = models.ForeignKey('clinico.Examenes', default=1, on_delete=models.PROTECT, null=False)
                 cantidad  = models.IntegerField()
+                estadoExamenes = models.ForeignKey('clinico.EstadoExamenes', default=1, on_delete=models.PROTECT,  null=False)
                 estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
 

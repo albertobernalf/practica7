@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from clinico.models import Medicos, Especialidades , TiposExamen, Examenes, Historia, HistoriaExamenes, HistoriaResultados, EspecialidadesMedicos, Servicios, Diagnosticos, EstadosSalida,   EstadoExamenes,  Enfermedades, TiposFolio, TiposAntecedente, Antecedentes ,  CausasExterna, Vias , TiposIncapacidad
+from clinico.models import Medicos, Especialidades , TiposExamen, Examenes, Historia, HistoriaExamenes, HistoriaResultados, EspecialidadesMedicos, Servicios, Diagnosticos, EstadosSalida,   EstadoExamenes,  Enfermedades, TiposFolio, TiposAntecedente, Antecedentes ,  CausasExterna, Vias , TiposIncapacidad, HistoriaExamenesCabezote
 
 @admin.register(Servicios)
 class serviciosAdmin(admin.ModelAdmin):
@@ -111,10 +111,18 @@ class examenesAdmin(admin.ModelAdmin):
 @admin.register(HistoriaExamenes)
 class historiaExamenesAdmin(admin.ModelAdmin):
 
-    list_display = ("id", "tipoDoc", "documento", "folio", "fecha", "tiposExamen", "examen")
-    search_fields = ("id", "tipoDoc", "documento", "folio", "fecha", "tiposExamen", "examen")
+    list_display = ( "tiposExamen", "examen","cantidad","estadoExamenes","historiaExamenesCabezote")
+    search_fields = ( "tiposExamen", "examen","cantidad","estadoExamenes","historiaExamenesCabezote")
     # Filtrar
-    list_filter = ('id', 'tipoDoc', 'documento', 'folio', 'fecha', 'tiposExamen', 'examen')
+    list_filter = ( 'tiposExamen', 'examen','estadoExamenes')
+
+@admin.register(HistoriaExamenesCabezote)
+class historiaExamenesCabezoteAdmin(admin.ModelAdmin):
+
+    list_display = ( "id", "tipoDoc", "documento","consecAdmision", "folio","fecha","observaciones")
+    search_fields =( "id", "tipoDoc", "documento","consecAdmision", "folio","fecha","observaciones")
+    # Filtrar
+    list_filter = ( 'tipoDoc', 'documento','consecAdmision','folio','fecha')
 
 
 

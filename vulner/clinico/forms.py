@@ -2,7 +2,9 @@ from django import forms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Historia, Especialidades, Medicos
 from usuarios.models import TiposDocumento, Usuarios
-from clinico.models import TiposExamen, Examenes, HistoriaExamenes
+from clinico.models import TiposExamen, Examenes, HistoriaExamenes,HistoriaExamenesCabezote, TiposFolio, CausasExterna
+from sitios.models import Dependencias
+from planta.models import Planta
 import django.core.validators
 import django.core.exceptions
 from django.core.exceptions import ValidationError
@@ -20,6 +22,15 @@ class historiaForm(forms.ModelForm):
         consecAdmision = forms.IntegerField(label='Admision No', disabled=True, initial=0)
         folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
         fecha = forms.DateTimeField()
+
+        tiposFolio = forms.ModelChoiceField(queryset=TiposFolio.objects.all())
+        causasExterna = forms.ModelChoiceField(queryset=CausasExterna.objects.all())
+        dependenciasRealizado = forms.ModelChoiceField(queryset=Dependencias.objects.all())
+        especialidades = forms.ModelChoiceField(queryset=Especialidades.objects.all())
+        planta = forms.ModelChoiceField(queryset=Planta.objects.all())
+
+        fechaRegistro =  forms.DateTimeField()
+        usuarioRegistro = forms.ModelChoiceField(queryset=Usuarios.objects.all())
 
         fields = '__all__'
 

@@ -366,7 +366,7 @@ def validaAcceso(request):
                     miConexion1.close()
                     miConexion2.close()
                     print("voy para ")
-                    return render(request, "clinico/menuMedico.html", context)
+                    return render(request, "clinico/panelClinico.html", context)
                 if (perfil[0] == 2):
                     miConexion0.close()
                     miConexion1.close()
