@@ -334,6 +334,30 @@ def validaAcceso(request):
 
                 # Fin combo Especialidades
 
+
+
+                # Combo EspecialidadesMedicos
+
+                miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+                comando = "SELECT em.id ,e.nombre FROM clinico_Especialidades e, clinico_EspecialidadesMedicos em,planta_planta pl  where em.especialidades_id = e.id and em.planta_id = pl.id AND pl.documento = '" + str(username) + "'"
+                curt.execute(comando)
+                print(comando)
+
+                especialidadesMedicos = []
+                especialidadesMedicos.append({'id': '', 'nombre': ''})
+
+                for id, nombre in curt.fetchall():
+                    especialidadesMedicos.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(especialidadesMedicos)
+
+                context['EspecialidadesMedicos'] = especialidadesMedicos
+
+                # Fin combo EspecialidadesMedicos
+
+
                 # Combo Medicos
                 miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
                 curt = miConexiont.cursor()

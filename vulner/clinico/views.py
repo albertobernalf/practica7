@@ -392,10 +392,37 @@ class crearHistoriaClinica1(TemplateView):
     print("Entre a Registrar Historia")
 
     def post(self, request, *args, **kwargs):
-        print("Entre POST de Crear Admisiones")
+        print("Entre POST de crearHistoriaClinica1")
         data = {}
         context = {}
+        motivo = request.POST["motivo"]
+        print (motivo)
+        objetivo = request.POST["objetivo"]
+        print(objetivo)
+        subjetivo = request.POST["subjetivo"]
+        print(subjetivo)
+        analisis = request.POST["analisis"]
+        plan = request.POST["plan"]
+        print(plan)
+        print(analisis)
+        tipoDoc = request.POST["tipoDoc"]
+        documento = request.POST["documento"]
+        fecha = request.POST["fecha"]
+        causasExterna = request.POST["causasExterna"]
+        dependeciadRealizado = request.POST["dependeciadRealizado"]
+        planta = request.POST["planta"]
+        usuarioRegistro = request.POST["Username"]
+        tablaExamenes = request.POST["tablaExamenes"]
+        print (tablaExamenes)
+
+
+        tablaExamenesRad = request.POST["tablaExamenesRad"]
+        print (tablaExamenesRad)
+
+
+
         return HttpResponse(json.dumps(data))
+
 
     def get_context_data(self,  **kwargs):
         print("Entre a Contexto Historia Clinica")

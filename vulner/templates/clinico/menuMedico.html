@@ -183,8 +183,8 @@ $("#btnAdicExamenLab").click(function(){
 		$("#tablaExamenes").append(tds);
 
 
-        datavta = $("#formLaboratorios").serialize();
-     	datavta1 =  JSON.stringify(datavta);
+    <!--    datavta = $("#formLaboratorios").serialize(); -->
+     <!--	datavta1 =  JSON.stringify(datavta); -->
 
 	<!--	seriali.push(datavta1); -->
 
@@ -261,8 +261,8 @@ $("#btnAdicExamenRad").click(function(){
 		$("#tablaExamenesRad").append(tds);
 
 
-        datavta = $("#formRadiologias").serialize();
-     	datavta1 =  JSON.stringify(datavta);
+    <!--    datavta = $("#formRadiologias").serialize(); -->
+     <!--	datavta1 =  JSON.stringify(datavta); -->
 
 	<!--	seriali.push(datavta1); -->
 
@@ -310,7 +310,7 @@ function addAEvent(){
 
 
 			    $('#tablaExamenes').unbind();
-
+                $('#tablaExamenesRad').unbind();
 
 				  $('#tablaExamenes').on('click','tr td', function(evt){
 
@@ -340,6 +340,43 @@ function addAEvent(){
 					        	}
 
 				    });
+
+
+
+				  $('#tablaExamenesRad').on('click','tr td', function(evt){
+
+
+
+				        var target,valorSeleccionado;
+
+				        var column_num = parseInt( $(this).index() + 1 ) ;
+
+				        var row_num = parseInt( $(this).parent().index() + 1 );
+
+				  	   target = $(evt.target);
+						   valorSeleccionado = target.text();
+
+
+
+					        if(column_num == 4)
+					        	{
+
+                                seriali.splice(row_num-3, 1);
+					        	    $(this).closest('tr').remove();
+
+
+
+  	                            event.preventDefault();
+
+					        	}
+
+				    });
+
+
+
+
+
+
 		  			}
 
 

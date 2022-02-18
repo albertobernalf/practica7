@@ -490,27 +490,34 @@ $(document).on('change', '#busSubServicio2', function(event) {
 
 
 
-form.addEventListener('submit', e=>{
+formHistoriaClinica.addEventListener('submit', e=>{
 
         e.preventDefault()
 
+        alert("Entre Form formHistoriaClinica");
 
-        var folio_oculto =  document.getElementById("folio_oculto").value
+        //var folio_oculto =  document.getElementById("folio_oculto").value
 
-        if (folio_oculto != 0)
-           {
-             var id_tipo_doc    =  document.formHistoria["id_id_tipo_doc"].value
-             var documento      =  document.formHistoria["id_documento"].value
+        //if (folio_oculto != 0)
+        //   {
+             var tipoDoc    =  "1" ; // document.formHistoriaClinica["id_tipoDoc"].value
+             var documento      =  document.formHistoriaClinica["id_documento"].value
              var folio  = ""
-             var fecha          =  document.formHistoria["fecha"].value
-             var estado_folio   =  document.formHistoria['id_estado_folio'].value
-             var id_especialidad = document.formHistoria['id_id_especialidad'].value
-             var id_medico =       document.formHistoria['id_id_medico'].value
-             var motivo =          document.formHistoria['id_motivo'].value
-             var subjetivo =       document.formHistoria['id_subjetivo'].value
-             var objetivo =       document.formHistoria['id_objetivo'].value
-             var analisis =        document.formHistoria['id_analisis'].value
-             var plan =            document.formHistoria['id_plan'].value
+             var fecha          =  document.formHistoriaClinica["fecha"].value
+             alert(tipoDoc);
+             alert(documento);
+             alert(fecha);
+
+
+
+
+            // var id_especialidad = document.formHistoriaClinica['id_id_especialidad'].value
+             //var id_medico =       document.formHistoriaClinica['id_id_medico'].value
+             var motivo =          document.formHistoriaClinica['id_motivo'].value
+             var subjetivo =       document.formHistoriaClinica['id_subjetivo'].value
+             var objetivo =       document.formHistoriaClinica['id_objetivo'].value
+             var analisis =        document.formHistoriaClinica['id_analisis'].value
+             var plan =            document.formHistoriaClinica['id_plan'].value
 
 
                envio1.append('id_tipo_doc', id_tipo_doc );
@@ -546,18 +553,18 @@ form.addEventListener('submit', e=>{
  	      		        var data = JSON.parse(respuesta2);
 
  	      	 			$("#mensajes").html("Registro de Historia Exitoso ");
- 	      	 	          document.formHistoria["id_id_tipo_doc"].value ="";
-                          document.formHistoria["id_documento"].value = "";
-                          document.formHistoria["id_folio"].value = "";
-                          document.formHistoria["fecha"].value = "";
-                          document.formHistoria['id_estado_folio'].value = "";
-                          document.formHistoria['id_id_especialidad'].value = "";
-                          document.formHistoria['id_id_medico'].value = "";
-                         document.formHistoria['id_motivo'].value = "";
-                         document.formHistoria['id_subjetivo'].value = "";
-                         document.formHistoria['id_objetivo'].value = "";
-                         document.formHistoria['id_analisis'].value = "";
-                        document.formHistoria['id_plan'].value = "";
+ 	      	 	          document.formHistoriaClinica["id_id_tipo_doc"].value ="";
+                          document.formHistoriaClinica["id_documento"].value = "";
+                          document.formHistoriaClinica["id_folio"].value = "";
+                          document.formHistoriaClinica["fecha"].value = "";
+                          document.formHistoriaClinica['id_estado_folio'].value = "";
+                          document.formHistoriaClinica['id_id_especialidad'].value = "";
+                          document.formHistoriaClinica['id_id_medico'].value = "";
+                         document.formHistoriaClinica['id_motivo'].value = "";
+                         document.formHistoriaClinica['id_subjetivo'].value = "";
+                         document.formHistoriaClinica['id_objetivo'].value = "";
+                         document.formHistoriaClinica['id_analisis'].value = "";
+                        document.formHistoriaClinica['id_plan'].value = "";
                         alert ("me voy para el ultim ajax");
 
 
@@ -623,18 +630,18 @@ form.addEventListener('submit', e=>{
                                // Eliminamos la ultima columna
                                     $("#Examenes td").remove();
                                     }
-                          document.formHistoria["id_id_tipo_doc"].value ="";
-                          document.formHistoria["id_documento"].value = "";
-                          document.formHistoria["id_folio"].value = "";
-                          document.formHistoria["fecha"].value = "";
-                          document.formHistoria['id_estado_folio'].value = "";
-                          document.formHistoria['id_id_especialidad'].value = "";
-                          document.formHistoria['id_id_medico'].value = "";
-                         document.formHistoria['id_motivo'].value = "";
-                         document.formHistoria['id_subjetivo'].value = "";
-                         document.formHistoria['id_objetivo'].value = "";
-                         document.formHistoria['id_analisis'].value = "";
-                        document.formHistoria['id_plan'].value = "";
+                          document.formHistoriaClinica["id_id_tipo_doc"].value ="";
+                          document.formHistoriaClinica["id_documento"].value = "";
+                          document.formHistoriaClinica["id_folio"].value = "";
+                          document.formHistoriaClinica["fecha"].value = "";
+                          document.formHistoriaClinica['id_estado_folio'].value = "";
+                          document.formHistoriaClinica['id_id_especialidad'].value = "";
+                          document.formHistoriaClinica['id_id_medico'].value = "";
+                         document.formHistoriaClinica['id_motivo'].value = "";
+                         document.formHistoriaClinica['id_subjetivo'].value = "";
+                         document.formHistoriaClinica['id_objetivo'].value = "";
+                         document.formHistoriaClinica['id_analisis'].value = "";
+                        document.formHistoriaClinica['id_plan'].value = "";
 
                           		envio_final1.delete('id_tipo_doc');
 	                	envio_final1.delete('documento');
@@ -677,11 +684,11 @@ form.addEventListener('submit', e=>{
 
 
           } // Cierra For
-       }  // Cierra If positivo
-        else
-        {
-        $("#mensajes").html(" ! Favor Primero Conseguir Nro De Folio antes de Enviar  ¡");
-        }
+       // }  // Cierra If positivo
+       // else
+       // {
+        // $("#mensajes").html(" ! Favor Primero Conseguir Nro De Folio antes de Enviar  ¡");
+       // }
 
 })
 

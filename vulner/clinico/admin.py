@@ -129,8 +129,8 @@ class historiaExamenesCabezoteAdmin(admin.ModelAdmin):
 @admin.register(Historia)
 class historiaAdmin(admin.ModelAdmin):
 
-        list_display = ("id", "tipoDoc", "documento","folio","fecha","motivo","causasExterna","dependenciasRealizado")
-        search_fields = ("id", "tipoDoc", "documento","folio","fecha","motivo" ,"causasExterna","dependenciasRealizado")
+        list_display = ("id", "tipoDoc", "documento","folio","fecha","causasExterna","dependenciasRealizado")
+        search_fields = ("id", "tipoDoc", "documento","folio","fecha","causasExterna","dependenciasRealizado")
         # Filtrar
         list_filter = ('id', 'tipoDoc', 'documento', 'folio', 'fecha', 'causasExterna','dependenciasRealizado')
 
