@@ -488,6 +488,33 @@ $(document).on('change', '#busSubServicio2', function(event) {
 
 			  });
 
+formRetornaHistoria.addEventListener('pre-submit', e=>{
+            alert("Entre Panel clinico presubmit");
+
+            document.getElementById["dtipoDocpaciente"].value = '1';
+            document.getElementById["documentopaciente"].value = '19465673';
+            document.getElementById["ingresopaciente"].value = '1';
+
+            alert("Me voy pre_submitEntre Panel clinico");
+
+
+
+
+  });
+
+  formRetornaHistoria.addEventListener('pre_submit', e=>{
+            alert("Entre Panel clinico PRESUBMIT");
+
+            document.getElementById["dtipoDocpaciente"].value = '1';
+            document.getElementById["documentopaciente"].value = '19465673';
+            document.getElementById["ingresopaciente"].value = '1';
+
+            alert("Me voy pre_submitEntre Panel clinico");
+
+
+
+
+  });
 
 
 formHistoriaClinica.addEventListener('submit', e=>{
@@ -501,9 +528,9 @@ formHistoriaClinica.addEventListener('submit', e=>{
         //if (folio_oculto != 0)
         //   {
              var tipoDoc    =  "1" ; // document.formHistoriaClinica["id_tipoDoc"].value
-             var documento      =  document.formHistoriaClinica["id_documento"].value
-             var folio  = ""
-             var fecha          =  document.formHistoriaClinica["fecha"].value
+             var documento      =  "19465673"
+             var folio  = "0"
+             var fecha          =  "2022-02-18"// document.getElementById["fecha"].value
              alert(tipoDoc);
              alert(documento);
              alert(fecha);
@@ -513,58 +540,59 @@ formHistoriaClinica.addEventListener('submit', e=>{
 
             // var id_especialidad = document.formHistoriaClinica['id_id_especialidad'].value
              //var id_medico =       document.formHistoriaClinica['id_id_medico'].value
-             var motivo =          document.formHistoriaClinica['id_motivo'].value
-             var subjetivo =       document.formHistoriaClinica['id_subjetivo'].value
-             var objetivo =       document.formHistoriaClinica['id_objetivo'].value
-             var analisis =        document.formHistoriaClinica['id_analisis'].value
-             var plan =            document.formHistoriaClinica['id_plan'].value
+             var motivo =          document.getElementById("id_motivo").value
+
+             var subjetivo =      document.getElementById("id_subjetivo").value
+             var objetivo =       document.getElementById("id_objetivo").value
+             var analisis =        document.getElementById("id_analisis").value
+             var plan =           document.getElementById("id_plan").value
+             var causasExterna = 1;
+             var dependeciadRealizado = 1;
+             var usuarioRegistro = 1;
+             var consecAdmision=1;
+             var tiposFolio = 1;
+             var especialidades = 1;
+             var planta = 1;
+             var fechaRegistro = "2022-12-18"
+             var estadoReg = "A"
 
 
-               envio1.append('id_tipo_doc', id_tipo_doc );
+             alert(plan);
+
+
+
+               envio1.append('tipoDoc', tipoDoc );
                envio1.append( 'documento', documento);
-               envio1.append('folio', document.getElementById("folio_oculto").value);
+               envio1.append( 'consecAdmision', consecAdmision);
+               envio1.append('folio', folio);
                envio1.append('fecha', fecha);
-               envio1.append('id_especialidad' , id_especialidad);
-               envio1.append('id_medico' , id_medico);
+                envio1.append('tiposFolio', tiposFolio);
+                 envio1.append('causasExterna', causasExterna);
+                  envio1.append('dependeciadRealizado', fecha);
+                   envio1.append('especialidades', especialidades);
+                     envio1.append('planta', planta);
                envio1.append('motivo' , motivo);
                envio1.append('subjetivo' , subjetivo);
                envio1.append('objetivo' , objetivo);
                envio1.append('analisis' , analisis);
                envio1.append('plan' , plan);
-               envio1.append('estado_folio' , estado_folio);
+                envio1.append('fechaRegistro' , fechaRegistro);
+                 envio1.append('usuarioRegistro' , usuarioRegistro);
+                  envio1.append('estadoReg' , estadoReg);
 
 
-
-
-
-         // La Historia Clinica
-
-
-         //       for (var valores in envio1.values) {
-            //            alert(valores);
-          //      }
 
 
                $.ajax({
             	   type: 'POST',
- 	               url: '/historia1View/',
+ 	               url: '/crearHistoriaClinica1/',
   	               data: envio1,
  	      		success: function (respuesta2) {
  	      		        var data = JSON.parse(respuesta2);
 
  	      	 			$("#mensajes").html("Registro de Historia Exitoso ");
- 	      	 	          document.formHistoriaClinica["id_id_tipo_doc"].value ="";
-                          document.formHistoriaClinica["id_documento"].value = "";
-                          document.formHistoriaClinica["id_folio"].value = "";
-                          document.formHistoriaClinica["fecha"].value = "";
-                          document.formHistoriaClinica['id_estado_folio'].value = "";
-                          document.formHistoriaClinica['id_id_especialidad'].value = "";
-                          document.formHistoriaClinica['id_id_medico'].value = "";
-                         document.formHistoriaClinica['id_motivo'].value = "";
-                         document.formHistoriaClinica['id_subjetivo'].value = "";
-                         document.formHistoriaClinica['id_objetivo'].value = "";
-                         document.formHistoriaClinica['id_analisis'].value = "";
-                        document.formHistoriaClinica['id_plan'].value = "";
+ 	      	 	      //    document.formHistoriaClinica["id_id_tipo_doc"].value ="";
+
                         alert ("me voy para el ultim ajax");
 
 

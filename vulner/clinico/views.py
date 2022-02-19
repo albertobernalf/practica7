@@ -6,7 +6,7 @@ import numpy as np
 #import onnxruntime as ort
 import pyttsx3
 import speech_recognition as sr
-
+from django.core.serializers import serialize
 
 from django.db.models.functions import Cast, Coalesce
 from django.utils.timezone import now
@@ -388,6 +388,9 @@ class crearHistoriaClinica(TemplateView):
 class crearHistoriaClinica1(TemplateView):
     print("Entre a Crear Historia Clinica1")
 
+
+
+
     template_name = 'clinico/historiaClinica.html'
     print("Entre a Registrar Historia")
 
@@ -395,33 +398,63 @@ class crearHistoriaClinica1(TemplateView):
         print("Entre POST de crearHistoriaClinica1")
         data = {}
         context = {}
-        motivo = request.POST["motivo"]
-        print (motivo)
-        objetivo = request.POST["objetivo"]
-        print(objetivo)
-        subjetivo = request.POST["subjetivo"]
-        print(subjetivo)
-        analisis = request.POST["analisis"]
-        plan = request.POST["plan"]
-        print(plan)
-        print(analisis)
-        tipoDoc = request.POST["tipoDoc"]
-        documento = request.POST["documento"]
-        fecha = request.POST["fecha"]
-        causasExterna = request.POST["causasExterna"]
-        dependeciadRealizado = request.POST["dependeciadRealizado"]
-        planta = request.POST["planta"]
-        usuarioRegistro = request.POST["Username"]
-        tablaExamenes = request.POST["tablaExamenes"]
-        print (tablaExamenes)
+
+        form = historiaForm(request.POST)
+
+        if self.request.is_ajax and self.request.method == "POST":
+            print ("Entre Ajax")
+
+            motivo = request.POST["motivo"]
+            print (motivo)
+            objetivo = request.POST["objetivo"]
+            print(objetivo)
+            subjetivo = request.POST["subjetivo"]
+            print(subjetivo)
+            analisis = request.POST["analisis"]
+            plan = request.POST["plan"]
+            print(plan)
+            print(analisis)
+            tipoDoc = request.POST["tipoDoc"]
+            documento = request.POST["documento"]
+            fecha = request.POST["fecha"]
+
+            causasExterna = request.POST["causasExterna"]
+            dependeciadRealizado = request.POST["dependeciadRealizado"]
+            planta = request.POST["planta"]
+            usuarioRegistro = request.POST["usuarioRegistro"]
+            #tablaExamenes = request.POST["tablaExamenes"]
+            #print (tablaExamenes)
 
 
-        tablaExamenesRad = request.POST["tablaExamenesRad"]
-        print (tablaExamenesRad)
+            #tablaExamenesRad = request.POST["tablaExamenesRad"]
+            #print (tablaExamenesRad)
+
+
+            if form.is_valid():
+              nueva_historia = Historia(
+                    tipoDoc = form.cleaned_data.get('tipoDoc'),
+                    documento=form.cleaned_data.get('documento'),
+                    consecAdmision=form.cleaned_data.get('consecAdmision'),
+                    folio=form.cleaned_data.get('folio'),
+                    fecha=form.cleaned_data.get('fecha'),
+                    tiposFolio=form.cleaned_data.get('tiposFolio'),
+                    causasExterna=form.cleaned_data.get('causasExterna'),
+                    dependenciasRealizado=form.cleaned_data.get('dependenciasRealizado'),
+                    especialidades=form.cleaned_data.get('especialidades'),
+                    planta=form.cleaned_data.get('planta'),
+                    motivo=form.cleaned_data.get('motivo'),
+                    subjetivo=form.cleaned_data.get('subjetivo'),
+                    objetivo=form.cleaned_data.get('objetivo'),
+                    analisis=form.cleaned_data.get('analisis'),
+                    plan=form.cleaned_data.get('plan'),
+                    fechaRegistro=form.cleaned_data.get('fechaRegistro'),
+                    usuarioRegistro=form.cleaned_data.get('usuarioRegistro'),
+                    estadoReg=form.cleaned_data.get('estadoReg'))
+              nueva_historia.save
+            return HttpResponse(json.dumps(data))
 
 
 
-        return HttpResponse(json.dumps(data))
 
 
     def get_context_data(self,  **kwargs):
@@ -435,7 +468,7 @@ class crearHistoriaClinica1(TemplateView):
 
 
 
-        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
         comando = "SELECT p.id id, p.nombre  nombre FROM clinico_diagnosticos p"
@@ -458,7 +491,7 @@ class crearHistoriaClinica1(TemplateView):
 
         # Combo Laboratorios
 
-        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
         comando = "SELECT e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='2'"
@@ -482,7 +515,7 @@ class crearHistoriaClinica1(TemplateView):
         # Combo Radiologia
 
 
-        miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
         comando = "SELECT e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='1'"
@@ -534,7 +567,7 @@ def buscarAdmisionClinico(request):
 
     # Consigo la sede Nombre
 
-    miConexion = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexion = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     cur = miConexion.cursor()
     comando = "SELECT nombre   FROM sitios_sedesClinica WHERE id ='" + Sede + "'"
     cur.execute(comando)
@@ -576,7 +609,7 @@ def buscarAdmisionClinico(request):
     ingresos = []
 
     # Combo de Servicios
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT ser.id id ,ser.nombre nombre FROM sitios_serviciosSedes sed, clinico_servicios ser Where sed.sedesClinica_id ='" + str(Sede) + "' AND sed.servicios_id = ser.id"
     curt.execute(comando)
@@ -596,7 +629,7 @@ def buscarAdmisionClinico(request):
     # Fin combo servicios
 
     # Combo de SubServicios
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT sub.id id ,sub.nombre nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub Where sed.sedesClinica_id ='" + str(
         Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id"
@@ -618,7 +651,7 @@ def buscarAdmisionClinico(request):
 
 
     # Combo TiposDOc
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT id ,nombre FROM usuarios_TiposDocumento"
     curt.execute(comando)
@@ -639,7 +672,7 @@ def buscarAdmisionClinico(request):
 
 
     # Combo Habitaciones
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(Sede) +"' AND dependenciasTipo_id = 2"
     curt.execute(comando)
@@ -660,7 +693,7 @@ def buscarAdmisionClinico(request):
     # Fin combo Habitaciones
 
     # Combo Especialidades
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT id ,nombre FROM clinico_Especialidades"
     curt.execute(comando)
@@ -680,7 +713,7 @@ def buscarAdmisionClinico(request):
     # Fin combo Especialidades
 
     # Combo Medicos
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE p.sedesClinica_id = perf.sedesClinica_id and  perf.sedesClinica_id = '" + str(
         Sede) + "' AND perf.tiposPlanta_id = 1 and p.id = perf.planta_id"
@@ -698,6 +731,8 @@ def buscarAdmisionClinico(request):
     miConexiont.close()
     print(medicos)
 
+
+
     context['Medicos'] = medicos
 
     # Fin combo Medicos
@@ -705,7 +740,7 @@ def buscarAdmisionClinico(request):
 
     # Busco Nombre de Habitacion
 
-    miConexiont = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     curt = miConexiont.cursor()
     comando = "SELECT d.id id, d.nombre  nombre FROM sitios_dependencias d WHERE d.id = '" + str(BusHabitacion) + "'"
     curt.execute(comando)
@@ -725,7 +760,7 @@ def buscarAdmisionClinico(request):
 
 
 
-    miConexion1 = MySQLdb.connect(host='192.168.0.14', user='root', passwd='', db='vulnerable9')
+    miConexion1 = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     cur1 = miConexion1.cursor()
 
  #   detalle = "SELECT i.tipoDoc_id tipoDoc, i.documento_id documento, u.nombre  nombre , i.consec consec , fechaIngreso , fechaSalida, serviciosIng_id,  dependenciasIngreso_id , dxIngreso_id FROM admisiones_ingresos i, usuarios_usuarios u, sitios_dependencias dep  WHERE i.sedesClinica_id = dep.sedesClinica_id AND i.dependenciasActual_id = dep.id AND i.sedesClinica_id = '" +    str(Sede) +"'"
