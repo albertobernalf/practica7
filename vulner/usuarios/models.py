@@ -42,6 +42,7 @@ class Usuarios(models.Model):
     genero = models.CharField(max_length=1, default ='L',choices=TIPO_CHOICES,)
     centrosC = models.ForeignKey('sitios.Centros', default=1, on_delete=models.PROTECT, null=True)
     tiposUsuario = models.ForeignKey('usuarios.TiposUsuario', default=1, on_delete=models.PROTECT, null=True)
+    fechaNacio = models.DateTimeField(default=now, editable=False)
     direccion = models.CharField(max_length=50)
     telefono  = models.CharField(max_length=20)
     contacto  = models.CharField(max_length=50)

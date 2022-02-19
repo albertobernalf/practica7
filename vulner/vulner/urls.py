@@ -53,9 +53,11 @@ urlpatterns = [
     path('reconocerAudio/', views.reconocerAudio),
     path('reproduceAudio/', views.reproduceAudio),
     path('accesoEspecialidadMedico/<str:documento>', views.accesoEspecialidadMedico),
-    path('crearHistoriaClinica/', viewsClinico.crearHistoriaClinica.as_view()),
+    path('crearHistoriaClinica/', viewsClinico.crearHistoriaClinica),
     path('crearHistoriaClinica1/', viewsClinico.crearHistoriaClinica1.as_view()),
     path('buscarAdmisionClinico/', viewsClinico.buscarAdmisionClinico),
+    path('cargaPanelMedico/', viewsClinico.cargaPanelMedico),
+
 
     # Actividaes Mecanicas
 

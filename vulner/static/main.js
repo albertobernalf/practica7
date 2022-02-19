@@ -488,60 +488,34 @@ $(document).on('change', '#busSubServicio2', function(event) {
 
 			  });
 
-formRetornaHistoria.addEventListener('pre-submit', e=>{
-            alert("Entre Panel clinico presubmit");
-
-            document.getElementById["dtipoDocpaciente"].value = '1';
-            document.getElementById["documentopaciente"].value = '19465673';
-            document.getElementById["ingresopaciente"].value = '1';
-
-            alert("Me voy pre_submitEntre Panel clinico");
 
 
 
 
-  });
 
-  formRetornaHistoria.addEventListener('pre_submit', e=>{
-            alert("Entre Panel clinico PRESUBMIT");
-
-            document.getElementById["dtipoDocpaciente"].value = '1';
-            document.getElementById["documentopaciente"].value = '19465673';
-            document.getElementById["ingresopaciente"].value = '1';
-
-            alert("Me voy pre_submitEntre Panel clinico");
-
-
-
-
-  });
 
 
 formHistoriaClinica.addEventListener('submit', e=>{
+
+
+         alert("Entre Form formHistoriaClinica");
+
 
         e.preventDefault()
 
         alert("Entre Form formHistoriaClinica");
 
-        //var folio_oculto =  document.getElementById("folio_oculto").value
 
-        //if (folio_oculto != 0)
-        //   {
-             var tipoDoc    =  "1" ; // document.formHistoriaClinica["id_tipoDoc"].value
-             var documento      =  "19465673"
-             var folio  = "0"
-             var fecha          =  "2022-02-18"// document.getElementById["fecha"].value
+             var tipoDoc    =  document.getElementById("tipoDoc").value
+             alert("tipodoc=");
              alert(tipoDoc);
-             alert(documento);
-             alert(fecha);
 
+             var documento      =  document.getElementById("documentoPaciente").value
 
+             var folio  = "0"
+             var fecha          =  "2022-02-18"
 
-
-            // var id_especialidad = document.formHistoriaClinica['id_id_especialidad'].value
-             //var id_medico =       document.formHistoriaClinica['id_id_medico'].value
              var motivo =          document.getElementById("id_motivo").value
-
              var subjetivo =      document.getElementById("id_subjetivo").value
              var objetivo =       document.getElementById("id_objetivo").value
              var analisis =        document.getElementById("id_analisis").value
@@ -549,43 +523,53 @@ formHistoriaClinica.addEventListener('submit', e=>{
              var causasExterna = 1;
              var dependeciadRealizado = 1;
              var usuarioRegistro = 1;
-             var consecAdmision=1;
+             var consecAdmision=document.getElementById("IngresoPaciente").value;
              var tiposFolio = 1;
              var especialidades = 1;
              var planta = 1;
              var fechaRegistro = "2022-12-18"
              var estadoReg = "A"
 
-
-             alert(plan);
-
-
-
-               envio1.append('tipoDoc', tipoDoc );
-               envio1.append( 'documento', documento);
-               envio1.append( 'consecAdmision', consecAdmision);
-               envio1.append('folio', folio);
-               envio1.append('fecha', fecha);
-                envio1.append('tiposFolio', tiposFolio);
-                 envio1.append('causasExterna', causasExterna);
-                  envio1.append('dependeciadRealizado', fecha);
-                   envio1.append('especialidades', especialidades);
-                     envio1.append('planta', planta);
-               envio1.append('motivo' , motivo);
-               envio1.append('subjetivo' , subjetivo);
-               envio1.append('objetivo' , objetivo);
-               envio1.append('analisis' , analisis);
-               envio1.append('plan' , plan);
-                envio1.append('fechaRegistro' , fechaRegistro);
-                 envio1.append('usuarioRegistro' , usuarioRegistro);
-                  envio1.append('estadoReg' , estadoReg);
+             envio1.append('tipoDoc', tipoDoc );
+             envio1.append( 'documento', documento);
+             envio1.append( 'consecAdmision', consecAdmision);
+             envio1.append('folio', folio);
+             envio1.append('fecha', fecha);
+             envio1.append('tiposFolio', tiposFolio);
+             envio1.append('causasExterna', causasExterna);
+             envio1.append('dependeciadRealizado', fecha);
+             envio1.append('especialidades', especialidades);
+             envio1.append('planta', planta);
+             envio1.append('motivo' , motivo);
+             envio1.append('subjetivo' , subjetivo);
+             envio1.append('objetivo' , objetivo);
+             envio1.append('analisis' , analisis);
+             envio1.append('plan' , plan);
+             envio1.append('fechaRegistro' , fechaRegistro);
+             envio1.append('usuarioRegistro' , usuarioRegistro);
+             envio1.append('estadoReg' , estadoReg);
 
 
+             // Aqui serializar la forma  HistoriaExamenesCabezoteForm
+             //document.cabezote["observaciones"].value ="MI observacion";
+             document.cabezote["documento"].value =documento;
+             document.cabezote["tipoDoc"].value =tipoDoc;
+             document.cabezote["consecAdmision"].value =consecAdmision;
+             document.cabezote["folio"].value =0;
+             document.cabezote["fechaRegistro"].value =fechaRegistro;
+             document.cabezote["usuarioRegistro"].value =usuarioRegistro;
+             document.cabezote["estadoReg"].value ='A';
+
+             serialcabezote = $("#cabezote").serialize();
+             cabezoteForm =  JSON.stringify(cabezote);
+
+             envio1.append('cabezoteForm' , cabezoteForm);
+             envio1.append('seriali1',seriali1);
 
 
                $.ajax({
             	   type: 'POST',
- 	               url: '/crearHistoriaClinica1/',
+ 	               url: '/crearHistoriaClinica/',
   	               data: envio1,
  	      		success: function (respuesta2) {
  	      		        var data = JSON.parse(respuesta2);
@@ -593,7 +577,7 @@ formHistoriaClinica.addEventListener('submit', e=>{
  	      	 			$("#mensajes").html("Registro de Historia Exitoso ");
  	      	 	      //    document.formHistoriaClinica["id_id_tipo_doc"].value ="";
 
-                        alert ("me voy para el ultim ajax");
+                        alert ("Grabe HC");
 
 
  	      		},
@@ -607,116 +591,6 @@ formHistoriaClinica.addEventListener('submit', e=>{
  	      		processData: false,
 
  	        });
-
-            var nuevo={};
-            var a=0;
-            var conteo=0;
-
-	 //for (var i=0; i <= seriali1.length; i++)
-	for (var i=0; i < 1; i++)
-			{
-
-            alert(JSON.stringify(seriali1));
-
-         for (var clave in seriali1){
-                    // Controlando que json realmente tenga esa propiedad
-                if (seriali1.hasOwnProperty(clave)) {
-                 // Mostrando en pantalla la clave junto a su valor
-                      alert("La clave es " + clave+ " y el valor es " + seriali1[clave]);
-                      envio_final = seriali1[clave];
-
-
-                     }
-                    }
-                  //  formData = JSON.stringify(formData);
-
-                    console.log("Van los FormDatas");
-                    alert("Longitud envio_final");
-                    alert(envio_final.length);
-
-                   // Display the key/value pairs
-                    for(var pair of envio_final.entries()) {
-                    console.log(pair[0]+ ', '+ pair[1]);
-                    envio_final1.append(pair[0], pair[1])
-                    conteo=conteo +1;
-                    if (conteo == 8 || conteo==16 || conteo==24  || conteo==32)
-                        {
-                         // inserto desde aqui
-                            alert("entre conteo");
-
-
-	    	$.ajax({
-            	   type: 'POST',
- 	               url: '/historiaExamenesView/',
-  	               data: envio_final1,
- 	      		success: function (respuesta2) {
- 	      	 				$("#mensajes").html("Examenes Creados " + respuesta2);
-
- 	      			       var trs=$("#Examenes tr").length;
-                            if(trs>1)
-                                    {
-                               // Eliminamos la ultima columna
-                                    $("#Examenes td").remove();
-                                    }
-                          document.formHistoriaClinica["id_id_tipo_doc"].value ="";
-                          document.formHistoriaClinica["id_documento"].value = "";
-                          document.formHistoriaClinica["id_folio"].value = "";
-                          document.formHistoriaClinica["fecha"].value = "";
-                          document.formHistoriaClinica['id_estado_folio'].value = "";
-                          document.formHistoriaClinica['id_id_especialidad'].value = "";
-                          document.formHistoriaClinica['id_id_medico'].value = "";
-                         document.formHistoriaClinica['id_motivo'].value = "";
-                         document.formHistoriaClinica['id_subjetivo'].value = "";
-                         document.formHistoriaClinica['id_objetivo'].value = "";
-                         document.formHistoriaClinica['id_analisis'].value = "";
-                        document.formHistoriaClinica['id_plan'].value = "";
-
-                          		envio_final1.delete('id_tipo_doc');
-	                	envio_final1.delete('documento');
-	                    envio_final1.delete('folio');
-	                 	envio_final1.delete('fecha');
-	                	envio_final1.delete('id_TipoExamen');
-	                	envio_final1.delete('id_examen');
-	                	envio_final1.delete('cantidad');
-	                	envio_final1.delete('estado_folio');
-
-
- 	      		},
- 	      		error: function (request, status, error) {
- 	      			alert(request.responseText);
- 	      			alert (error);
- 	      			$("#mensajes").html("Error Venta AJAX O RESPUESTA");
- 	      		},
- 	      		cache : false,
- 	      		contentType : false,
- 	      		processData: false,
-
- 	              });
-
-
-
-
-
-                      /// termino inserto desde aqui
-
-
-
-                        }
-
-
-
-
-                    }
-
-
-
-
-          } // Cierra For
-       // }  // Cierra If positivo
-       // else
-       // {
-        // $("#mensajes").html(" ! Favor Primero Conseguir Nro De Folio antes de Enviar  ¡");
-       // }
 
 })
 

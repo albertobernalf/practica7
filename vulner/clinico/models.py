@@ -186,8 +186,8 @@ class HistoriaExamenesCabezote(models.Model):
            documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False, related_name='DocumentoHistoriaExamenesCabezote')
            consecAdmision = models.IntegerField(default=0)
            folio = models.IntegerField()
-           fecha = models.DateTimeField()
-           observaciones = models.CharField(max_length=200, default='', editable=True)
+
+           observaciones = models.CharField(max_length=200,  editable=True)
            fechaRegistro = models.DateTimeField(default=now, editable=False)
            usuarioRegistro = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False)
            estadoReg = models.CharField(max_length=1, default='A', editable=False)
