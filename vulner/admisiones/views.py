@@ -381,6 +381,31 @@ def validaAcceso(request):
 
                 # Fin combo Medicos
 
+                # Combo TiposFolio
+
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+
+                comando = "SELECT e.id id, e.nombre nombre FROM clinico_tiposFolio e"
+
+                curt.execute(comando)
+                print(comando)
+
+                tiposFolio = []
+                tiposFolio.append({'id': '', 'nombre': ''})
+
+                for id, nombre in curt.fetchall():
+                    tiposFolio.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(tiposFolio)
+
+                context['TiposFolio'] = tiposFolio
+
+                # Fin combo TiposFolio
+
+
+
 
                 print("passe")
 
@@ -1212,6 +1237,8 @@ def buscarHabitaciones(request):
     print(comando)
 
     Habitaciones =[]
+
+
 
 
     for id, nombre in curt.fetchall():

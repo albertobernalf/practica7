@@ -3,6 +3,7 @@ console.log('Hola Alberto Hi!')
 var datavta;
 var seriali = new Array();
 var seriali1 = new Array();
+var seriali2 = new Array();
 var envio = new FormData()
 var envio1 = new FormData()
 var envio2 = new FormData()
@@ -249,6 +250,60 @@ $(document).on('change', '#busEspecialidad', function(event) {
 
 	     });
 });
+
+
+
+$(document).on('change', '#tiposAntecedente', function(event) {
+
+
+       var select = document.getElementById("tiposAntecedente"); /*Obtener el SELECT */
+       var TiposAntecedente = select.options[select .selectedIndex].value; /* Obtener el valor */
+     //  var Antecedentes =   $(this).val()
+
+       // var Sede =  document.getElementById("Sede").value;
+        alert("Entre Tipos Antecedente");
+
+
+        $.ajax({
+	           url: '/buscarAntecedentes',
+	            data : {TiposAntecedente:TiposAntecedente},
+	           type: 'GET',
+	           dataType : 'json',
+
+	  		success: function (respuesta) {
+
+	  		   var options = '<option value="=================="></option>';
+
+	  		  var dato = JSON.parse(respuesta);
+
+
+                     const $id2 = document.querySelector("#antecedentes");
+
+
+ 	      		     $("#antecedentes").empty();
+
+
+	                 $.each(dato, function(key,value) {
+                                    options +='<option value="' + value.id + '">' + value.nombre + '</option>';
+                                    option = document.createElement("option");
+                                    option.value = value.id;
+                                    option.text = value.nombre;
+                                    $id2.appendChild(option);
+ 	      		      });
+
+
+
+
+
+                    },
+	   		    error: function (request, status, error) {
+
+	   			    $("#mensajes").html(" !  Reproduccion  con error !");
+	   	    	}
+
+	     });
+});
+
 
 
 
@@ -553,24 +608,63 @@ formHistoriaClinica.addEventListener('submit', e=>{
 
 
              // Aqui serializar la forma  HistoriaExamenesCabezoteForm
-             //document.cabezote["observaciones"].value ="MI observacion";
-             document.cabezote["documento"].value =documento;
-             document.cabezote["tipoDoc"].value =tipoDoc;
-             document.cabezote["consecAdmision"].value =consecAdmision;
-             document.cabezote["folio"].value =0;
-             document.cabezote["fechaRegistro"].value =fechaRegistro;
-             document.cabezote["usuarioRegistro"].value =usuarioRegistro;
-             document.cabezote["estadoReg"].value ='A';
 
-             serialcabezote = $("#cabezote").serialize();
-             cabezoteForm =  JSON.stringify(serialcabezote);
-
-             alert("cabezoteForm =");
-             alert(cabezoteForm);
+             alert("Documento = " + documento);
 
 
-             envio1.append('cabezoteForm' , cabezoteForm);
-             envio1.append('seriali1',seriali1);
+             document.formCabezoteLab['documento'].value = documento;
+             document.formCabezoteLab['tipoDoc'].value = tipoDoc;
+             document.formCabezoteLab['consecAdmision'].value = consecAdmision;
+             document.formCabezoteLab['folio'].value =0;
+             document.formCabezoteLab['fechaRegistro'].value = fechaRegistro;
+             document.formCabezoteLab['usuarioRegistro'].value = usuarioRegistro;
+             document.formCabezoteLab['estadoReg'].value ='A';
+
+             serialcabezote = $("#formCabezoteLab").serialize();
+             cabezoteFormLab =  JSON.stringify(serialcabezote);
+
+             alert("cabezoteFormLab =");
+             alert(cabezoteFormLab);
+
+
+             envio1.append('cabezoteFormLab' , cabezoteFormLab);
+
+
+             		 // Rutina manejo serili1
+		 alert(JSON.stringify(seriali1));
+
+     		    for (var clave in seriali1){
+                 		   // Controlando que json realmente tenga esa propiedad
+            		    if (seriali1.hasOwnProperty(clave)) {
+             		    // Mostrando en pantalla la clave junto a su valor
+               		    //   alert("La clave es " + clave + " y el valor es " + seriali1[clave]);
+				console.log (clave + ', ' + seriali1[clave]);
+                 	       envio_final = seriali1[clave];
+	                     }
+        	           }
+
+
+
+
+                   // Display the key/value pairs
+
+                    var conteo= 0;
+
+                    for(var pair of envio_final.entries()) {
+                    console.log(pair[0]+ ', '+ pair[1]);
+                    envio_final1.append(pair[0], pair[1])
+                    conteo=conteo +1;
+                    if (conteo == 8 || conteo==16 || conteo==24  || conteo==32)
+                        {
+                         // inserto desde aqui
+                            alert("entre conteo");
+			}
+		}
+
+              alert("envio_final1");
+                    alert(envio_final1);
+
+                    envio1.append('seriali1',envio_final1);
 
              alert("envio1 =");
              alert(envio1);
@@ -583,11 +677,10 @@ formHistoriaClinica.addEventListener('submit', e=>{
   	               data: envio1,
  	      		success: function (respuesta2) {
  	      		        var data = JSON.parse(respuesta2);
+ 	      		        alert(respuesta2);
 
- 	      	 			$("#mensajes").html("Registro de Historia Exitoso ");
- 	      	 	      //    document.formHistoriaClinica["id_id_tipo_doc"].value ="";
 
-                        alert ("Grabe HC");
+ 	      	 			$("#mensajes").html(respuesta2);
 
 
  	      		},

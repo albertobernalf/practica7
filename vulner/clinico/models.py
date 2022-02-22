@@ -291,3 +291,20 @@ class HistorialDiag(models.Model):
 
     def __str__(self):
         return self.documento
+
+
+class HistorialAntecedentes(models.Model):
+    id = models.AutoField(primary_key=True)
+    tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
+    documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,     related_name='DocumentoAntecedentes')
+    consecAdmision = models.IntegerField(default=0)
+    folio = models.IntegerField(default=0)
+    tiposAntecedente = models.ForeignKey('clinico.TiposAntecedente', on_delete=models.PROTECT, null=False)
+    antecedentes  = models.ForeignKey('clinico.Antecedentes', on_delete=models.PROTECT, null=False)
+    descripcion = models.CharField(max_length=200)
+    fechaRegistro = models.DateTimeField(default=now, editable=False)
+    usuarioRegistro = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=True)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.descripcion

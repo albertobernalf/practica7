@@ -57,6 +57,7 @@ urlpatterns = [
     path('crearHistoriaClinica1/', viewsClinico.crearHistoriaClinica1.as_view()),
     path('buscarAdmisionClinico/', viewsClinico.buscarAdmisionClinico),
     path('cargaPanelMedico/', viewsClinico.cargaPanelMedico),
+    path('buscarAntecedentes/', viewsClinico.buscarAntecedentes),
 
 
     # Actividaes Mecanicas

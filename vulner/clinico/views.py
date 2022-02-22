@@ -374,6 +374,14 @@ def crearHistoriaClinica(request):
         if request.is_ajax and request.method == "POST":
             print("Entre Ajax")
 
+
+            CabezoteFormLab = request.POST["cabezoteFormLab"]
+            print("cabezoteFormLab = ", CabezoteFormLab)
+
+            Seriali1 = request.POST["seriali1"]
+            print("Seriali1 = ", Seriali1)
+            
+
             tipoDoc = request.POST["tipoDoc"]
             print("tipoDoc = ", tipoDoc)
 
@@ -382,6 +390,7 @@ def crearHistoriaClinica(request):
             folio = request.POST["folio"]
             fecha = request.POST["fecha"]
             tiposFolio = request.POST["tiposFolio"]
+            tiposFolio = 1
             causasExterna = request.POST["causasExterna"]
             dependenciasRealizado = request.POST["dependenciasRealizado"]
 
@@ -416,22 +425,54 @@ def crearHistoriaClinica(request):
             print("tipodFolio = ", tiposFolio)
             print("causas externa=", causasExterna)
             print("dependenciasrealizado= ", dependenciasRealizado)
-            print("espec.medico = ", espmedico)
+            print("especmedico = ", espMedico)
             print("planta = ", planta)
+            print("usuarioRegistro = ", usuarioRegistro)
+
+            if (dependenciasRealizado  == '' or causasExterna == ''  ):
+
+
+                print("Entre GRAVES campos vacios")
+                #data = {'Mensaje': 'Favor suministrar causa Externa y/O Dependencia Realiado folio'}
+                return HttpResponse('Favor suministrar causa Externa y/O Dependencia Realiado folio')
+
+            else:
+
+                # Consigo la Especialidad de Evolucion
+
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+
+                comando = "SELECT e.id id , e2.nombre nombre FROM clinico_especialidadesMedicos e, clinico_especialidades e2  WHERE e.id = '" +str(espMedico) + "' AND e.especialidades_id = e2.id     "
+
+                curt.execute(comando)
+                print(comando)
+
+                especial = []
+
+                for id, nombre in curt.fetchall():
+                    especial.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(especial)
+                especial1 = json.dumps(especial)
+                print(especial1.id)
+
+
+                # Fin combo Diagnosticos
 
 
 
-
-            nueva_historia = Historia(
+                nueva_historia = Historia(
                     tipoDoc= TiposDocumento.objects.get(id = tipoDoc)   ,
-                    documento=Usuarios.objects.get(id = 1)  ,
+                    documento=Usuarios.objects.get(documento = documento)  ,
                     consecAdmision=1,
                     folio=ultimofolio2,
                     fecha=fecha,
                     tiposFolio=TiposFolio.objects.get(id = tiposFolio)   ,
                     causasExterna=CausasExterna.objects.get(id = causasExterna),
                     dependenciasRealizado=Dependencias.objects.get(id = dependenciasRealizado)   ,
-                    especialidades=Especialidades.objects.get(id = espMedico)   ,
+                    especialidades=EspecialidadesMedicos.objects.get(id = especial1)   ,
                     planta=Planta.objects.get(id = planta)   ,
                     motivo=motivo,
                     subjetivo=subjetivo,
@@ -441,18 +482,19 @@ def crearHistoriaClinica(request):
                     fechaRegistro=fechaRegistro,
                     usuarioRegistro=Usuarios.objects.get(id = usuarioRegistro)   ,
                     estadoReg=estadoReg)
-            nueva_historia.save()
+                nueva_historia.save()
 
-            data = {'Mensaje': 'Folio Creado'}
+                data = {'Mensaje': 'Folio Creado'}
 
-            seriali1 = request.POST["seriali1"]
-            print(seriali1)
+                seriali1 = request.POST["seriali1"]
+                print(seriali1)
 
-            cabezoteForm = request.POST["cabezoteForm"]
-            print (cabezoteForm)
+                cabezoteForm = request.POST["cabezoteForm"]
+                print (cabezoteForm)
 
 
-            return HttpResponse(json.dumps(data))
+                #return HttpResponse(json.dumps(data))
+                return HttpResponse('Folio Creado')
 
 
 
@@ -567,7 +609,7 @@ def crearHistoriaClinica(request):
         print(laboratorios)
 
         context['Laboratorios'] = laboratorios
-        context['TipoExamen'] = '2'
+        context['TipoExamenLab'] = '2'
 
         # Fin combo Laboratorios
 
@@ -593,7 +635,11 @@ def crearHistoriaClinica(request):
         print(radiologias)
 
         context['Radiologias'] = radiologias
-        context['TipoExamen'] = '1'
+        context['TipoExamenRad'] = '1'
+
+        # Fin combo Radiologia
+
+
         # Fin combo Radiologia
 
 
@@ -626,15 +672,16 @@ def crearHistoriaClinica(request):
 
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
+        # 3 = Consultorios Verificar
 
-        comando = "SELECT d.id id, d.nombre nombre FROM sitios_dependencias d WHERE d.sedesClinica_id = '" + str(Sede) + "'"
+        comando = "SELECT d.id id, d.nombre nombre FROM sitios_dependencias d WHERE d.sedesClinica_id = '" + str(Sede) + "' And d.dependenciasTipo_id = '3'"
 
         curt.execute(comando)
         print(comando)
 
 
         dependenciasRealizado = []
-        dependenciasRealizado.append({'id': '', 'nombre': ''})
+        #dependenciasRealizado.append({'id': '', 'nombre': ''})
 
         for  id, nombre in curt.fetchall():
             dependenciasRealizado.append({'id': id, 'nombre': nombre})
@@ -670,7 +717,75 @@ def crearHistoriaClinica(request):
 
         # Fin Combo causasExterna
 
-        # Fin combo Radiologia
+        # Combo Tiposantecedentes
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT id,  nombre FROM clinico_tiposAntecedente  "
+
+        curt.execute(comando)
+        print(comando)
+
+        tiposAntecedente = []
+        tiposAntecedente.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            tiposAntecedente.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposAntecedente)
+
+        context['TiposAntecedente'] = tiposAntecedente
+
+        # Fin Combo Tiposantecedentes
+
+        # Combo antecedentes
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT id,  nombre FROM clinico_antecedentes t "
+
+        curt.execute(comando)
+        print(comando)
+
+        antecedentes = []
+        antecedentes.append({'id': '', 'nombre': ''})
+
+        # Se va en blanco si antecedentes
+
+        print(antecedentes)
+
+        context['Antecedentes'] = antecedentes
+
+        # Fin Combo antecedentes
+
+        # Combo Terapias
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='3'"
+
+        curt.execute(comando)
+        print(comando)
+
+        terapias = []
+        terapias.append({'TipoId': '', 'id': '', 'nombre': ''})
+
+        for TipoId, id, nombre in curt.fetchall():
+            terapias.append({'TipoId': TipoId, 'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(terapias)
+
+        context['Terapias'] = terapias
+        context['TipoTerapia'] = '3'
+
+        # Fin combo Terapias
+
+
 
         return render(request, 'clinico/historiaclinica.html', context);
 
@@ -1411,3 +1526,42 @@ def cargaPanelMedico(request):
     print("passe")
 
     return render(request, "clinico/panelClinico.html", context)
+
+
+def buscarAntecedentes(request):
+
+
+    context = {}
+
+    TiposAntecedente = request.GET["TiposAntecedente"]
+
+
+    print ("Entre buscar  TiposAntecedente =",TiposAntecedente)
+
+
+
+    # Busco la Antecedentes de un Servicio
+
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+    curt = miConexiont.cursor()
+
+
+
+    comando = "SELECT a.id id ,a.nombre nombre  FROM clinico_tiposAntecedente t, clinico_antecedentes a  Where t.id = a.tiposAntecedente_id and t.id = '" + str(TiposAntecedente) +"'"
+
+    curt.execute(comando)
+    print(comando)
+
+    antecedentes =[]
+
+
+    for id, nombre in curt.fetchall():
+        antecedentes.append({'id': id, 'nombre': nombre})
+
+    miConexiont.close()
+    print(antecedentes)
+    context['Antecedentes'] = antecedentes
+
+
+    return JsonResponse(json.dumps(antecedentes), safe=False)
+
