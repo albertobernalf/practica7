@@ -15,8 +15,9 @@ from .forms import historiaForm, historiaExamenesForm
 from datetime import datetime
 from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, EspecialidadesMedicos, Medicos, Especialidades, TiposFolio, CausasExterna
 from sitios.models import Dependencias
+from planta.models import Planta
 
-from clinico.forms import HistoriaExamenesCabezoteForm
+from clinico.forms import HistoriaExamenesCabezoteForm, IncapacidadesForm
 from django.db.models import Avg, Max, Min
 from usuarios.models import Usuarios, TiposDocumento
 
@@ -374,18 +375,20 @@ def crearHistoriaClinica(request):
             print("Entre Ajax")
 
             tipoDoc = request.POST["tipoDoc"]
+            print("tipoDoc = ", tipoDoc)
+
             documento = request.POST["documento"]
             consecAdmision = request.POST["consecAdmision"]
             folio = request.POST["folio"]
             fecha = request.POST["fecha"]
             tiposFolio = request.POST["tiposFolio"]
             causasExterna = request.POST["causasExterna"]
-            #dependenciasRealizado = request.POST["dependenciasRealizado"]
-            dependenciasRealizado = 1
-            #especialidades = request.POST["especialidades"]
-            especialidades = 1
-            #planta = request.POST["planta"]
-            planta = 1
+            dependenciasRealizado = request.POST["dependenciasRealizado"]
+
+            espMedico = request.POST["espMedico"]
+
+            planta = request.POST["planta"]
+            #planta = 1
             motivo = request.POST["motivo"]
             objetivo = request.POST["objetivo"]
             subjetivo = request.POST["subjetivo"]
@@ -404,19 +407,32 @@ def crearHistoriaClinica(request):
                 documento=documento).aggregate(maximo=Coalesce(Max('folio'), 0))
             ultimofolio2 = (ultimofolio['maximo'] + 1)
 
+
+
+            print ("documento= ", documento)
+            print ("consec admisione = ", consecAdmision)
             print("folio = ", ultimofolio2)
+            print("fecha = ", fecha)
+            print("tipodFolio = ", tiposFolio)
+            print("causas externa=", causasExterna)
+            print("dependenciasrealizado= ", dependenciasRealizado)
+            print("espec.medico = ", espmedico)
+            print("planta = ", planta)
+
+
+
 
             nueva_historia = Historia(
                     tipoDoc= TiposDocumento.objects.get(id = tipoDoc)   ,
-                    documento=Usuarios.objects.get(id = documento)  ,
-                    consecAdmision=consecAdmision,
+                    documento=Usuarios.objects.get(id = 1)  ,
+                    consecAdmision=1,
                     folio=ultimofolio2,
                     fecha=fecha,
                     tiposFolio=TiposFolio.objects.get(id = tiposFolio)   ,
                     causasExterna=CausasExterna.objects.get(id = causasExterna),
                     dependenciasRealizado=Dependencias.objects.get(id = dependenciasRealizado)   ,
-                    especialidades=Especialidades.objects.get(id = especialidades)   ,
-                    planta=planta,
+                    especialidades=Especialidades.objects.get(id = espMedico)   ,
+                    planta=Planta.objects.get(id = planta)   ,
                     motivo=motivo,
                     subjetivo=subjetivo,
                     objetivo=objetivo,
@@ -425,7 +441,7 @@ def crearHistoriaClinica(request):
                     fechaRegistro=fechaRegistro,
                     usuarioRegistro=Usuarios.objects.get(id = usuarioRegistro)   ,
                     estadoReg=estadoReg)
-            nueva_historia.save
+            nueva_historia.save()
 
             data = {'Mensaje': 'Folio Creado'}
 
@@ -447,6 +463,7 @@ def crearHistoriaClinica(request):
         context['title'] = 'Mi gran Template'
         context['historiaForm'] = historiaForm
         context['HistoriaExamenesCabezoteForm'] = HistoriaExamenesCabezoteForm
+        context['IncapacidadesForm'] = IncapacidadesForm
 
         Sede = request.GET["Sede"]
         Servicio = request.GET["Servicio"]
@@ -503,6 +520,32 @@ def crearHistoriaClinica(request):
         context['Diagnosticos'] = diagnosticos
 
         # Fin combo Diagnosticos
+
+        # Combo TiposFolio
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT e.id id, e.nombre nombre FROM clinico_tiposFolio e"
+
+        curt.execute(comando)
+        print(comando)
+
+        tiposFolio = []
+        tiposFolio.append({ 'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            tiposFolio.append({ 'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposFolio)
+
+        context['TiposFolio'] = tiposFolio
+
+
+        # Fin combo TiposFolio
+
+
 
         # Combo Laboratorios
 
@@ -576,6 +619,58 @@ def crearHistoriaClinica(request):
         print(datosPaciente)
 
         context['DatosPaciente'] = datosPaciente
+
+        # Combo Fin Datos BAsicos paciente
+
+        # Combo DependenciasRealizado
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT d.id id, d.nombre nombre FROM sitios_dependencias d WHERE d.sedesClinica_id = '" + str(Sede) + "'"
+
+        curt.execute(comando)
+        print(comando)
+
+
+        dependenciasRealizado = []
+        dependenciasRealizado.append({'id': '', 'nombre': ''})
+
+        for  id, nombre in curt.fetchall():
+            dependenciasRealizado.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(dependenciasRealizado)
+
+        context['DependenciasRealizado'] = dependenciasRealizado
+
+        # Fin Combo DependenciasRealizado
+
+        # Combo causasExterna
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT d.id id, d.nombre nombre FROM clinico_causasExterna d "
+
+
+        curt.execute(comando)
+        print(comando)
+
+        causasExterna = []
+        causasExterna.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            causasExterna.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(causasExterna)
+
+        context['CausasExterna'] = causasExterna
+
+        # Fin Combo causasExterna
+
+        # Fin combo Radiologia
 
         return render(request, 'clinico/historiaclinica.html', context);
 

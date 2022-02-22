@@ -490,11 +490,6 @@ $(document).on('change', '#busSubServicio2', function(event) {
 
 
 
-
-
-
-
-
 formHistoriaClinica.addEventListener('submit', e=>{
 
 
@@ -506,29 +501,32 @@ formHistoriaClinica.addEventListener('submit', e=>{
         alert("Entre Form formHistoriaClinica");
 
 
-             var tipoDoc    =  document.getElementById("tipoDoc").value
-             alert("tipodoc=");
-             alert(tipoDoc);
+             var tipoDoc    =  document.getElementById("tipoDoc_id").value
 
-             var documento      =  document.getElementById("documentoPaciente").value
+             var documento      =  document.getElementById("documentoPaciente").value;
 
-             var folio  = "0"
-             var fecha          =  "2022-02-18"
+             var folio  = "0";
+             var fecha          =  document.getElementById("fecha").value;
 
-             var motivo =          document.getElementById("id_motivo").value
-             var subjetivo =      document.getElementById("id_subjetivo").value
-             var objetivo =       document.getElementById("id_objetivo").value
-             var analisis =        document.getElementById("id_analisis").value
-             var plan =           document.getElementById("id_plan").value
-             var causasExterna = 1;
-             var dependeciadRealizado = 1;
-             var usuarioRegistro = 1;
+             var motivo =          document.getElementById("id_motivo").value;
+             var subjetivo =      document.getElementById("id_subjetivo").value;
+             var objetivo =       document.getElementById("id_objetivo").value;
+             var analisis =        document.getElementById("id_analisis").value;
+             var plan =           document.getElementById("id_plan").value;
+             var causasExterna = document.getElementById("causasExterna").value;
+             var dependenciasRealizado = document.getElementById("dependenciasRealizado").value;
+             var usuarioRegistro = document.getElementById("usuarioRegistro").value;
              var consecAdmision=document.getElementById("IngresoPaciente").value;
-             var tiposFolio = 1;
-             var especialidades = 1;
-             var planta = 1;
-             var fechaRegistro = "2022-12-18"
+             var tiposFolio = document.getElementById("tiposFolio").value;
+             var espMedico = document.getElementById("espMedico").value;
+             var planta = document.getElementById("Username_id").value;
+             var fechaRegistro = document.getElementById("fechaRegistro").value;
              var estadoReg = "A"
+
+              alert(tipoDoc)
+             alert(documentoPaciente)
+            alert(consecAdmision)
+
 
              envio1.append('tipoDoc', tipoDoc );
              envio1.append( 'documento', documento);
@@ -537,8 +535,8 @@ formHistoriaClinica.addEventListener('submit', e=>{
              envio1.append('fecha', fecha);
              envio1.append('tiposFolio', tiposFolio);
              envio1.append('causasExterna', causasExterna);
-             envio1.append('dependeciadRealizado', fecha);
-             envio1.append('especialidades', especialidades);
+             envio1.append('dependenciasRealizado', dependenciasRealizado);
+             envio1.append('espMedico', espMedico);
              envio1.append('planta', planta);
              envio1.append('motivo' , motivo);
              envio1.append('subjetivo' , subjetivo);
@@ -548,6 +546,10 @@ formHistoriaClinica.addEventListener('submit', e=>{
              envio1.append('fechaRegistro' , fechaRegistro);
              envio1.append('usuarioRegistro' , usuarioRegistro);
              envio1.append('estadoReg' , estadoReg);
+
+             alert("Esto envio1 :");
+             alert(envio1);
+
 
 
              // Aqui serializar la forma  HistoriaExamenesCabezoteForm
@@ -561,10 +563,18 @@ formHistoriaClinica.addEventListener('submit', e=>{
              document.cabezote["estadoReg"].value ='A';
 
              serialcabezote = $("#cabezote").serialize();
-             cabezoteForm =  JSON.stringify(cabezote);
+             cabezoteForm =  JSON.stringify(serialcabezote);
+
+             alert("cabezoteForm =");
+             alert(cabezoteForm);
+
 
              envio1.append('cabezoteForm' , cabezoteForm);
              envio1.append('seriali1',seriali1);
+
+             alert("envio1 =");
+             alert(envio1);
+
 
 
                $.ajax({

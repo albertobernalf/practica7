@@ -2,12 +2,34 @@ from django import forms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Historia, Especialidades, Medicos
 from usuarios.models import TiposDocumento, Usuarios
-from clinico.models import TiposExamen, Examenes, HistoriaExamenes,HistoriaExamenesCabezote, TiposFolio, CausasExterna
+from clinico.models import TiposExamen, Examenes, HistoriaExamenes,HistoriaExamenesCabezote, TiposFolio, CausasExterna, TiposIncapacidad, Incapacidades, Diagnosticos
 from sitios.models import Dependencias
 from planta.models import Planta
 import django.core.validators
 import django.core.exceptions
 from django.core.exceptions import ValidationError
+
+
+class IncapacidadesForm(forms.ModelForm):
+
+    class Meta:
+        model = Incapacidades
+
+        tipoDoc = forms.IntegerField(label="Tipo Doc")
+        documento = forms.CharField(label = "Documento")
+        consecAdmision = forms.IntegerField(label="Consecuito de Ingreso")
+        dependenciasRealizado = forms.ModelChoiceField(queryset=Dependencias.objects.all())
+        folio = forms.IntegerField(label="Folio No" )
+        fecha = forms.DateTimeField()
+        tiposIncapacidad = forms.ModelChoiceField(queryset=TiposIncapacidad.objects.all())
+        desdeFecha = forms.DateTimeField()
+        hastaFecha = forms.DateTimeField()
+        diagnosticos = forms.ModelChoiceField(queryset=Diagnosticos.objects.all())
+        estadoReg = forms .CharField(max_length=1)
+
+        fields = '__all__'
+
+
 
 class HistoriaExamenesCabezoteForm(forms.ModelForm):
 
