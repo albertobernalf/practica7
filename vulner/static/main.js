@@ -2,11 +2,17 @@ console.log('Hola Alberto Hi!')
 
 var datavta;
 var seriali = new Array();
-var seriali1 = new Array();
+var serialiLab = new Array();
+var serialiRad = new Array();
+var serialiTer = new Array();
+var serialiDiag = new Array();
+var serialiAnt = new Array();
+
 var seriali2 = new Array();
 var envio = new FormData()
 var envio1 = new FormData()
 var envio2 = new FormData()
+var envioDiag = new FormData()
 var formData = new FormData()
 var envio_final = new FormData()
 var envio_final1 = new FormData()
@@ -549,12 +555,9 @@ formHistoriaClinica.addEventListener('submit', e=>{
 
 
          alert("Entre Form formHistoriaClinica");
-
+         alert("serlialiLab = " +  serialiLab);
 
         e.preventDefault()
-
-        alert("Entre Form formHistoriaClinica");
-
 
              var tipoDoc    =  document.getElementById("tipoDoc_id").value
 
@@ -577,10 +580,7 @@ formHistoriaClinica.addEventListener('submit', e=>{
              var planta = document.getElementById("Username_id").value;
              var fechaRegistro = document.getElementById("fechaRegistro").value;
              var estadoReg = "A"
-
-              alert(tipoDoc)
-             alert(documentoPaciente)
-            alert(consecAdmision)
+             var diagnosticos = document.getElementById("diagnosticos").value;
 
 
              envio1.append('tipoDoc', tipoDoc );
@@ -601,15 +601,10 @@ formHistoriaClinica.addEventListener('submit', e=>{
              envio1.append('fechaRegistro' , fechaRegistro);
              envio1.append('usuarioRegistro' , usuarioRegistro);
              envio1.append('estadoReg' , estadoReg);
-
-             alert("Esto envio1 :");
-             alert(envio1);
-
+             envio1.append('diagnosticos' , diagnosticos);
 
 
              // Aqui serializar la forma  HistoriaExamenesCabezoteForm
-
-             alert("Documento = " + documento);
 
 
              document.formCabezoteLab['documento'].value = documento;
@@ -620,55 +615,68 @@ formHistoriaClinica.addEventListener('submit', e=>{
              document.formCabezoteLab['usuarioRegistro'].value = usuarioRegistro;
              document.formCabezoteLab['estadoReg'].value ='A';
 
-             serialcabezote = $("#formCabezoteLab").serialize();
-             cabezoteFormLab =  JSON.stringify(serialcabezote);
+             // convertir formdata a JSON
 
-             alert("cabezoteFormLab =");
-             alert(cabezoteFormLab);
+             const formDataCabezoteLab = new FormData(formCabezoteLab);
 
 
-             envio1.append('cabezoteFormLab' , cabezoteFormLab);
+             var object = {};
+             formDataCabezoteLab.forEach((value, key) => object[key] = value);
+
+             var jsonformDataCabezoteLab = JSON.stringify(object);
+
+
+            alert("JSON del formulario cabezote");
+
+            alert(jsonformDataCabezoteLab);
+
+
+
+             envio1.append('jsonformDataCabezoteLab' , jsonformDataCabezoteLab);
 
 
              		 // Rutina manejo serili1
-		 alert(JSON.stringify(seriali1));
 
-     		    for (var clave in seriali1){
+     		    for (var clave in serialiLab){
                  		   // Controlando que json realmente tenga esa propiedad
-            		    if (seriali1.hasOwnProperty(clave)) {
+            		    if (serialiLab.hasOwnProperty(clave)) {
              		    // Mostrando en pantalla la clave junto a su valor
-               		    //   alert("La clave es " + clave + " y el valor es " + seriali1[clave]);
-				console.log (clave + ', ' + seriali1[clave]);
-                 	       envio_final = seriali1[clave];
+               		    //   alert("La clave es " + clave + " y el valor es " + serialiLab[clave]);
+			           	console.log (clave + ', ' + serialiLab[clave]);
+                 	       envio_final = serialiLab[clave];
 	                     }
         	           }
-
-
+                        console.log("Envio final = ");
+                        console.log(envio_final);
 
 
                    // Display the key/value pairs
 
                     var conteo= 0;
+                    var jsonLab = {}
+                    var jsonDef = []
 
                     for(var pair of envio_final.entries()) {
                     console.log(pair[0]+ ', '+ pair[1]);
-                    envio_final1.append(pair[0], pair[1])
+                   envio_final1.append(pair[0], pair[1])
+                   jsonLab.pair[0] = pair[1];
+
                     conteo=conteo +1;
-                    if (conteo == 8 || conteo==16 || conteo==24  || conteo==32)
+                    if (conteo == 3 || conteo==6 || conteo==9  || conteo==12  || conteo==15  || conteo==18  || conteo==21)
                         {
-                         // inserto desde aqui
+                         // insjsonDeferto desde aqui
+                         jsonDef.push(jsonLab)
+                         jsonLab = {}
+
                             alert("entre conteo");
 			}
 		}
 
-              alert("envio_final1");
-                    alert(envio_final1);
+              alert("jsonDef);
+                    alert(jsonDef);
 
-                    envio1.append('seriali1',envio_final1);
 
-             alert("envio1 =");
-             alert(envio1);
-
+                    envio1.append('serialiLab',jsonDef);
 
 
                $.ajax({

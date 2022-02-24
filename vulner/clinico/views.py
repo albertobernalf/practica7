@@ -13,7 +13,7 @@ from django.utils.timezone import now
 from django.db.models import Avg, Max, Min
 from .forms import historiaForm, historiaExamenesForm
 from datetime import datetime
-from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, EspecialidadesMedicos, Medicos, Especialidades, TiposFolio, CausasExterna
+from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, EspecialidadesMedicos, Medicos, Especialidades, TiposFolio, CausasExterna, HistoriaExamenesCabezote
 from sitios.models import Dependencias
 from planta.models import Planta
 
@@ -375,15 +375,9 @@ def crearHistoriaClinica(request):
             print("Entre Ajax")
 
 
-            CabezoteFormLab = request.POST["cabezoteFormLab"]
-            print("cabezoteFormLab = ", CabezoteFormLab)
-
-            Seriali1 = request.POST["seriali1"]
-            print("Seriali1 = ", Seriali1)
-            
-
             tipoDoc = request.POST["tipoDoc"]
             print("tipoDoc = ", tipoDoc)
+
 
             documento = request.POST["documento"]
             consecAdmision = request.POST["consecAdmision"]
@@ -395,6 +389,7 @@ def crearHistoriaClinica(request):
             dependenciasRealizado = request.POST["dependenciasRealizado"]
 
             espMedico = request.POST["espMedico"]
+            diagnosticos = request.POST["diagnosticos"]
 
             planta = request.POST["planta"]
             #planta = 1
@@ -416,8 +411,6 @@ def crearHistoriaClinica(request):
                 documento=documento).aggregate(maximo=Coalesce(Max('folio'), 0))
             ultimofolio2 = (ultimofolio['maximo'] + 1)
 
-
-
             print ("documento= ", documento)
             print ("consec admisione = ", consecAdmision)
             print("folio = ", ultimofolio2)
@@ -429,7 +422,7 @@ def crearHistoriaClinica(request):
             print("planta = ", planta)
             print("usuarioRegistro = ", usuarioRegistro)
 
-            if (dependenciasRealizado  == '' or causasExterna == ''  ):
+            if (dependenciasRealizado  == '' or causasExterna == ''  or diagnosticos == '' ):
 
 
                 print("Entre GRAVES campos vacios")
@@ -437,6 +430,41 @@ def crearHistoriaClinica(request):
                 return HttpResponse('Favor suministrar causa Externa y/O Dependencia Realiado folio')
 
             else:
+
+
+                CabezoteFormLab = request.POST["jsonformDataCabezoteLab"]
+                print("cabezoteFormLab = ", CabezoteFormLab)
+
+
+                # Voy a iterar cabezoteFormLab
+
+                json_dict_CabezoteFormLab = json.loads(CabezoteFormLab)
+
+                print(json_dict_CabezoteFormLab)
+
+                # Loop along dictionary keys
+                #for key in json_dict_CabezoteFormLab:
+                #    print(key, ":", json_dict_CabezoteFormLab[key])
+
+
+
+
+                SerialiLab = request.POST["serialiLab"]
+                print("SerialiLab = ", SerialiLab)
+
+                json_dict_SerialiLab = json.loads(SerialiLab)
+                print ("Diccionario seriliLab = ", json_dict_SerialiLab)
+
+                # Voy a iterarseriali1
+
+                # Loop along dictionary keys
+                for key in json_dict_SerialiLab:
+                    print(key, ":", json_dict_SerialiLab[key])
+
+                # Intento guardar el cabezote de Examenes
+
+                nuevos_laboratorioshistoria = HistoriaExamenesCabezote(json_dict_CabezoteFormLab)
+                nuevos_laboratorioshistoria.save()
 
                 # Consigo la Especialidad de Evolucion
 
@@ -458,10 +486,7 @@ def crearHistoriaClinica(request):
                 especial1 = json.dumps(especial)
                 print(especial1.id)
 
-
                 # Fin combo Diagnosticos
-
-
 
                 nueva_historia = Historia(
                     tipoDoc= TiposDocumento.objects.get(id = tipoDoc)   ,
@@ -512,19 +537,23 @@ def crearHistoriaClinica(request):
         Perfil = request.GET["Perfil"]
         Username = request.GET["Username"]
         Username_id = request.GET["Username_id"]
-        TipoDocPaciente = request.GET["TipoDocPaciente"]
+
         nombreSede = request.GET["nombreSede"]
+        TipoDocPaciente = request.GET["TipoDocPaciente"]
         DocumentoPaciente = request.GET["DocumentoPaciente"]
         IngresoPaciente = request.GET["IngresoPaciente"]
         espMedico = request.GET["espMedico"]
 
         print("espcialidad Medico = ", espMedico)
+        print("TipoDocPaciente = ", TipoDocPaciente)
+
         print("DocumentoPaciente = ", DocumentoPaciente)
+        print("IngresoPaciente = ", IngresoPaciente)
+
         print("Sede = ", Sede)
         print("Servicio = ", Servicio)
         print("Username = ", Username)
 
-        print("TipoDocPaciente = ", TipoDocPaciente)
 
 
 
@@ -533,11 +562,37 @@ def crearHistoriaClinica(request):
         context['Perfil'] = Perfil
         context['Username'] = Username
         context['Username_id'] = Username_id
-        context['TipoDocPaciente'] = TipoDocPaciente
+
         context['nombreSede'] = nombreSede
+        context['TipoDocPaciente'] = TipoDocPaciente
         context['DocumentoPaciente'] = DocumentoPaciente
-        context['espMedico'] = espMedico
         context['IngresoPaciente'] = IngresoPaciente
+        context['espMedico'] = espMedico
+
+
+        # Combo Tipos Diagnostico
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT t.id id, t.nombre  nombre FROM clinico_tiposDiagnostico t"
+
+        curt.execute(comando)
+        print(comando)
+
+        tiposDiagnostico = []
+        tiposDiagnostico.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            tiposDiagnostico.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposDiagnostico)
+
+        context['TiposDiagnostico'] = tiposDiagnostico
+
+        # Fin combo Tipos Diagnostico
+
 
         # Combo Diagnosticos
 
@@ -644,12 +699,26 @@ def crearHistoriaClinica(request):
 
 
         # Datos Basicos del Paciente
+        filaTipoDoc = TiposDocumento.objects.get(nombre = TipoDocPaciente)
+
+
+
+        print(filaTipoDoc.id)
+
+
+
+        fila = Usuarios.objects.get(tipoDoc_id=filaTipoDoc.id,nombre=DocumentoPaciente)
+
+        print ("OJO LOS DATOS DESNORMALIOZADOS")
+
+        print (fila.documento)
+
 
 
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
-        comando = "select  tipoDoc_id , documento documentoPaciente, u.nombre nombre, genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, u.direccion direccion, u.telefono telefono  from usuarios_usuarios u, usuarios_tiposUsuario  tu, sitios_centros cen where  u.tipoDoc_id = '" + str(TipoDocPaciente) + "' and u.documento = '" + str(DocumentoPaciente) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
+        comando = "select  tipoDoc_id , documento documentoPaciente, u.nombre nombre, genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, u.direccion direccion, u.telefono telefono  from usuarios_usuarios u, usuarios_tiposUsuario  tu, sitios_centros cen where  u.tipoDoc_id = '" + str(filaTipoDoc.id) + "' and u.documento = '" + str(fila.documento) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
 
 
         curt.execute(comando)
@@ -662,6 +731,8 @@ def crearHistoriaClinica(request):
                     'centro': centro, 'tipoUsuario': tipoUsuario, 'fechaNacio': fechaNacio, 'direccion': direccion, 'telefono': telefono})
 
         miConexiont.close()
+        print("OJO ESTOS SON LOS DAOS DEL PACIENTE SELECCIONAO")
+
         print(datosPaciente)
 
         context['DatosPaciente'] = datosPaciente
@@ -972,6 +1043,12 @@ class crearHistoriaClinica1(TemplateView):
 
 
         # Datos Basicos del Paciente
+
+        TipoDocFinal = Historia.objects.all().filter(tipoDoc_id=TipoDocPaciente).filter(documento=documentoPaciente)
+
+        DocumentoFinal = Historia.objects.all().filter(tipoDoc_id=TipoDocPaciente).filter(documento=documentoPaciente)
+
+
 
 
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
@@ -1522,6 +1599,31 @@ def cargaPanelMedico(request):
     context['Medicos'] = medicos
 
     # Fin combo Medicos
+
+    # Combo TiposFolio
+
+    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+    curt = miConexiont.cursor()
+
+    comando = "SELECT e.id id, e.nombre nombre FROM clinico_tiposFolio e"
+
+    curt.execute(comando)
+    print(comando)
+
+    tiposFolio = []
+    tiposFolio.append({'id': '', 'nombre': ''})
+
+    for id, nombre in curt.fetchall():
+        tiposFolio.append({'id': id, 'nombre': nombre})
+
+    miConexiont.close()
+    print(tiposFolio)
+
+    context['TiposFolio'] = tiposFolio
+
+    # Fin combo TiposFolio
+
+
 
     print("passe")
 

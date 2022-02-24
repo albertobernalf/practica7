@@ -5,16 +5,91 @@ var $ = jQuery;
 
  var exa = new FormData()
 
-$(function () {
- var dateNow = new Date();
 
-$('#fecha').datetimepicker({
- format: 'YYYY-MM-DD hh:mm:ss',
- defaultDate:dateNow
-});
+
+
+// $(function () {
+// var dateNow = new Date();
+
+// $('#fecha').datetimepicker({
+// format: 'YYYY-MM-DD hh:mm:ss',
+// defaultDate:dateNow
+// });
 
 // $("#fecha").data('DateTimePicker').setLocalDate(new Date(year, month, day, 00, 01));
-  });
+//  });
+
+
+
+$("#btnAdicDiagnosticos").click(function(){
+
+
+    let elementDiag = document.getElementById("tablaDiagnosticos");
+    elementDiag.removeAttribute("hide");
+
+    alert("Se muestra la TABLA ?");
+
+    elementDiag.setAttribute("hide", "show");
+
+    alert("Se muestra la TABLA otra vez ?");
+
+
+    var cantidad=document.getElementById("cantidad").value;
+
+	var TiposDiagnostico =  document.getElementById("tiposDiagnostico").value;
+
+	var Diagnosticos =  document.getElementById("diagnosticos").value;
+
+	var comboDiagnostico = document.getElementById("diagnosticos");
+
+	var DiagnosticoNombre = comboDiagnostico.options[comboDiagnostico.selectedIndex].text;
+
+
+
+
+
+		  var tds = '<tr>';
+
+		  tds += '<td class="col-xs-2">' + TiposDiagnostico + '</td>';
+		  tds += '<td class="col-xs-6">' + Diagnosticos + '</td>';
+		  tds += '<td class="col-xs-6">' + cantidad + '</td>';
+          tds += '<td class="col-xs-1"><a href="#">Delete</a></td>';
+
+
+
+
+
+		tds += '</tr>';
+
+		$("#tablaDiagnosticos").append(tds);
+
+
+
+
+
+        envioDiag.append('TiposDiagnostico' , TiposDiagnostico);
+        envioDiag.append('Diagnosticos' , Diagnosticos);
+        envioDiag.append('cantidad' , cantidad);
+
+
+
+             for (var valores in envio.values) {
+                     console.log(valores);
+             }
+
+
+
+
+
+        serialiDiag.push(envioDiag);
+
+
+
+
+        addAEvent();
+
+
+   });
 
 
 
@@ -59,7 +134,7 @@ $("#btnAdicAntecedentes").click(function(){
                      console.log(valores);
              }
 
-        seriali2.push(envio);
+        serialiAnt.push(envio);
 
 
 
@@ -128,7 +203,7 @@ $("#btnAdicExamenTerapias").click(function(){
      //       var jsonEnvio = JSON.stringify(object);
 
 
-        seriali1.push(envio);
+        serialiTer.push(envio);
 
 
 
@@ -144,10 +219,17 @@ $("#btnAdicExamenTerapias").click(function(){
 $("#btnAdicExamenLab").click(function(){
 
 
+    alert("Se muestra la TABLA ?");
+
+
     let elementLab = document.getElementById("tablaExamenes");
     elementLab.removeAttribute("hide");
 
-    alert("eNTRE aDICIONAR laBORATORIOS y ya active tabla");
+
+    elementLab.setAttribute("hide", "show");
+
+    alert("Se muestra la TABLA otra vez ?");
+
 
     var cantidad=document.getElementById("cantidad").value;
 
@@ -206,9 +288,9 @@ $("#btnAdicExamenLab").click(function(){
      //       var jsonEnvio = JSON.stringify(object);
 
 
-        seriali1.push(envio);
+        serialiLab.push(envio);
 
-
+        alert("serlialiLab = " +  serialiLab);
 
 
         addAEvent();
@@ -287,25 +369,14 @@ $("#btnAdicExamenRad").click(function(){
      //       var jsonEnvio = JSON.stringify(object);
 
 
-        seriali1.push(envio);
+        serialiRad.push(envio);
 
         addAEvent();
 
 
    });
 
-formCargaHc.addEventListener('submit', e=>{
 
-      //  e.preventDefault()
-
-       alert("Entre A Cargar HC");
-
-    document.getElementById("TipoDocPaciente").value = '1';
-    document.getElementById("DocumentoPaciente").value = '19465673';
-    document.getElementById("IngresoPaciente").value = '1';
-
-
-});
 
 
 
@@ -316,6 +387,10 @@ function addAEvent(){
 
 			    $('#tablaExamenes').unbind();
                 $('#tablaExamenesRad').unbind();
+                $('#tablaTerapias').unbind();
+                $('#tablaAntecedentes').unbind();
+                $('#tablaDiagnosticos').unbind();
+
 
 				  $('#tablaExamenes').on('click','tr td', function(evt){
 
@@ -349,6 +424,94 @@ function addAEvent(){
 
 
 				  $('#tablaExamenesRad').on('click','tr td', function(evt){
+
+
+
+				        var target,valorSeleccionado;
+
+				        var column_num = parseInt( $(this).index() + 1 ) ;
+
+				        var row_num = parseInt( $(this).parent().index() + 1 );
+
+				  	   target = $(evt.target);
+						   valorSeleccionado = target.text();
+
+
+
+					        if(column_num == 4)
+					        	{
+
+                                seriali.splice(row_num-3, 1);
+					        	    $(this).closest('tr').remove();
+
+
+
+  	                            event.preventDefault();
+
+					        	}
+
+				    });
+
+
+                    $('#tablaTerapias').on('click','tr td', function(evt){
+
+
+
+				        var target,valorSeleccionado;
+
+				        var column_num = parseInt( $(this).index() + 1 ) ;
+
+				        var row_num = parseInt( $(this).parent().index() + 1 );
+
+				  	   target = $(evt.target);
+						   valorSeleccionado = target.text();
+
+
+
+					        if(column_num == 4)
+					        	{
+
+                                seriali.splice(row_num-3, 1);
+					        	    $(this).closest('tr').remove();
+
+
+
+  	                            event.preventDefault();
+
+					        	}
+
+				    });
+
+				     $('#tablaDiagnosticos').on('click','tr td', function(evt){
+
+
+
+				        var target,valorSeleccionado;
+
+				        var column_num = parseInt( $(this).index() + 1 ) ;
+
+				        var row_num = parseInt( $(this).parent().index() + 1 );
+
+				  	   target = $(evt.target);
+						   valorSeleccionado = target.text();
+
+
+
+					        if(column_num == 4)
+					        	{
+
+                                seriali.splice(row_num-3, 1);
+					        	    $(this).closest('tr').remove();
+
+
+
+  	                            event.preventDefault();
+
+					        	}
+
+				    });
+
+				     $('#tablaAntecedentes').on('click','tr td', function(evt){
 
 
 

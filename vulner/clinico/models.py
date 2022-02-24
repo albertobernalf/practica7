@@ -236,6 +236,15 @@ class HistoriaResultados(models.Model):
 
 
 
+class TiposDiagnostico(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50, null=False)
+    estadoReg = models.CharField(max_length=1, default='A', editable=False)
+
+    def __str__(self):
+        return self.nombre
+
+
 
 class Diagnosticos(models.Model):
     id = models.AutoField(primary_key=True)
@@ -276,17 +285,14 @@ class Incapacidades(models.Model):
         return self.documento
 
 
-class HistorialDiag(models.Model):
+class HistorialDiagnosticos(models.Model):
     id = models.AutoField(primary_key=True)
     tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT,   null=False)
     documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False,  related_name='DocumentoHistoriaDiag')
     consecAdmision = models.IntegerField()
     folio = models.IntegerField()
-    diagnosticosPpal =  models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxPpal')
-    diagnosticosSec1 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec1')
-    diagnosticosSec2 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec2')
-    diagnosticosSec3 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec3')
-    diagnosticosSec4 = models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxSec4')
+    diagnosticos =  models.ForeignKey('clinico.Diagnosticos', default=1, on_delete=models.PROTECT, null=False ,  related_name='dxPpal')
+    tiposDiagnostico = models.ForeignKey('clinico.TiposDiagnostico', default=1, on_delete=models.PROTECT, null=False ,  related_name='tiposDiagnostico')
     estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
     def __str__(self):
