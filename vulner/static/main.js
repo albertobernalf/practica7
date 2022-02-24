@@ -653,8 +653,8 @@ formHistoriaClinica.addEventListener('submit', e=>{
                    // Display the key/value pairs
 
                     var conteo= 0;
-                    var jsonLab = {}
-                    var jsonDef = []
+                    var jsonLab = {};
+                    var jsonDef = [];
 
                     for(var pair of envio_final.entries()) {
                     console.log(pair[0]+ ', '+ pair[1]);
@@ -665,8 +665,8 @@ formHistoriaClinica.addEventListener('submit', e=>{
                     if (conteo == 3 || conteo==6 || conteo==9  || conteo==12  || conteo==15  || conteo==18  || conteo==21)
                         {
                          // insjsonDeferto desde aqui
-                         jsonDef.push(jsonLab)
-                         jsonLab = {}
+                         jsonDef.push(jsonLab);
+                         jsonLab = {};
 
                             alert("entre conteo");
 			}
