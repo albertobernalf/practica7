@@ -16,8 +16,9 @@ from datetime import datetime
 from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, EspecialidadesMedicos, Medicos, Especialidades, TiposFolio, CausasExterna, HistoriaExamenesCabezote
 from sitios.models import Dependencias
 from planta.models import Planta
+from contratacion.models import Procedimientos
 
-from clinico.forms import HistoriaExamenesCabezoteForm, IncapacidadesForm
+from clinico.forms import HistoriaExamenesCabezoteForm, IncapacidadesForm, HistorialDiagnosticosCabezoteForm
 from django.db.models import Avg, Max, Min
 from usuarios.models import Usuarios, TiposDocumento
 
@@ -452,18 +453,43 @@ def crearHistoriaClinica(request):
                 SerialiLab = request.POST["serialiLab"]
                 print("SerialiLab = ", SerialiLab)
 
+
                 json_dict_SerialiLab = json.loads(SerialiLab)
                 print ("Diccionario seriliLab = ", json_dict_SerialiLab)
 
                 # Voy a iterarseriali1
 
-                # Loop along dictionary keys
-                for key in json_dict_SerialiLab:
-                    print(key, ":", json_dict_SerialiLab[key])
+                y = {}
+
+
+                for x in range(0, len(json_dict_SerialiLab) ):
+                    print(json_dict_SerialiLab[x])
+                    y = json_dict_SerialiLab[x]
+
+
+                    print (y['tipoExamen'])
+                    print(y['examen'])
+
+                    print (y['cantidad'])
+
+
+                    # Loop along dictionary keys
+                    for key in y:
+                        print(key, ":", y[key])
+
 
                 # Intento guardar el cabezote de Examenes
 
-                nuevos_laboratorioshistoria = HistoriaExamenesCabezote(json_dict_CabezoteFormLab)
+                nuevos_laboratorioshistoria = HistoriaExamenesCabezote(
+                    tipoDoc = TiposDocumento.objects.get(id=json_dict_CabezoteFormLab['tipoDoc']),
+                    documento = Usuarios.objects.get(documento=json_dict_CabezoteFormLab['documento']),
+                    consecAdmision = json_dict_CabezoteFormLab['consecAdmision'],
+                    folio = ultimofolio2,
+                    tiposExamen =  TiposExamen.objects.get(id=json_dict_CabezoteFormLab['tiposExamen']),
+                    observaciones =json_dict_CabezoteFormLab['observaciones'] ,
+                    estadoReg=estadoReg)
+
+
                 nuevos_laboratorioshistoria.save()
 
                 # Consigo la Especialidad de Evolucion
@@ -531,6 +557,8 @@ def crearHistoriaClinica(request):
         context['historiaForm'] = historiaForm
         context['HistoriaExamenesCabezoteForm'] = HistoriaExamenesCabezoteForm
         context['IncapacidadesForm'] = IncapacidadesForm
+        context['HistorialDiagnosticosCabezoteForm'] = HistorialDiagnosticosCabezoteForm
+
 
         Sede = request.GET["Sede"]
         Servicio = request.GET["Servicio"]
@@ -593,9 +621,7 @@ def crearHistoriaClinica(request):
 
         # Fin combo Tipos Diagnostico
 
-
-        # Combo Diagnosticos
-
+        # Combo Diagnostico
 
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
@@ -617,6 +643,31 @@ def crearHistoriaClinica(request):
         context['Diagnosticos'] = diagnosticos
 
         # Fin combo Diagnosticos
+
+        # Combo Especialidades
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT e.id id, e.nombre  nombre FROM clinico_especialidades e"
+
+        curt.execute(comando)
+        print(comando)
+
+        especialidades = []
+        especialidades.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            especialidades.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(especialidades)
+
+        context['Especialidades'] = especialidades
+
+        # Fin combo Especialidades
+
+
 
         # Combo TiposFolio
 
@@ -649,16 +700,17 @@ def crearHistoriaClinica(request):
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
-        comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='2'"
+        #comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='2'"
+        comando = "SELECT t.id TipoId, p.id id, p.nombre nombre , p.cups cups FROM clinico_tiposExamen t, contratacion_procedimientos p WHERE t.id = p.TiposExamen_id and t.id ='2'"
 
         curt.execute(comando)
         print(comando)
 
         laboratorios = []
-        laboratorios.append({'TipoId': '', 'id': '', 'nombre': ''})
+        laboratorios.append({'TipoId': '', 'id': '', 'nombre': '', 'cups': ''})
 
-        for TipoId, id, nombre in curt.fetchall():
-            laboratorios.append({'TipoId': TipoId, 'id': id, 'nombre': nombre})
+        for TipoId, id, nombre, cups in curt.fetchall():
+            laboratorios.append({'TipoId': TipoId, 'id': id, 'nombre': nombre, 'cups' : cups})
 
         miConexiont.close()
         print(laboratorios)
@@ -675,16 +727,17 @@ def crearHistoriaClinica(request):
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
-        comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='1'"
+        #comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='1'"
+        comando = "SELECT t.id TipoId, p.id id, p.nombre nombre , p.cups cups FROM clinico_tiposExamen t, contratacion_procedimientos p WHERE t.id = p.TiposExamen_id and t.id ='1'"
 
         curt.execute(comando)
         print(comando)
 
         radiologias = []
-        radiologias.append({'TipoId': '', 'id': '', 'nombre': ''})
+        radiologias.append({'TipoId': '', 'id': '', 'nombre': '', 'cups': ''})
 
-        for TipoId, id, nombre in curt.fetchall():
-            radiologias.append({'TipoId': TipoId, 'id': id, 'nombre': nombre})
+        for TipoId, id, nombre, cups in curt.fetchall():
+            radiologias.append({'TipoId': TipoId, 'id': id, 'nombre': nombre, 'cups' : cups})
 
         miConexiont.close()
         print(radiologias)
@@ -837,16 +890,18 @@ def crearHistoriaClinica(request):
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
-        comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='3'"
+        #comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='3'"
+        comando = "SELECT t.id TipoId, p.id id, p.nombre nombre , p.cups cups FROM clinico_tiposExamen t, contratacion_procedimientos p WHERE t.id = p.TiposExamen_id and t.id ='3'"
 
         curt.execute(comando)
         print(comando)
 
         terapias = []
-        terapias.append({'TipoId': '', 'id': '', 'nombre': ''})
+        terapias.append({'TipoId': '', 'id': '', 'nombre': '', 'cups': ''})
 
-        for TipoId, id, nombre in curt.fetchall():
-            terapias.append({'TipoId': TipoId, 'id': id, 'nombre': nombre})
+
+        for TipoId, id, nombre, cups in curt.fetchall():
+            terapias.append({'TipoId': TipoId, 'id': id, 'nombre': nombre, 'cups': cups})
 
         miConexiont.close()
         print(terapias)

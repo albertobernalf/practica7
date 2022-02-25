@@ -2,7 +2,7 @@ from django import forms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Historia, Especialidades, Medicos
 from usuarios.models import TiposDocumento, Usuarios
-from clinico.models import TiposExamen, Examenes, HistoriaExamenes,HistoriaExamenesCabezote, TiposFolio, CausasExterna, TiposIncapacidad, Incapacidades, Diagnosticos
+from clinico.models import TiposExamen, Examenes, HistoriaExamenes,HistoriaExamenesCabezote, TiposFolio, CausasExterna, TiposIncapacidad, Incapacidades, Diagnosticos, HistorialDiagnosticosCabezote
 from sitios.models import Dependencias
 from planta.models import Planta
 import django.core.validators
@@ -30,6 +30,20 @@ class IncapacidadesForm(forms.ModelForm):
         fields = '__all__'
 
 
+class HistorialDiagnosticosCabezoteForm(forms.ModelForm):
+
+    class Meta:
+        model = HistorialDiagnosticosCabezote
+
+        tipoDoc = forms.IntegerField(label='Tipo Doc')
+        documento = forms.IntegerField(label='No Documento')
+        consecAdmision= forms.IntegerField(label='Admision No', disabled = True, initial=0)
+        folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
+        observaciones = forms.CharField(max_length=200)
+        estadoReg = forms.CharField(max_length=1)
+
+        fields = '__all__'
+
 
 class HistoriaExamenesCabezoteForm(forms.ModelForm):
 
@@ -42,8 +56,9 @@ class HistoriaExamenesCabezoteForm(forms.ModelForm):
         consecAdmision = forms.IntegerField(label='Admision No', disabled=True, initial=0)
         folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
         observaciones =forms.CharField(max_length=200)
-        fechaRegistro = forms.DateTimeField()
-        usuarioRegistro = forms.IntegerField(label='Usuario Documento')
+        tiposExamen = forms.ModelChoiceField(queryset=TiposExamen.objects.all())
+        #fechaRegistro = forms.DateTimeField()
+        #usuarioRegistro = forms.IntegerField(label='Usuario Documento')
         estadoReg = forms.CharField(max_length=1)
 
         fields = '__all__'

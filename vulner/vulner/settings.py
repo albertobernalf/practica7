@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'smart_selects',
     'planta',
     'admisiones',
+    'contratacion',
+
 ]
 
 MIDDLEWARE = [

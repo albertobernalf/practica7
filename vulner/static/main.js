@@ -7,6 +7,8 @@ var serialiRad = new Array();
 var serialiTer = new Array();
 var serialiDiag = new Array();
 var serialiAnt = new Array();
+var serialiInt = new Array();
+
 
 var seriali2 = new Array();
 var envio = new FormData()
@@ -269,8 +271,8 @@ $(document).on('change', '#tiposAntecedente', function(event) {
        // var Sede =  document.getElementById("Sede").value;
         alert("Entre Tipos Antecedente");
 
-
         $.ajax({
+
 	           url: '/buscarAntecedentes',
 	            data : {TiposAntecedente:TiposAntecedente},
 	           type: 'GET',
@@ -551,192 +553,8 @@ $(document).on('change', '#busSubServicio2', function(event) {
 
 
 
-formHistoriaClinica.addEventListener('submit', e=>{
-
-
-         alert("Entre Form formHistoriaClinica");
-         alert("serlialiLab = " +  serialiLab);
-
-        e.preventDefault()
-
-             var tipoDoc    =  document.getElementById("tipoDoc_id").value
-
-             var documento      =  document.getElementById("documentoPaciente").value;
-
-             var folio  = "0";
-             var fecha          =  document.getElementById("fecha").value;
-
-             var motivo =          document.getElementById("id_motivo").value;
-             var subjetivo =      document.getElementById("id_subjetivo").value;
-             var objetivo =       document.getElementById("id_objetivo").value;
-             var analisis =        document.getElementById("id_analisis").value;
-             var plan =           document.getElementById("id_plan").value;
-             var causasExterna = document.getElementById("causasExterna").value;
-             var dependenciasRealizado = document.getElementById("dependenciasRealizado").value;
-             var usuarioRegistro = document.getElementById("usuarioRegistro").value;
-             var consecAdmision=document.getElementById("IngresoPaciente").value;
-             var tiposFolio = document.getElementById("tiposFolio").value;
-             var espMedico = document.getElementById("espMedico").value;
-             var planta = document.getElementById("Username_id").value;
-             var fechaRegistro = document.getElementById("fechaRegistro").value;
-             var estadoReg = "A"
-             var diagnosticos = document.getElementById("diagnosticos").value;
-
-
-             envio1.append('tipoDoc', tipoDoc );
-             envio1.append( 'documento', documento);
-             envio1.append( 'consecAdmision', consecAdmision);
-             envio1.append('folio', folio);
-             envio1.append('fecha', fecha);
-             envio1.append('tiposFolio', tiposFolio);
-             envio1.append('causasExterna', causasExterna);
-             envio1.append('dependenciasRealizado', dependenciasRealizado);
-             envio1.append('espMedico', espMedico);
-             envio1.append('planta', planta);
-             envio1.append('motivo' , motivo);
-             envio1.append('subjetivo' , subjetivo);
-             envio1.append('objetivo' , objetivo);
-             envio1.append('analisis' , analisis);
-             envio1.append('plan' , plan);
-             envio1.append('fechaRegistro' , fechaRegistro);
-             envio1.append('usuarioRegistro' , usuarioRegistro);
-             envio1.append('estadoReg' , estadoReg);
-             envio1.append('diagnosticos' , diagnosticos);
-
-
-             // Aqui serializar la forma  HistoriaExamenesCabezoteForm
-
-
-             document.formCabezoteLab['documento'].value = documento;
-             document.formCabezoteLab['tipoDoc'].value = tipoDoc;
-             document.formCabezoteLab['consecAdmision'].value = consecAdmision;
-             document.formCabezoteLab['folio'].value =0;
-             document.formCabezoteLab['fechaRegistro'].value = fechaRegistro;
-             document.formCabezoteLab['usuarioRegistro'].value = usuarioRegistro;
-             document.formCabezoteLab['estadoReg'].value ='A';
-
-             // convertir formdata a JSON
-
-             const formDataCabezoteLab = new FormData(formCabezoteLab);
-
-
-             var object = {};
-             formDataCabezoteLab.forEach((value, key) => object[key] = value);
-
-             var jsonformDataCabezoteLab = JSON.stringify(object);
-
-
-            alert("JSON del formulario cabezote");
-
-            alert(jsonformDataCabezoteLab);
 
 
 
-             envio1.append('jsonformDataCabezoteLab' , jsonformDataCabezoteLab);
-
-
-             		 // Rutina manejo serili1
-
-     		    for (var clave in serialiLab){
-                 		   // Controlando que json realmente tenga esa propiedad
-            		    if (serialiLab.hasOwnProperty(clave)) {
-             		    // Mostrando en pantalla la clave junto a su valor
-               		    //   alert("La clave es " + clave + " y el valor es " + serialiLab[clave]);
-			           	console.log (clave + ', ' + serialiLab[clave]);
-                 	       envio_final = serialiLab[clave];
-	                     }
-        	           }
-                        console.log("Envio final = ");
-                        console.log(envio_final);
-
-
-                   // Display the key/value pairs
-
-                    var conteo= 0;
-                    var jsonLab = {};
-                    var jsonDef = [];
-
-                    for(var pair of envio_final.entries()) {
-                    console.log(pair[0]+ ', '+ pair[1]);
-                   envio_final1.append(pair[0], pair[1])
-                   jsonLab.pair[0] = pair[1];
-
-                    conteo=conteo +1;
-                    if (conteo == 3 || conteo==6 || conteo==9  || conteo==12  || conteo==15  || conteo==18  || conteo==21)
-                        {
-                         // insjsonDeferto desde aqui
-                         jsonDef.push(jsonLab);
-                         jsonLab = {};
-
-                            alert("entre conteo");
-			}
-		}
-
-              alert("jsonDef);
-                    alert(jsonDef);
-
-
-                    envio1.append('serialiLab',jsonDef);
-
-
-               $.ajax({
-            	   type: 'POST',
- 	               url: '/crearHistoriaClinica/',
-  	               data: envio1,
- 	      		success: function (respuesta2) {
- 	      		        var data = JSON.parse(respuesta2);
- 	      		        alert(respuesta2);
-
-
- 	      	 			$("#mensajes").html(respuesta2);
-
-
- 	      		},
- 	      		error: function (request, status, error) {
- 	      			alert(request.responseText);
- 	      			alert (error);
- 	      			$("#mensajes").html("Error Venta AJAX O RESPUESTA");
- 	      		},
- 	      		cache : false,
- 	      		contentType : false,
- 	      		processData: false,
-
- 	        });
-
-})
-
-
-$("#btnFolio").click(function(){
-
-// El Tema del Folio
-             var id_tipo_doc    =  document.formHistoria["id_id_tipo_doc"].value
-             var documento      =  document.formHistoria["id_documento"].value
-
-                  envio2.append('id_tipo_doc', id_tipo_doc );
-                  envio2.append( 'documento', documento);
-
-             	$.ajax({
-            	   type: 'POST',
- 	               url: '/consecutivo_folios/',
-  	               data: envio2 ,
- 	      		success: function (respuesta2) {
- 	      		             var data = JSON.parse(respuesta2);
- 	      		              alert("folio Ultiomop es ");
- 	      		            alert(data.ultimofolio)
- 	      	 				document.getElementById("folio_oculto").value= data.ultimofolio;
- 	      	 			//	document.getElementById("id_folio").value= data.ultimofolio;
-
- 	      			      		},
- 	      		error: function (request, status, error) {
- 	      			alert(request.responseText);
- 	      			alert (error);
- 	      			$("#mensajes").html("Error Venta AJAX O RESPUESTA");
- 	      		},
- 	      		cache : false,
- 	      		contentType : false,
- 	      		processData: false,
-
- 	        });
-});
 
 

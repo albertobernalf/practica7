@@ -19,6 +19,72 @@ var $ = jQuery;
 // $("#fecha").data('DateTimePicker').setLocalDate(new Date(year, month, day, 00, 01));
 //  });
 
+$("#btnAdicInterconsultas").click(function(){
+
+
+    let elementInt = document.getElementById("tablaInterconsultas");
+    elementInt.removeAttribute("hide");
+
+
+
+    elementInt.setAttribute("hide", "show");
+
+    alert("Se muestra la TABLA otra vez ?");
+
+
+  //  var cantidad=document.getElementById("cantidad").value;
+
+	var DescripcionConsulta =  document.getElementById("descripcionConsulta").value;
+
+	var InterconsultasDiagnosticos =  document.getElementById("interconsultasDiagnosticos").value;
+
+	var comboDiagnostico = document.getElementById("interconsultasDiagnosticos");
+
+	var DiagnosticoNombre = comboDiagnostico.options[comboDiagnostico.selectedIndex].text;
+
+    var InterconsultasEspecialidad =  document.getElementById("interconsultasEspecialidad").value;
+
+	var comboEspecialidades = document.getElementById("interconsultasEspecialidad");
+
+	var EspecialidadesNombre = comboEspecialidades.options[comboEspecialidades.selectedIndex].text;
+
+
+
+		  var tds = '<tr>';
+
+		  tds += '<td class="col-xs-2">' + DiagnosticoNombre + '</td>';
+		  tds += '<td class="col-xs-6">' + EspecialidadesNombre + '</td>';
+		  tds += '<td class="col-xs-6">' + DescripcionConsulta + '</td>';
+          tds += '<td class="col-xs-1"><a href="#">Delete</a></td>';
+
+
+
+		tds += '</tr>';
+
+		$("#tablaDiagnosticos").append(tds);
+
+
+        envioDiag.append('DiagnosticoNombre' , DiagnosticoNombre);
+        envioDiag.append('EspecialidadesNombre' , EspecialidadesNombre);
+        envioDiag.append('DescripcionConsulta' , DescripcionConsulta);
+
+
+
+             for (var valores in envio.values) {
+                     console.log(valores);
+             }
+
+
+        serialiInt.push(envioDiag);
+
+
+
+
+        addAEvent();
+
+
+   });
+
 
 
 $("#btnAdicDiagnosticos").click(function(){
@@ -27,14 +93,12 @@ $("#btnAdicDiagnosticos").click(function(){
     let elementDiag = document.getElementById("tablaDiagnosticos");
     elementDiag.removeAttribute("hide");
 
-    alert("Se muestra la TABLA ?");
 
     elementDiag.setAttribute("hide", "show");
 
-    alert("Se muestra la TABLA otra vez ?");
 
 
-    var cantidad=document.getElementById("cantidad").value;
+   // var cantidad=document.getElementById("cantidad").value;
 
 	var TiposDiagnostico =  document.getElementById("tiposDiagnostico").value;
 
@@ -52,7 +116,7 @@ $("#btnAdicDiagnosticos").click(function(){
 
 		  tds += '<td class="col-xs-2">' + TiposDiagnostico + '</td>';
 		  tds += '<td class="col-xs-6">' + Diagnosticos + '</td>';
-		  tds += '<td class="col-xs-6">' + cantidad + '</td>';
+		//  tds += '<td class="col-xs-6">' + cantidad + '</td>';
           tds += '<td class="col-xs-1"><a href="#">Delete</a></td>';
 
 
@@ -69,7 +133,7 @@ $("#btnAdicDiagnosticos").click(function(){
 
         envioDiag.append('TiposDiagnostico' , TiposDiagnostico);
         envioDiag.append('Diagnosticos' , Diagnosticos);
-        envioDiag.append('cantidad' , cantidad);
+       // envioDiag.append('cantidad' , cantidad);
 
 
 
@@ -94,6 +158,8 @@ $("#btnAdicDiagnosticos").click(function(){
 
 
 $("#btnAdicAntecedentes").click(function(){
+
+   alert("Se muestra la TABLA otra vez ?");
 
     let elementAnt = document.getElementById("tablaAntecedentes");
    elementAnt.removeAttribute("hide");
@@ -122,13 +188,14 @@ $("#btnAdicAntecedentes").click(function(){
 
 		$("#tablaAntecedentes").append(tds);
 
+          alert("Sa enviar");
 
 
         envio.append('TiposAntecedente' , TiposAntecedente);
-        envio.append('antecedentes' , antecedentes);
+        envio.append('ExamenNombre' , ExamenNombre);
         envio.append('descripcion' , descripcion);
 
-
+  alert("antes del push");
 
              for (var valores in envio.values) {
                      console.log(valores);
@@ -147,8 +214,10 @@ $("#btnAdicAntecedentes").click(function(){
 
 $("#btnAdicExamenTerapias").click(function(){
 
+    alert("Entre boton");
+
     let elementTer = document.getElementById("tablaTerapias");
-   elementTer.removeAttribute("hide");
+    elementTer.removeAttribute("hide");
 
 
 
@@ -219,16 +288,14 @@ $("#btnAdicExamenTerapias").click(function(){
 $("#btnAdicExamenLab").click(function(){
 
 
-    alert("Se muestra la TABLA ?");
 
 
-    let elementLab = document.getElementById("tablaExamenes");
-    elementLab.removeAttribute("hide");
+  //  let elementLab = document.getElementById("tablaExamenes");
+  //  elementLab.removeAttribute("hide");
 
 
-    elementLab.setAttribute("hide", "show");
+ //   elementLab.setAttribute("hide", "show");
 
-    alert("Se muestra la TABLA otra vez ?");
 
 
     var cantidad=document.getElementById("cantidad").value;
@@ -290,7 +357,7 @@ $("#btnAdicExamenLab").click(function(){
 
         serialiLab.push(envio);
 
-        alert("serlialiLab = " +  serialiLab);
+
 
 
         addAEvent();
@@ -301,7 +368,7 @@ $("#btnAdicExamenLab").click(function(){
 
 $("#btnAdicExamenRad").click(function(){
 
-
+    alert("Entre boton");
 
     let elementRad = document.getElementById("tablaExamenesRad");
    elementRad.removeAttribute("hide");
@@ -390,6 +457,7 @@ function addAEvent(){
                 $('#tablaTerapias').unbind();
                 $('#tablaAntecedentes').unbind();
                 $('#tablaDiagnosticos').unbind();
+                $('#tablaInterconsultas').unbind();
 
 
 				  $('#tablaExamenes').on('click','tr td', function(evt){
@@ -540,6 +608,34 @@ function addAEvent(){
 
 				    });
 
+                     $('#tablaInterconsultas').on('click','tr td', function(evt){
+
+
+
+				        var target,valorSeleccionado;
+
+				        var column_num = parseInt( $(this).index() + 1 ) ;
+
+				        var row_num = parseInt( $(this).parent().index() + 1 );
+
+				  	   target = $(evt.target);
+						   valorSeleccionado = target.text();
+
+
+
+					        if(column_num == 4)
+					        	{
+
+                                seriali.splice(row_num-3, 1);
+					        	    $(this).closest('tr').remove();
+
+
+
+  	                            event.preventDefault();
+
+					        	}
+
+				    });
 
 
 
