@@ -7,16 +7,17 @@ import numpy as np
 import pyttsx3
 import speech_recognition as sr
 from django.core.serializers import serialize
-
 from django.db.models.functions import Cast, Coalesce
 from django.utils.timezone import now
 from django.db.models import Avg, Max, Min
 from .forms import historiaForm, historiaExamenesForm
 from datetime import datetime
-from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, EspecialidadesMedicos, Medicos, Especialidades, TiposFolio, CausasExterna, HistoriaExamenesCabezote
+from clinico.models import Historia, HistoriaExamenes, Examenes, TiposExamen, EspecialidadesMedicos, Medicos, Especialidades, TiposFolio, CausasExterna, HistoriaExamenesCabezote, EstadoExamenes
 from sitios.models import Dependencias
 from planta.models import Planta
 from contratacion.models import Procedimientos
+
+
 
 from clinico.forms import HistoriaExamenesCabezoteForm, IncapacidadesForm, HistorialDiagnosticosCabezoteForm
 from django.db.models import Avg, Max, Min
@@ -33,6 +34,9 @@ import MySQLdb
 
 
 # Create your views here.
+
+
+
 
 
 def prueba(request):
@@ -147,54 +151,6 @@ def historia1View(request):
             return HttpResponse("Formulario Ajax invalido")
     return HttpResponse("Problemas con AJAx")
 
-
-def historiaView(request):
-    print("Entre por el view historiaView")
-
-    form = historiaForm(request.POST)
-
-    if request.method == 'POST':
-        print("entre por POST")
-
-        # Check if the form is valid:
-        if form.is_valid():
-            form1 = form.cleaned_data
-            print("A grabar")
-
-            grabo = Historia(id_tipo_doc=form1['id_tipo_doc'],
-                             documento=form1['documento'],
-                             folio=form1['folio'],
-                             fecha=form1['fecha'],
-                             id_especialidad=form1['id_especialidad'],
-                             id_medico=form1['id_medico'],
-                             motivo=form1['motivo'],
-                             subjetivo=form1['subjetivo'],
-                             objetivo=form1['objetivo'],
-                             analisis=form1['analisis'],
-                             plan=form1['plan'],
-                             estado_folio=form1['estado_folio'])
-            grabo.save()
-            grabo.id
-            print("yA grabe")
-
-            messages.success(request, 'Informacion guardada')
-
-            return redirect('/historiaView')
-        else:
-            print("Error")
-            print(form.errors)
-            messages.error(request, form.errors['documento'])
-
-    else:
-        print("pase por el else")
-
-        form = historiaForm()
-        form2 = historiaExamenesForm()
-
-        return render(request, 'historia_form.html', {'form': form, 'form2': form2})
-
-    form2 = historiaExamenesForm()
-    return render(request, 'historia_form.html', {'form': form, 'form2': form2})
 
 
 def motivoSeñas(request):
@@ -408,10 +364,34 @@ def crearHistoriaClinica(request):
             fechaRegistro = dnow
             estadoReg = "A"
             print("estadoRegistro =", estadoReg)
+            # Busca el folio a asignar
+            # Primero el id del paciente:
 
-            ultimofolio = Historia.objects.all().filter(tipoDoc_id=tipoDoc).filter(
-                documento=documento).aggregate(maximo=Coalesce(Max('folio'), 0))
+            miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+            curt = miConexiont.cursor()
+
+            comando = "SELECT id FROM usuarios_usuarios  WHERE tipoDoc_id = '" + str(tipoDoc) + "' AND documento ='" + str(documento) +"'"
+
+            curt.execute(comando)
+            print(comando)
+
+            idPaciente = []
+
+            for id in curt.fetchall():
+                idPaciente.append({'id': id})
+
+            miConexiont.close()
+            print(idPaciente)
+
+            idPacienteFinal = idPaciente[0]
+
+
+            # fIN consegui id del paciente
+
+            ultimofolio = Historia.objects.all().filter(tipoDoc_id=tipoDoc).filter(documento_id=idPacienteFinal['id']).aggregate(maximo=Coalesce(Max('folio'), 0))
+            print("ultimo folio = ", ultimofolio)
             ultimofolio2 = (ultimofolio['maximo'] + 1)
+            print("ultimo folio2 = ", ultimofolio2)
 
             print ("documento= ", documento)
             print ("consec admisione = ", consecAdmision)
@@ -457,6 +437,9 @@ def crearHistoriaClinica(request):
                 jsonEspecial = especial[0]
                 campo = jsonEspecial['id']
 
+                # Fin consigo especialidad
+
+
                 print (campo)
 
 
@@ -497,73 +480,80 @@ def crearHistoriaClinica(request):
 
                 nueva_historia.save()
 
+                historiaId = nueva_historia.id
+                print("Historia No : ", historiaId)
+                jsonHistoria = {'id': historiaId}
 
 
                 # Fin Grabacion Historia
-
-                # Grabacion Cabezote Laboratorios
-
-                JsonCabezoteLab = request.POST["jsonCabezoteLab"]
-                print("cabezoteFormLab = ", JsonCabezoteLab)
-
-                # Convierto ma Diccionario
-
-                JsonDictCabezoteLab = json.loads(JsonCabezoteLab)
-
-                print(JsonDictCabezoteLab)
-
-                # Intento guardar el cabezote de Examenes
-
-                HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
-                    tipoDoc=TiposDocumento.objects.get(id=JsonDictCabezoteLab['tipoDoc']),
-                    documento=Usuarios.objects.get(documento=JsonDictCabezoteLab['documento']),
-                    consecAdmision=JsonDictCabezoteLab['consecAdmision'],
-                    folio=ultimofolio2,
-                    tiposExamen =  TiposExamen.objects.get(id=JsonDictCabezoteLab['tiposExamen']),
-                    # tiposExamen=JsonDictCabezoteLab['tiposExamen'],
-                    observaciones=JsonDictCabezoteLab['observaciones'],
-                    estadoReg=estadoReg)
-
-                HistoriaExamenesCabezote1.save()
-
-                cabezoteLabId = HistoriaExamenesCabezote1.id
-
-                # Fin Grabacion Cabezote Laboratorios
 
 
                 SerialiLab = request.POST["serialiLab"]
                 print("SerialiLab = ", SerialiLab)
 
-                JsonDicSerialiLab = json.loads(SerialiLab)
-                print ("Diccionario seriliLab = ", JsonDicSerialiLab)
 
-                # Voy a iterar
-                campo = {}
-                jsonCabezoteId = {'cabezoteId' : cabezoteId}
+                if SerialiLab != []:
+
+                    # Grabacion Cabezote Laboratorios
+                    JsonCabezoteLab = request.POST["jsonCabezoteLab"]
+
+                    print("cabezoteFormLab = ", JsonCabezoteLab)
+
+                    # Convierto ma Diccionario
+
+                    JsonDictCabezoteLab  = json.loads(JsonCabezoteLab)
+
+                    print(JsonDictCabezoteLab)
+
+                    # Intento guardar el cabezote de Examenes
+
+                    HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
+                      #tipoDoc=TiposDocumento.objects.get(id=JsonDictCabezoteLab['tipoDoc']),
+                      #documento=Usuarios.objects.get(documento=JsonDictCabezoteLab['documento']),
+                      #consecAdmision=JsonDictCabezoteLab['consecAdmision'],
+                      #folio=ultimofolio2,
+                      historia =   Historia.objects.get(id=jsonHistoria['id']),
+                      tiposExamen =  TiposExamen.objects.get(id=JsonDictCabezoteLab['tiposExamen']),
+                      # tiposExamen=JsonDictCabezoteLab['tiposExamen'],
+                      observaciones=JsonDictCabezoteLab['observaciones'],
+                      estadoReg=estadoReg)
+
+                    HistoriaExamenesCabezote1.save()
+
+                    cabezoteLabId = HistoriaExamenesCabezote1.id
+
+                    # Fin Grabacion Cabezote Laboratorios
+
+                    # Grabacion detalle Laboratorios
 
 
-                for x in range(0, len(JsonDicSerialiLab) ):
-                    print(JsonDicSerialiLab[x])
-                    campo = JsonDicSerialiLab[x]
 
-                    print (campo['tipoExamen'])
-                    print(campo['examen'])
-                    print (campo['cantidad'])
+                    JsonDicSerialiLab = json.loads(SerialiLab)
+                    print ("Diccionario seriliLab = ", JsonDicSerialiLab)
+
+                    # Voy a iterar
+                    campo = {}
+                    jsoncabezoteLabId = {'cabezoteLabId' : cabezoteLabId}
+
+                    jsonEstadoExamenes = {'id' : 1}
 
 
-                    # Loop along dictionary keys
-                    #for key in y:
-                    #    print(key, ":", y[key])
+                    for x in range(0, len(JsonDicSerialiLab) ):
+                      print(JsonDicSerialiLab[x])
+                      campo = JsonDicSerialiLab[x]
+                      print (campo['tipoExamen'])
+                      print(campo['examen'])
+                      print (campo['cantidad'])
 
-                    # Grabacion Definitiva
+                      # Grabacion Definitiva
 
-                    HistoriaExamenes1 = HistoriaExamenes(historiaExamenesCabezote = jsonCabezoteId['cabezoteId'],
-                    procedimientos = campo['examen'],
-                    cantidad =  campo['cantidad'],
-                    estadoExamenes = 'O',
-                    estadoReg = 'A' )
+                      HistoriaExamenes1 = HistoriaExamenes(historiaExamenesCabezote = HistoriaExamenesCabezote.objects.get(id=jsoncabezoteLabId['cabezoteLabId']),
+                        procedimientos = Procedimientos.objects.get(id=campo['examen']),
+                        cantidad =  campo['cantidad'],
+                        estadoExamenes =EstadoExamenes.objects.get(id=jsonEstadoExamenes['id']),
+                        estadoReg = 'A' )
 
-                    HistoriaExamenes.save()
+                      HistoriaExamenes1.save()
 
 
 
@@ -588,24 +578,11 @@ def crearHistoriaClinica(request):
 
                 # Grabacion Formulacion
 
+                # Grabacion Signos Vitales
 
 
 
-
-
-
-
-
-
-
-
-            data = {'Mensaje': 'Folio Creado'}
-
-            seriali1 = request.POST["seriali1"]
-            print(seriali1)
-
-            cabezoteForm = request.POST["cabezoteForm"]
-            print (cabezoteForm)
+            data = {'Mensaje': 'Folio exitoso : ' + str(ultimofolio2)}
 
 
             #return HttpResponse(json.dumps(data))
@@ -629,6 +606,7 @@ def crearHistoriaClinica(request):
         Perfil = request.GET["Perfil"]
         Username = request.GET["Username"]
         Username_id = request.GET["Username_id"]
+        Profesional = request.GET["profesional"]
 
         nombreSede = request.GET["nombreSede"]
         TipoDocPaciente = request.GET["TipoDocPaciente"]
@@ -654,6 +632,7 @@ def crearHistoriaClinica(request):
         context['Perfil'] = Perfil
         context['Username'] = Username
         context['Username_id'] = Username_id
+        context['Profesional'] = Profesional
 
         context['nombreSede'] = nombreSede
         context['TipoDocPaciente'] = TipoDocPaciente

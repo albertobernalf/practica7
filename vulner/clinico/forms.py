@@ -37,12 +37,18 @@ class HistorialDiagnosticosCabezoteForm(forms.ModelForm):
 
         tipoDoc = forms.IntegerField(label='Tipo Doc')
         documento = forms.IntegerField(label='No Documento')
-        consecAdmision= forms.IntegerField(label='Admision No', disabled = True, initial=0)
+        consecAdmision= forms.IntegerField(label='Admision No', disabled=True, initial=0)
         folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
         observaciones = forms.CharField(max_length=200)
         estadoReg = forms.CharField(max_length=1)
 
         fields = '__all__'
+
+        widgets = {
+            'observaciones': forms.Textarea(attrs={'class': 'form-control', 'width': "100%", 'cols': "40", 'rows': "4",
+                                                   'placeholder': "Observaciones"})
+        }
+
 
 
 class HistoriaExamenesCabezoteForm(forms.ModelForm):
@@ -51,10 +57,11 @@ class HistoriaExamenesCabezoteForm(forms.ModelForm):
     class Meta:
         model = HistoriaExamenesCabezote
 
-        tipoDoc = forms.IntegerField(label='Tipo Doc')
-        documento = forms.IntegerField(label='No Documento')
-        consecAdmision = forms.IntegerField(label='Admision No', disabled=True, initial=0)
-        folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
+        historia = forms.IntegerField(label='Historia')
+        #tipoDoc = forms.IntegerField(label='Tipo Doc')
+        #documento = forms.IntegerField(label='No Documento')
+        #consecAdmision = forms.IntegerField(label='Admision No', disabled=True, initial=0)
+        #folio = forms.IntegerField(label='No Folio', disabled=True, initial=0)
         observaciones =forms.CharField(max_length=200)
         tiposExamen = forms.ModelChoiceField(queryset=TiposExamen.objects.all())
         #fechaRegistro = forms.DateTimeField()

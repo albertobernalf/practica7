@@ -145,14 +145,17 @@ def validaAcceso(request):
 
     miConexion0 = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
     cur0 = miConexion0.cursor()
-    comando = "select p.id  Username_id , p.nombre nombre from planta_planta p where p.documento ='" + username + "'"
+    comando = "select p.id  Username_id , p.nombre profesional from planta_planta p where p.documento ='" + username + "'"
     cur0.execute(comando)
     print(comando)
     planta = []
 
-    for Username_id, nombre in cur0.fetchall():
-        planta.append({'Username_id': Username_id, 'nombre': nombre})
+    for Username_id, profesional in cur0.fetchall():
+        planta.append({'Username_id': Username_id, 'profesional': profesional})
         context['Username_id'] = Username_id
+        context['Profesional'] = profesional
+
+    print ("Profesional = ", profesional )
 
     if planta == []:
 

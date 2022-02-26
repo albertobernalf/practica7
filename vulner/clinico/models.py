@@ -200,7 +200,7 @@ class Historia(models.Model):
 
 
                 def __str__(self):
-                    return self.motivo
+                    return str(self.id)
 
                 class Meta:
                     ordering = ["tipoDoc","documento","folio","fecha","especialidades","motivo","subjetivo","objetivo","analisis","plan"]
@@ -208,16 +208,20 @@ class Historia(models.Model):
 
 class HistoriaExamenesCabezote(models.Model):
            id = models.AutoField(primary_key=True)
-           tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
-           documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False, related_name='DocumentoHistoriaExamenesCabezote')
-           consecAdmision = models.IntegerField(default=0)
-           folio = models.IntegerField()
+           historia = models.ForeignKey('clinico.Historia', default=1, on_delete=models.PROTECT, null=False)
+          # tipoDoc = models.ForeignKey('usuarios.TiposDocumento', default=1, on_delete=models.PROTECT, null=False)
+           #documento = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False, related_name='DocumentoHistoriaExamenesCabezote')
+           #consecAdmision = models.IntegerField(default=0)
+           #folio = models.IntegerField()
            tiposExamen = models.ForeignKey('clinico.TiposExamen', default=1, on_delete=models.PROTECT, null=False)
            observaciones = models.CharField(max_length=200,  editable=True)
          #  fechaRegistro = models.DateTimeField(default=now, editable=False)
          #  usuarioRegistro = models.ForeignKey('usuarios.Usuarios', default=1, on_delete=models.PROTECT, null=False)
            estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
+
+           def __str__(self):
+                 return self.observaciones
 
 class HistoriaExamenes(models.Model):
                 id = models.AutoField(primary_key=True)
@@ -231,7 +235,7 @@ class HistoriaExamenes(models.Model):
 
 
                 def __str__(self):
-                        return self.estado_folio
+                        return str(self.cantidad)
 
 class HistoriaResultados(models.Model):
                     id = models.AutoField(primary_key=True)
@@ -323,7 +327,7 @@ class HistorialDiagnosticosCabezote(models.Model):
     estadoReg = models.CharField(max_length=1, default='A', editable=False)
 
     def __str__(self):
-        return self.documento
+        return self.observaciones
 
 
 

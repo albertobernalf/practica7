@@ -90,17 +90,15 @@ $("#btnAdicInterconsultas").click(function(){
 $("#btnAdicDiagnosticos").click(function(){
 
 
-    let elementDiag = document.getElementById("tablaDiagnosticos");
-    elementDiag.removeAttribute("hide");
-
-
-    elementDiag.setAttribute("hide", "show");
-
 
 
    // var cantidad=document.getElementById("cantidad").value;
 
 	var TiposDiagnostico =  document.getElementById("tiposDiagnostico").value;
+
+	var comboTiposDiagnostico = document.getElementById("TiposDiagnostico").value;
+
+	var TiposDiagnosticoNombre =  comboTiposDiagnostico.options[comboTiposDiagnostico.selectedIndex].text;
 
 	var Diagnosticos =  document.getElementById("diagnosticos").value;
 
@@ -114,8 +112,8 @@ $("#btnAdicDiagnosticos").click(function(){
 
 		  var tds = '<tr>';
 
-		  tds += '<td class="col-xs-2">' + TiposDiagnostico + '</td>';
-		  tds += '<td class="col-xs-6">' + Diagnosticos + '</td>';
+		  tds += '<td class="col-xs-2">' + TiposDiagnosticoNombre + '</td>';
+		  tds += '<td class="col-xs-6">' + DiagnosticoNombre + '</td>';
 		//  tds += '<td class="col-xs-6">' + cantidad + '</td>';
           tds += '<td class="col-xs-1"><a href="#">Delete</a></td>';
 
@@ -160,9 +158,6 @@ $("#btnAdicDiagnosticos").click(function(){
 $("#btnAdicAntecedentes").click(function(){
 
    alert("Se muestra la TABLA otra vez ?");
-
-    let elementAnt = document.getElementById("tablaAntecedentes");
-   elementAnt.removeAttribute("hide");
 
     var descripcion=document.getElementById("descripcion").value;
 
@@ -215,9 +210,6 @@ $("#btnAdicAntecedentes").click(function(){
 $("#btnAdicExamenTerapias").click(function(){
 
     alert("Entre boton");
-
-    let elementTer = document.getElementById("tablaTerapias");
-    elementTer.removeAttribute("hide");
 
 
 
@@ -290,14 +282,6 @@ $("#btnAdicExamenLab").click(function(){
 
 
 
-  //  let elementLab = document.getElementById("tablaExamenes");
-  //  elementLab.removeAttribute("hide");
-
-
- //   elementLab.setAttribute("hide", "show");
-
-
-
     var cantidad=document.getElementById("cantidad").value;
 
 	var TipoExamen =  document.getElementById("tipoExamenLab").value;
@@ -314,7 +298,8 @@ $("#btnAdicExamenLab").click(function(){
 
 		  var tds = '<tr>';
 
-		  tds += '<td class="col-xs-2">' + TipoExamen + '</td>';
+          tds += '<td  style="visibility: hidden">' + TipoExamen + '</td>';
+		 // tds += '<td class="col-xs-2">' + TipoExamen + '</td>';
 		  tds += '<td class="col-xs-6">' + ExamenNombre + '</td>';
 		  tds += '<td class="col-xs-6">' + cantidad + '</td>';
           tds += '<td class="col-xs-1"><a href="#">Delete</a></td>';
@@ -370,8 +355,6 @@ $("#btnAdicExamenRad").click(function(){
 
     alert("Entre boton");
 
-    let elementRad = document.getElementById("tablaExamenesRad");
-   elementRad.removeAttribute("hide");
 
 
     var cantidad=document.getElementById("cantidad").value;

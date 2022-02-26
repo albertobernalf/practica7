@@ -111,10 +111,10 @@ class examenesAdmin(admin.ModelAdmin):
 @admin.register(HistoriaExamenes)
 class historiaExamenesAdmin(admin.ModelAdmin):
 
-    list_display = ( "historiaExamenesCabezote", "cantidad","estadoExamenes")
-    search_fields = ( "historiaExamenesCabezote", "cantidad","estadoExamenes")
+    list_display = ( "id", "cantidad","estadoExamenes")
+    search_fields = ( "id", "cantidad","estadoExamenes")
     # Filtrar
-    list_filter = ( "historiaExamenesCabezote", "cantidad","estadoExamenes")
+    list_filter = ( "id", "cantidad","estadoExamenes")
 
 
 @admin.register(HistorialDiagnosticosCabezote)
@@ -128,19 +128,19 @@ class historialDiagnosticosCabezoteAdmin(admin.ModelAdmin):
 
 @admin.register(HistorialDiagnosticos)
 class historialDiagnosticosAdmin(admin.ModelAdmin):
-        list_display = ("id", "historialDiagnosticosCabezote","diagnosticos","tiposDiagnostico")
-        search_fields = ("id", "historialDiagnosticosCabezote","diagnosticos","tiposDiagnostico")
+        list_display = ("id", "diagnosticos","tiposDiagnostico")
+        search_fields = ("id", "diagnosticos","tiposDiagnostico")
         # Filtrar
-        list_filter = ("id", "historialDiagnosticosCabezote","diagnosticos","tiposDiagnostico")
+        list_filter = ("id", "diagnosticos","tiposDiagnostico")
 
 
 @admin.register(HistoriaExamenesCabezote)
 class historiaExamenesCabezoteAdmin(admin.ModelAdmin):
 
-    list_display = ( "id", "tipoDoc", "documento","consecAdmision", "folio","observaciones")
-    search_fields =( "id", "tipoDoc", "documento","consecAdmision", "folio","observaciones")
+    list_display = ( "id", "historia", "tiposExamen","observaciones")
+    search_fields =( "id", "historia","tiposExamen","observaciones")
     # Filtrar
-    list_filter = ( 'tipoDoc', 'documento','consecAdmision','folio')
+    list_filter = ( "id", "historia", "tiposExamen","observaciones")
 
 
 
