@@ -111,10 +111,10 @@ class examenesAdmin(admin.ModelAdmin):
 @admin.register(HistoriaExamenes)
 class historiaExamenesAdmin(admin.ModelAdmin):
 
-    list_display = ( "id", "cantidad","estadoExamenes")
-    search_fields = ( "id", "cantidad","estadoExamenes")
+    list_display = ( "id", "procedimientos", "cantidad","estadoExamenes")
+    search_fields = ( "id", "procedimientos","cantidad","estadoExamenes")
     # Filtrar
-    list_filter = ( "id", "cantidad","estadoExamenes")
+    list_filter = ( "id", "procedimientos","cantidad","estadoExamenes")
 
 
 @admin.register(HistorialDiagnosticosCabezote)

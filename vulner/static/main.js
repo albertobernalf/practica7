@@ -14,9 +14,14 @@ var seriali2 = new Array();
 var envio = new FormData()
 var envio1 = new FormData()
 var envio2 = new FormData()
+var envioLab = new FormData()
+var envioRad = new FormData()
+var envioTer = new FormData()
+
 var envioDiag = new FormData()
 var formData = new FormData()
 var envio_final = new FormData()
+var envio_finalRad = new FormData()
 var envio_final1 = new FormData()
 
 var x=0

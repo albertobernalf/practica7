@@ -96,7 +96,7 @@ $("#btnAdicDiagnosticos").click(function(){
 
 	var TiposDiagnostico =  document.getElementById("tiposDiagnostico").value;
 
-	var comboTiposDiagnostico = document.getElementById("TiposDiagnostico").value;
+	var comboTiposDiagnostico = document.getElementById("tiposDiagnostico");
 
 	var TiposDiagnosticoNombre =  comboTiposDiagnostico.options[comboTiposDiagnostico.selectedIndex].text;
 
@@ -238,33 +238,13 @@ $("#btnAdicExamenTerapias").click(function(){
 		$("#tablaTerapias").append(tds);
 
 
-    <!--    datavta = $("#formLaboratorios").serialize(); -->
-     <!--	datavta1 =  JSON.stringify(datavta); -->
-
-	<!--	seriali.push(datavta1); -->
-
-
-
-        envio.append('tipoExamen' , TipoExamen);
-        envio.append('examen' , examen);
-        envio.append('cantidad' , cantidad);
+        envioTer.append('tipoExamen' , TipoExamen);
+        envioTer.append('examen' , examen);
+        envioTer.append('cantidad' , cantidad);
 
 
 
-             for (var valores in envio.values) {
-                     console.log(valores);
-             }
-
-
-     //   var object = {};
-       //     envio.forEach(functiprinton(value, key){
-     //                 object[key] = value;
-      //                  });
-
-     //       var jsonEnvio = JSON.stringify(object);
-
-
-        serialiTer.push(envio);
+        serialiTer.push(envioTer);
 
 
 
@@ -306,7 +286,7 @@ $("#btnAdicExamenLab").click(function(){
 
 
          // tds += '<td  style="visibility: hidden">' + id_tipo_doc + '</td>';
-		//  tds += '<td  style="visibility: hidden">' + documento + '</td>';
+
 
 
 		tds += '</tr>';
@@ -314,33 +294,16 @@ $("#btnAdicExamenLab").click(function(){
 		$("#tablaExamenes").append(tds);
 
 
-    <!--    datavta = $("#formLaboratorios").serialize(); -->
-     <!--	datavta1 =  JSON.stringify(datavta); -->
-
-	<!--	seriali.push(datavta1); -->
 
 
-
-        envio.append('tipoExamen' , TipoExamen);
-        envio.append('examen' , examen);
-        envio.append('cantidad' , cantidad);
+        envioLab.append('tipoExamen' , TipoExamen);
+        envioLab.append('examen' , examen);
+        envioLab.append('cantidad' , cantidad);
 
 
 
-             for (var valores in envio.values) {
-                     console.log(valores);
-             }
 
-
-     //   var object = {};
-       //     envio.forEach(functiprinton(value, key){
-     //                 object[key] = value;
-      //                  });
-
-     //       var jsonEnvio = JSON.stringify(object);
-
-
-        serialiLab.push(envio);
+        serialiLab.push(envioLab);
 
 
 
@@ -368,15 +331,11 @@ $("#btnAdicExamenRad").click(function(){
 
 
 		  var tds = '<tr>';
-
-		  tds += '<td class="col-xs-2">' + TipoExamen + '</td>';
+          tds += '<td  style="visibility: hidden">' + TipoExamen + '</td>';
+		 // tds += '<td class="col-xs-2">' + TipoExamen + '</td>';
 		  tds += '<td class="col-xs-6">' + ExamenNombre + '</td>';
 		  tds += '<td class="col-xs-6">' + cantidad + '</td>';
           tds += '<td class="col-xs-1"><a href="#">Delete</a></td>';
-
-
-         // tds += '<td  style="visibility: hidden">' + id_tipo_doc + '</td>';
-		//  tds += '<td  style="visibility: hidden">' + documento + '</td>';
 
 
 		tds += '</tr>';
@@ -384,42 +343,13 @@ $("#btnAdicExamenRad").click(function(){
 		$("#tablaExamenesRad").append(tds);
 
 
-    <!--    datavta = $("#formRadiologias").serialize(); -->
-     <!--	datavta1 =  JSON.stringify(datavta); -->
-
-	<!--	seriali.push(datavta1); -->
-
-
-	//	envio.delete('id_tipo_doc');
-	//	envio.delete('documento');
-	//    envio.delete('folio');
-	//	envio.delete('fecha');
-	//	envio.delete('id_TipoExamen');
-	//	envio.delete('id_examen');
-	//	envio.delete('cantidad');
-	//	envio.delete('estado_folio');
-
-
-        envio.append('TipoExamen' , TipoExamen);
-        envio.append('examen' , examen);
-        envio.append('cantidad' , cantidad);
+        envioRad.append('tipoExamen' , TipoExamen);
+        envioRad.append('examen' , examen);
+        envioRad.append('cantidad' , cantidad);
 
 
 
-             for (var valores in envio.values) {
-                     console.log(valores);
-             }
-
-
-     //   var object = {};
-       //     envio.forEach(function(value, key){
-     //                 object[key] = value;
-      //                  });
-
-     //       var jsonEnvio = JSON.stringify(object);
-
-
-        serialiRad.push(envio);
+        serialiRad.push(envioRad);
 
         addAEvent();
 

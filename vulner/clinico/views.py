@@ -488,13 +488,16 @@ def crearHistoriaClinica(request):
                 # Fin Grabacion Historia
 
 
+                # Grabacion Laboratorios
+
                 SerialiLab = request.POST["serialiLab"]
                 print("SerialiLab = ", SerialiLab)
 
 
-                if SerialiLab != []:
+                if SerialiLab != '[]':
 
-                    # Grabacion Cabezote Laboratorios
+                    # Grabacion Cabezote  Laboratorios
+
                     JsonCabezoteLab = request.POST["jsonCabezoteLab"]
 
                     print("cabezoteFormLab = ", JsonCabezoteLab)
@@ -508,13 +511,9 @@ def crearHistoriaClinica(request):
                     # Intento guardar el cabezote de Examenes
 
                     HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
-                      #tipoDoc=TiposDocumento.objects.get(id=JsonDictCabezoteLab['tipoDoc']),
-                      #documento=Usuarios.objects.get(documento=JsonDictCabezoteLab['documento']),
-                      #consecAdmision=JsonDictCabezoteLab['consecAdmision'],
-                      #folio=ultimofolio2,
+
                       historia =   Historia.objects.get(id=jsonHistoria['id']),
                       tiposExamen =  TiposExamen.objects.get(id=JsonDictCabezoteLab['tiposExamen']),
-                      # tiposExamen=JsonDictCabezoteLab['tiposExamen'],
                       observaciones=JsonDictCabezoteLab['observaciones'],
                       estadoReg=estadoReg)
 
@@ -556,13 +555,78 @@ def crearHistoriaClinica(request):
                       HistoriaExamenes1.save()
 
 
+                      # Fin Grabacion Detalle Laboratorios
 
-                # Grabacion Detalle Laboratorios
+                # Fin Grabacion Laboratorios
 
-                # Fin Grabacion Detalle Laboratorios
+                # Grabacion Radiologia
 
+                SerialiRad = request.POST["serialiRad"]
+                print("SerialiRad = ", SerialiRad)
 
-                # Grabacion Radiologias
+                if SerialiRad != '[]':
+
+                          # Grabacion Cabezote  Radoliogia
+
+                          JsonCabezoteRad = request.POST["jsonCabezoteRad"]
+
+                          print("JsonCabezoteRad = ", JsonCabezoteRad)
+
+                          # Convierto ma Diccionario
+
+                          JsonDictCabezoteRad = json.loads(JsonCabezoteRad)
+
+                          print(JsonDictCabezoteRad)
+
+                          # Intento guardar el cabezote de Examenes
+
+                          HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
+
+                              historia=Historia.objects.get(id=jsonHistoria['id']),
+                              tiposExamen=TiposExamen.objects.get(id=JsonDictCabezoteRad['tiposExamen']),
+                              observaciones=JsonDictCabezoteRad['observaciones'],
+                              estadoReg=estadoReg)
+
+                          HistoriaExamenesCabezote1.save()
+
+                          cabezoteRadId = HistoriaExamenesCabezote1.id
+
+                          # Fin Grabacion Cabezote Radiologia
+
+                          # Grabacion detalle Laboratorios
+
+                          JsonDicSerialiRad = json.loads(SerialiRad)
+                          print("Diccionario seriliRad = ", JsonDicSerialiRad)
+
+                          # Voy a iterar
+                          campo = {}
+                          jsoncabezoteRadId = {'cabezoteRadId': cabezoteRadId}
+                          # Estado Ordenado
+
+                          jsonEstadoExamenes = {'id': 1}
+
+                          for x in range(0, len(JsonDicSerialiRad)):
+                              print(JsonDicSerialiRad[x])
+                              campo = JsonDicSerialiRad[x]
+                              print(campo['tipoExamen'])
+                              print(campo['examen'])
+                              print(campo['cantidad'])
+
+                              # Grabacion Definitiva
+
+                              HistoriaExamenes1 = HistoriaExamenes(
+                                  historiaExamenesCabezote=HistoriaExamenesCabezote.objects.get(
+                                      id=jsoncabezoteRadId['cabezoteRadId']),
+                                  procedimientos=Procedimientos.objects.get(id=campo['examen']),
+                                  cantidad=campo['cantidad'],
+                                  estadoExamenes=EstadoExamenes.objects.get(id=jsonEstadoExamenes['id']),
+                                  estadoReg='A')
+
+                              HistoriaExamenes1.save()
+
+                              # Fin Grabacion Detalle Laboratorios
+
+                      # Fin Grabacion Laboratorios
 
                 # Grabacion Terapias
 
@@ -623,9 +687,6 @@ def crearHistoriaClinica(request):
         print("Sede = ", Sede)
         print("Servicio = ", Servicio)
         print("Username = ", Username)
-
-
-
 
         context['Sede'] = Sede
         context['Servicio'] = Servicio
@@ -1662,7 +1723,7 @@ def cargaPanelMedico(request):
     print(comando)
 
     especialidadesMedicos = []
-    especialidadesMedicos.append({'id': '', 'nombre': ''})
+    #especialidadesMedicos.append({'id': '', 'nombre': ''})
 
     for id, nombre in curt.fetchall():
         especialidadesMedicos.append({'id': id, 'nombre': nombre})
@@ -1733,6 +1794,7 @@ def buscarAntecedentes(request):
 
 
     context = {}
+
 
     TiposAntecedente = request.GET["TiposAntecedente"]
 
