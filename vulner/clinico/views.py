@@ -385,7 +385,8 @@ def crearHistoriaClinica(request):
             folio = request.POST["folio"]
             fecha = request.POST["fecha"]
             tiposFolio = request.POST["tiposFolio"]
-            tiposFolio = 1
+            #tiposFolio = 1
+            print (tiposFolio)
             causasExterna = request.POST["causasExterna"]
             dependenciasRealizado = request.POST["dependenciasRealizado"]
 
@@ -416,7 +417,7 @@ def crearHistoriaClinica(request):
             print ("consec admisione = ", consecAdmision)
             print("folio = ", ultimofolio2)
             print("fecha = ", fecha)
-            print("tipodFolio = ", tiposFolio)
+            print("tiposFolio = ", tiposFolio)
             print("causas externa=", causasExterna)
             print("dependenciasrealizado= ", dependenciasRealizado)
             print("especmedico = ", espMedico)
@@ -432,72 +433,14 @@ def crearHistoriaClinica(request):
 
             else:
 
-
-                CabezoteFormLab = request.POST["jsonformDataCabezoteLab"]
-                print("cabezoteFormLab = ", CabezoteFormLab)
-
-
-                # Voy a iterar cabezoteFormLab
-
-                json_dict_CabezoteFormLab = json.loads(CabezoteFormLab)
-
-                print(json_dict_CabezoteFormLab)
-
-                # Loop along dictionary keys
-                #for key in json_dict_CabezoteFormLab:
-                #    print(key, ":", json_dict_CabezoteFormLab[key])
-
-
-
-
-                SerialiLab = request.POST["serialiLab"]
-                print("SerialiLab = ", SerialiLab)
-
-
-                json_dict_SerialiLab = json.loads(SerialiLab)
-                print ("Diccionario seriliLab = ", json_dict_SerialiLab)
-
-                # Voy a iterarseriali1
-
-                y = {}
-
-
-                for x in range(0, len(json_dict_SerialiLab) ):
-                    print(json_dict_SerialiLab[x])
-                    y = json_dict_SerialiLab[x]
-
-
-                    print (y['tipoExamen'])
-                    print(y['examen'])
-
-                    print (y['cantidad'])
-
-
-                    # Loop along dictionary keys
-                    for key in y:
-                        print(key, ":", y[key])
-
-
-                # Intento guardar el cabezote de Examenes
-
-                nuevos_laboratorioshistoria = HistoriaExamenesCabezote(
-                    tipoDoc = TiposDocumento.objects.get(id=json_dict_CabezoteFormLab['tipoDoc']),
-                    documento = Usuarios.objects.get(documento=json_dict_CabezoteFormLab['documento']),
-                    consecAdmision = json_dict_CabezoteFormLab['consecAdmision'],
-                    folio = ultimofolio2,
-                    tiposExamen =  TiposExamen.objects.get(id=json_dict_CabezoteFormLab['tiposExamen']),
-                    observaciones =json_dict_CabezoteFormLab['observaciones'] ,
-                    estadoReg=estadoReg)
-
-
-                nuevos_laboratorioshistoria.save()
+                # Grabacion Historia
 
                 # Consigo la Especialidad de Evolucion
 
                 miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
                 curt = miConexiont.cursor()
 
-                comando = "SELECT e.id id , e2.nombre nombre FROM clinico_especialidadesMedicos e, clinico_especialidades e2  WHERE e.id = '" +str(espMedico) + "' AND e.especialidades_id = e2.id     "
+                comando = "SELECT e2.id id , e2.nombre nombre FROM clinico_especialidadesMedicos e, clinico_especialidades e2  WHERE e.id = '" +str(espMedico) + "' AND e.especialidades_id = e2.id     "
 
                 curt.execute(comando)
                 print(comando)
@@ -507,45 +450,166 @@ def crearHistoriaClinica(request):
                 for id, nombre in curt.fetchall():
                     especial.append({'id': id, 'nombre': nombre})
 
+
                 miConexiont.close()
                 print(especial)
-                especial1 = json.dumps(especial)
-                print(especial1.id)
 
-                # Fin combo Diagnosticos
+                jsonEspecial = especial[0]
+                campo = jsonEspecial['id']
+
+                print (campo)
+
+
+                print("Especial1 = " , campo)
+
+                jsontiposFolio = {'tiposFolio' : tiposFolio}
+
+                print("jsontiposFolio = ", jsontiposFolio)
+                print("jsontiposFolio = ", jsontiposFolio ['tiposFolio'])
+
+                jsonPlanta = {'planta': planta}
+                jsonUsuarioRegistro = {'usuarioRegistro': usuarioRegistro}
+
+                print ("jsonusuaroregistr= ", jsonUsuarioRegistro ['usuarioRegistro'])
+                print ("jsonplanta = ", jsonPlanta ['planta'])
+
+                # Fin Consigo la Especialidad de Evolucion
 
                 nueva_historia = Historia(
                     tipoDoc= TiposDocumento.objects.get(id = tipoDoc)   ,
                     documento=Usuarios.objects.get(documento = documento)  ,
                     consecAdmision=1,
                     folio=ultimofolio2,
-                    fecha=fecha,
-                    tiposFolio=TiposFolio.objects.get(id = tiposFolio)   ,
+                    fecha=fechaRegistro,
+                    tiposFolio=TiposFolio.objects.get(id = jsontiposFolio ['tiposFolio'])   ,
                     causasExterna=CausasExterna.objects.get(id = causasExterna),
                     dependenciasRealizado=Dependencias.objects.get(id = dependenciasRealizado)   ,
-                    especialidades=EspecialidadesMedicos.objects.get(id = especial1)   ,
-                    planta=Planta.objects.get(id = planta)   ,
+                    especialidades=Especialidades.objects.get(id = jsonEspecial['id'])   ,
+                    planta=Planta.objects.get(id = jsonPlanta ['planta'])   ,
                     motivo=motivo,
                     subjetivo=subjetivo,
                     objetivo=objetivo,
                     analisis=analisis,
                     plan=plan,
                     fechaRegistro=fechaRegistro,
-                    usuarioRegistro=Usuarios.objects.get(id = usuarioRegistro)   ,
+                    usuarioRegistro=Usuarios.objects.get(id = jsonUsuarioRegistro ['usuarioRegistro'])   ,
                     estadoReg=estadoReg)
+
                 nueva_historia.save()
 
-                data = {'Mensaje': 'Folio Creado'}
-
-                seriali1 = request.POST["seriali1"]
-                print(seriali1)
-
-                cabezoteForm = request.POST["cabezoteForm"]
-                print (cabezoteForm)
 
 
-                #return HttpResponse(json.dumps(data))
-                return HttpResponse('Folio Creado')
+                # Fin Grabacion Historia
+
+                # Grabacion Cabezote Laboratorios
+
+                JsonCabezoteLab = request.POST["jsonCabezoteLab"]
+                print("cabezoteFormLab = ", JsonCabezoteLab)
+
+                # Convierto ma Diccionario
+
+                JsonDictCabezoteLab = json.loads(JsonCabezoteLab)
+
+                print(JsonDictCabezoteLab)
+
+                # Intento guardar el cabezote de Examenes
+
+                HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
+                    tipoDoc=TiposDocumento.objects.get(id=JsonDictCabezoteLab['tipoDoc']),
+                    documento=Usuarios.objects.get(documento=JsonDictCabezoteLab['documento']),
+                    consecAdmision=JsonDictCabezoteLab['consecAdmision'],
+                    folio=ultimofolio2,
+                    tiposExamen =  TiposExamen.objects.get(id=JsonDictCabezoteLab['tiposExamen']),
+                    # tiposExamen=JsonDictCabezoteLab['tiposExamen'],
+                    observaciones=JsonDictCabezoteLab['observaciones'],
+                    estadoReg=estadoReg)
+
+                HistoriaExamenesCabezote1.save()
+
+                cabezoteLabId = HistoriaExamenesCabezote1.id
+
+                # Fin Grabacion Cabezote Laboratorios
+
+
+                SerialiLab = request.POST["serialiLab"]
+                print("SerialiLab = ", SerialiLab)
+
+                JsonDicSerialiLab = json.loads(SerialiLab)
+                print ("Diccionario seriliLab = ", JsonDicSerialiLab)
+
+                # Voy a iterar
+                campo = {}
+                jsonCabezoteId = {'cabezoteId' : cabezoteId}
+
+
+                for x in range(0, len(JsonDicSerialiLab) ):
+                    print(JsonDicSerialiLab[x])
+                    campo = JsonDicSerialiLab[x]
+
+                    print (campo['tipoExamen'])
+                    print(campo['examen'])
+                    print (campo['cantidad'])
+
+
+                    # Loop along dictionary keys
+                    #for key in y:
+                    #    print(key, ":", y[key])
+
+                    # Grabacion Definitiva
+
+                    HistoriaExamenes1 = HistoriaExamenes(historiaExamenesCabezote = jsonCabezoteId['cabezoteId'],
+                    procedimientos = campo['examen'],
+                    cantidad =  campo['cantidad'],
+                    estadoExamenes = 'O',
+                    estadoReg = 'A' )
+
+                    HistoriaExamenes.save()
+
+
+
+                # Grabacion Detalle Laboratorios
+
+                # Fin Grabacion Detalle Laboratorios
+
+
+                # Grabacion Radiologias
+
+                # Grabacion Terapias
+
+                # Grabacion Diagnosticos
+
+                # Grabacion Antecedentes
+
+                # Grabacion Procedimientos NoQx
+
+                # Grabacion Incapacidades
+
+                # Grabacion Cirugias
+
+                # Grabacion Formulacion
+
+
+
+
+
+
+
+
+
+
+
+
+            data = {'Mensaje': 'Folio Creado'}
+
+            seriali1 = request.POST["seriali1"]
+            print(seriali1)
+
+            cabezoteForm = request.POST["cabezoteForm"]
+            print (cabezoteForm)
+
+
+            #return HttpResponse(json.dumps(data))
+            return HttpResponse('Folio Creado')
 
 
 
@@ -771,7 +835,7 @@ def crearHistoriaClinica(request):
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
-        comando = "select  tipoDoc_id , documento documentoPaciente, u.nombre nombre, genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, u.direccion direccion, u.telefono telefono  from usuarios_usuarios u, usuarios_tiposUsuario  tu, sitios_centros cen where  u.tipoDoc_id = '" + str(filaTipoDoc.id) + "' and u.documento = '" + str(fila.documento) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
+        comando = "select  tipoDoc_id , tip.nombre tipnombre, documento documentoPaciente, u.nombre nombre, case when genero = 'M' then 'Masculino' when genero= 'F' then 'Femenino' end as genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, u.direccion direccion, u.telefono telefono  from usuarios_usuarios u, usuarios_tiposUsuario  tu, sitios_centros cen , usuarios_tiposDocumento tip  where tip.id =u.tipoDoc_id  AND u.tipoDoc_id = '" + str(filaTipoDoc.id) + "' and u.documento = '" + str(fila.documento) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
 
 
         curt.execute(comando)
@@ -779,8 +843,8 @@ def crearHistoriaClinica(request):
 
         datosPaciente = []
 
-        for tipoDoc_id, documentoPaciente, nombre, genero, centro, tipoUsuario, fechaNacio, direccion, telefono in curt.fetchall():
-            datosPaciente.append({'tipoDoc_id': tipoDoc_id, 'documentoPaciente': documentoPaciente, 'nombre': nombre, 'genero': genero,
+        for tipoDoc_id, tipnombre, documentoPaciente, nombre,  genero, centro, tipoUsuario, fechaNacio, direccion, telefono in curt.fetchall():
+            datosPaciente.append({'tipoDoc_id': tipoDoc_id, 'tipnombre' : tipnombre , 'documentoPaciente': documentoPaciente, 'nombre': nombre, 'genero': genero,
                     'centro': centro, 'tipoUsuario': tipoUsuario, 'fechaNacio': fechaNacio, 'direccion': direccion, 'telefono': telefono})
 
         miConexiont.close()
@@ -913,7 +977,8 @@ def crearHistoriaClinica(request):
 
 
 
-        return render(request, 'clinico/historiaclinica.html', context);
+        #return render(request, 'clinico/historiaclinica.html', context);
+        return render(request, 'navegacion.html', context);
 
 
 
@@ -1109,15 +1174,15 @@ class crearHistoriaClinica1(TemplateView):
         miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
         curt = miConexiont.cursor()
 
-        comando = "select  tipoDoc_id , documento documentoPaciente, nombre, genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, direccion, telefono from usuarios_usuario u, usuarios_tiposUsuario  tu, sitios_centros cen where  u.tipoDoc_id = '" + str(TipoDocPaciente) + "' and u.documento = '" + str(documentoPaciente) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
+        comando = "select  tipoDoc_id , tip.nombre tipnombre, documento documentoPaciente, nombre, case when genero = 'M' then 'Masculino' when genero= 'F' then 'Femenino' end as genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, direccion, telefono from usuarios_usuario u, usuarios_tiposUsuario  tu, sitios_centros cen, usuarios_tiposDocumento tip where  tip.id =u.tipoDoc_id  AND u.tipoDoc_id = '" + str(TipoDocPaciente) + "' and u.documento = '" + str(documentoPaciente) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
 
         curt.execute(comando)
         print(comando)
 
         datosPaciente = []
 
-        for tipoDoc_id, documentoPaciente, nombre, genero, centro, tipoUsuario, fechaNacio, direccion, telefono  in curt.fetchall():
-            datosPaciente.append({'tipoDoc_id': tipoDoc_id, 'documentoPaciente': documentoPaciente, 'nombre': nombre,'genero':genero   ,'centro':centro  , 'tipoUsuario':tipoUsuario  ,'fechaNacio': fechaNacio,'direccion': direccion, 'telefono' : telefono})
+        for tipoDoc_id, tipnombre , documentoPaciente, nombre, genero, centro, tipoUsuario, fechaNacio, direccion, telefono  in curt.fetchall():
+            datosPaciente.append({'tipoDoc_id': tipoDoc_id, 'tipnombre' : tipnombre, 'documentoPaciente': documentoPaciente, 'nombre': nombre,'genero':genero   ,'centro':centro  , 'tipoUsuario':tipoUsuario  ,'fechaNacio': fechaNacio,'direccion': direccion, 'telefono' : telefono})
 
         miConexiont.close()
         print(datosPaciente)
