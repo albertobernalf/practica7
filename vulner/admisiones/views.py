@@ -282,7 +282,7 @@ def validaAcceso(request):
                 print(comando)
 
                 tiposDoc = []
-                tiposDoc.append({'id': '', 'nombre': ''})
+                #tiposDoc.append({'id': '', 'nombre': ''})
 
 
 
@@ -407,6 +407,97 @@ def validaAcceso(request):
 
                 # Fin combo TiposFolio
 
+                # Combo TiposUsuario
+
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+
+                comando = "SELECT p.id id, p.nombre  nombre FROM usuarios_tiposusuario p"
+
+                curt.execute(comando)
+                print(comando)
+
+                tiposUsuario = []
+                # tiposUsuario.append({'id': '', 'nombre': ''})
+
+                for id, nombre in curt.fetchall():
+                    tiposUsuario.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(tiposUsuario)
+
+                context['TiposUsuario'] = tiposUsuario
+
+                # Fin combo Tipos Usuario
+
+                # Combo TiposDocumento
+
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+
+                comando = "SELECT p.id id, p.nombre  nombre FROM usuarios_tiposDocumento p"
+
+                curt.execute(comando)
+                print(comando)
+
+                tiposDocumento = []
+                #tiposDocumento.append({'id': '', 'nombre': ''})
+
+                for id, nombre in curt.fetchall():
+                    tiposDocumento.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(tiposDocumento)
+
+                context['TiposDocumento'] = tiposDocumento
+
+                # Fin combo TiposDocumento
+
+                # Combo Centros
+
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+
+                comando = "SELECT p.id id, p.nombre  nombre FROM sitios_centros p"
+
+                curt.execute(comando)
+                print(comando)
+
+                centros = []
+
+                for id, nombre in curt.fetchall():
+                    centros.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(tiposDocumento)
+
+                context['Centros'] = centros
+
+                # Fin combo Centros
+
+                # Combo Diagnosticos
+
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
+
+                comando = "SELECT p.id id, p.nombre  nombre FROM clinico_diagnosticos p"
+
+                curt.execute(comando)
+                print(comando)
+
+                diagnosticos = []
+                diagnosticos.append({'id': '', 'nombre': ''})
+
+                for id, nombre in curt.fetchall():
+                    diagnosticos.append({'id': id, 'nombre': nombre})
+
+                miConexiont.close()
+                print(diagnosticos)
+
+                context['Diagnosticos'] = diagnosticos
+
+                # Fin combo Diagnosticos
+
 
 
 
@@ -445,9 +536,9 @@ def validaAcceso(request):
                     miConexion0.close()
                     miConexion1.close()
                     miConexion2.close()
-                    return render(request, "admisiones/panelHospAdmisionesBravo.html", context)
+                    return render(request, "admisiones/panelAdmisiones.html", context)
 
-    return render(request, "menuMedico.html",context)
+    return render(request, "admisiones/panelAdmisiones.html",context)
 
 
 
@@ -673,9 +764,9 @@ def retornarAdmision(request, Sede, Perfil, Username, Username_id, NombreSede):
         return render(request, "facturacion/menuFacturacion.html", context)
     if (Perfil == 6):
         print ("Entre por dende ERA")
-        return render(request, "admisiones/panelHospAdmisionesBravo.html", context)
+        return render(request, "admisiones/panelAdmisiones.html", context)
 
-    return render(request, "admisiones/panelHospAdmisionesBravo.html", context)
+    return render(request, "admisiones/panelAdmisiones.html", context)
 
 
 def salir(request):
@@ -1122,7 +1213,7 @@ def buscarAdmision(request):
 
 
 
-    return render(request, "admisiones/panelHospAdmisionesBravo.html", context)
+    return render(request, "admisiones/panelAdmisiones.html", context)
 
 
 
@@ -1256,6 +1347,484 @@ def buscarHabitaciones(request):
 
 
     return JsonResponse(json.dumps(Habitaciones), safe=False)
+
+
+
+# aqui nuevo codigo cvrear admision DEF
+
+
+def crearAdmisionDef(request):
+
+    print("Entre a Craer Admision definitiva")
+
+    if request.method == 'POST':
+        print("EntrePost Graba Admision Def")
+        data = {}
+        context = {}
+
+
+        #sedesClinica = request.POST['sedesClinica']
+        sedesClinica = request.POST['Sede']
+        Sede = request.POST['Sede']
+        context['Sede'] = Sede
+        Perfil = request.POST['Perfil']
+        context['Perfil'] = Perfil
+
+        print("Sedes Clinica = ", sedesClinica)
+        print ("Sede = ",Sede)
+
+
+        Username = request.POST["Username"]
+        print(" = " , Username)
+        context['Username'] = Username
+
+        Username_id = request.POST["Username_id"]
+        print("Username_id = ", Username_id)
+        context['Username_id'] = Username_id
+
+
+
+        tipoDoc = request.POST['tipoDoc']
+       # documento = request.POST['documento']
+        documento = request.POST['busDocumentoSel']
+        print("tipoDoc = ", tipoDoc)
+        print("documento = ", documento)
+        #extraServicio = request.POST['extraServicio']
+       #print("extraServicio = ", extraServicio)
+
+        consec = Ingresos.objects.all().filter(documento_id = documento).aggregate(Max('consec'))
+        print("consecutivo Inicial =", consec)
+        consecutivo1 = consec['consec__max']
+        consecutivo = consec['consec__max']
+
+        if consecutivo1 == None:
+            consecutivo = 1
+        else:
+            consecutivo = consecutivo + int(1)
+
+
+
+        print("consecutivo =", consecutivo)
+        consec = consecutivo
+        fechaIngreso = request.POST['fechaIngreso']
+        print("fechaIngreso =", fechaIngreso)
+
+        fechaSalida = "0001-01-01 00:00:00"
+
+        factura = 0
+        numcita = 0
+        dependenciasIngreso = request.POST['dependenciasIngreso']
+        print("dependenciasIngreso =", dependenciasIngreso)
+        dependenciasActual = dependenciasIngreso
+        dependenciasSalida = ""
+        dxIngreso = request.POST['dxIngreso']
+        print("dxIngreso =", dxIngreso)
+        dxActual = dxIngreso
+        dxSalida = ""
+        estadoSalida = "1"
+
+        medicoIngreso = request.POST['medicoIngreso']
+        print("medicoIngreso =", medicoIngreso)
+        medicoActual = medicoIngreso
+        medicoSalida = ""
+        salidaClinica = "N"
+        salidaDefinitiva = "N"
+
+        especialidadesMedicos = request.POST['busEspecialidad']
+
+        especialidadesMedicosSalida = ""
+        especialidadesMedicosActual = especialidadesMedicos
+
+
+        usuarioRegistro = Username_id
+
+        print("usuarioRegistro =", usuarioRegistro)
+        now = datetime.now()
+        dnow=now.strftime("%Y-%m-%d %H:%M:%S")
+        print ("NOW  = ", dnow)
+
+        fechaRegistro = dnow
+        estadoReg = "A"
+        print("estadoRegistro =", estadoReg)
+
+        data[0] = "Ha ocurrido un error"
+
+        # VAmos a guardar la Admision
+
+        # Consigo ID de Documento
+
+        documento_llave = Usuarios.objects.get(documento=documento)
+        print("el id del dopcumento = ", documento_llave.id)
+
+        grabo = Ingresos(
+                         sedesClinica_id=Sede,
+                         tipoDoc_id=tipoDoc,
+                         documento_id=documento_llave.id,
+                         consec=consec,
+                         fechaIngreso=fechaIngreso,
+                         fechaSalida=fechaSalida,
+                         factura=factura,
+                         numcita=numcita,
+                         dependenciasIngreso_id=dependenciasIngreso,
+                         dxIngreso_id=dxIngreso,
+                         medicoIngreso_id=medicoIngreso,
+                         especialidadesMedicosIngreso_id=especialidadesMedicos,
+                         dependenciasActual_id=dependenciasActual,
+                         dxActual_id = dxActual,
+                         medicoActual_id=medicoActual,
+                         especialidadesMedicosActual_id=especialidadesMedicosActual,
+                         dependenciasSalida_id = dependenciasSalida,
+                         dxSalida_id = dxSalida,
+                         medicoSalida_id=medicoSalida,
+                         especialidadesMedicosSalida_id="",
+                         estadoSalida_id = estadoSalida,
+
+                         salidaClinica = salidaClinica,
+                         salidaDefinitiva=salidaDefinitiva,
+                         fechaRegistro=fechaRegistro,
+                         usuarioRegistro_id=usuarioRegistro,
+                         estadoReg=estadoReg
+
+        )
+        print("Voy a fiu¿guardar la INFO")
+
+        grabo.save()
+        print("yA grabe 2", grabo.id)
+        grabo.id
+        print("yA grabe" , grabo.id)
+
+        # Grabo Dependencia Historico
+
+        print("Voy a guardar HISTORICO dependencias ")
+
+        grabo2 = HistorialDependencias(
+            tipoDoc_id=tipoDoc,
+            documento_id=documento_llave.id,
+            consec=consec,
+            dependencias_id=dependenciasIngreso,
+            fechaOcupacion=fechaRegistro,
+            fechaLiberacion=fechaSalida,
+            fechaRegistro=fechaRegistro,
+            usuarioRegistro_id=usuarioRegistro,
+            estadoReg=estadoReg
+
+        )
+        grabo2.save()
+
+        print("Grabe HISTPRICO DEPENDENCIAS")
+
+        # Averiguar si ya hay una Dependencia Actual creada o actualizarla
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT id ,disponibilidad nombre FROM sitios_dependenciasActual WHERE dependencias_id = '" + str(dependenciasIngreso) + "'"
+        curt.execute(comando)
+        print(comando)
+
+        dependenciasActual = []
+
+        for id, nombre in curt.fetchall():
+            dependenciasActual.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+
+
+        if dependenciasActual != []:
+
+            print("Voy a actualizar disponibilidad dependencias Actual")
+
+            # Actualizo Disponibilidad de dependencia
+            miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+            curt = miConexiont.cursor()
+            comando = "UPDATE sitios_dependenciasActual  SET disponibilidad = 'O' WHERE dependencias_id = '" + str(dependenciasIngreso) + "'"
+            curt.execute(comando)
+            print(comando)
+            miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+            curt = miConexiont.cursor()
+            comando = "SELECT id ,disponibilidad nombre FROM sitios_dependenciasActual WHERE dependencias_id = '" + str(
+                dependenciasIngreso) + "'"
+            curt.execute(comando)
+            print(comando)
+
+            dependenciasActual = []
+
+            for id, nombre in curt.fetchall():
+                dependenciasActual.append({'id': id, 'nombre': nombre})
+
+            miConexiont.commit
+            miConexiont.close()
+
+
+        else:
+
+          # Grabo Dependencia Actual
+
+          print("Voy a guardar dependencias Actual")
+
+          grabo3 = DependenciasActual(
+            tipoDoc_id=tipoDoc,
+            documento_id=documento_llave.id,
+            consec=consec,
+            dependencias_id=dependenciasIngreso,
+            disponibilidad='O',
+            fecha=fechaRegistro,
+            fechaRegistro=fechaRegistro,
+            usuarioRegistro_id=usuarioRegistro,
+            estadoReg=estadoReg
+          )
+          grabo3.save()
+
+          print("GUARDADO dependencias Actual")
+
+
+
+        # RUTINA ARMADO CONTEXT
+
+        ingresos = []
+
+        miConexionx = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curx = miConexionx.cursor()
+
+
+        detalle = "SELECT  tp.nombre tipoDoc,  u.documento documento, u.nombre  nombre , i.consec consec , fechaIngreso , fechaSalida, ser.nombre servicioNombreIng, dep.nombre camaNombreIng , diag.nombre dxActual FROM admisiones_ingresos i, usuarios_usuarios u, sitios_dependencias dep , clinico_servicios ser ,usuarios_tiposDocumento tp , sitios_dependenciastipo deptip  , clinico_Diagnosticos diag  , sitios_serviciosSedes sd WHERE  sd.sedesClinica_id = i.sedesClinica_id  and   sd.servicios_id  = ser.id and   i.sedesClinica_id = dep.sedesClinica_id AND i.dependenciasActual_id = dep.id AND i.sedesClinica_id= '" + str(
+            Sede) + "'  AND  deptip.id = dep.dependenciasTipo_id and dep.servicios_id = ser.id AND i.salidaDefinitiva = 'N' and tp.id = u.tipoDoc_id and u.id = i.documento_id and diag.id = i.dxactual_id"
+        print(detalle)
+
+        curx.execute(detalle)
+
+        for tipoDoc, documento, nombre, consec, fechaIngreso, fechaSalida, servicioNombreIng, camaNombreIng, dxActual in curx.fetchall():
+            ingresos.append({'tipoDoc': tipoDoc, 'Documento': documento, 'Nombre': nombre, 'Consec': consec,
+                             'FechaIngreso': fechaIngreso, 'FechaSalida': fechaSalida,
+                             'servicioNombreIng': servicioNombreIng, 'camaNombreIng': camaNombreIng,
+                             'DxActual': dxActual})
+
+        miConexionx.close()
+        print(ingresos)
+        context['Ingresos'] = ingresos
+
+        # Combo de Servicios
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT ser.id id ,ser.nombre nombre FROM sitios_serviciosSedes sed, clinico_servicios ser Where sed.sedesClinica_id ='" + str(Sede) + "' AND sed.servicios_id = ser.id"
+        curt.execute(comando)
+        print(comando)
+
+        servicios = []
+        servicios.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            servicios.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(servicios)
+
+        context['Servicios'] = servicios
+
+        # Fin combo servicios
+
+        # Combo de SubServicios
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT sub.id id ,sub.nombre nombre  FROM sitios_serviciosSedes sed, clinico_servicios ser  , sitios_subserviciossedes sub Where sed.sedesClinica_id ='" + str(
+            Sede) + "' AND sed.servicios_id = ser.id and  sed.sedesClinica_id = sub.sedesClinica_id and sed.servicios_id =sub.servicios_id"
+        curt.execute(comando)
+        print(comando)
+
+        subServicios = []
+        subServicios.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            subServicios.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(subServicios)
+
+        context['SubServicios'] = subServicios
+
+        # Fin combo SubServicios
+
+        # Combo TiposDOc
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT id ,nombre FROM usuarios_TiposDocumento "
+        curt.execute(comando)
+        print(comando)
+
+        tiposDoc = []
+        #tiposDoc.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            tiposDoc.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposDoc)
+
+        context['TiposDoc'] = tiposDoc
+
+        # Fin combo TiposDOc
+
+        # Combo Habitaciones
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT id ,nombre FROM sitios_dependencias where sedesClinica_id = '" + str(
+            Sede) + "' AND dependenciasTipo_id = 2"
+        curt.execute(comando)
+        print(comando)
+
+        habitaciones = []
+
+        for id, nombre in curt.fetchall():
+            habitaciones.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(habitaciones)
+
+        context['Habitaciones'] = habitaciones
+
+        # Fin combo Habitaciones
+
+        # Combo Especialidades
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+        comando = "SELECT id ,nombre FROM clinico_Especialidades"
+        curt.execute(comando)
+        print(comando)
+
+        especialidades = []
+        especialidades.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            especialidades.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(especialidades)
+
+        context['Especialidades'] = especialidades
+
+        # Fin combo Especialidades
+
+        # Combo Medicos
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM planta_planta p ,  planta_perfilesplanta perf WHERE p.sedesClinica_id = perf.sedesClinica_id and  perf.sedesClinica_id = '" + str(
+            Sede) + "' AND perf.tiposPlanta_id = 1   and p.id = perf.planta_id "
+
+        curt.execute(comando)
+        print(comando)
+
+        medicos = []
+        medicos.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            medicos.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(medicos)
+
+        context['Medicos'] = medicos
+
+        # Fin combo Medicos
+
+        # Combo TiposUsuario
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM usuarios_tiposusuario p"
+
+        curt.execute(comando)
+        print(comando)
+
+        tiposUsuario = []
+        # tiposUsuario.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            tiposUsuario.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposUsuario)
+
+        context['TiposUsuario'] = tiposUsuario
+
+        # Fin combo Tipos Usuario
+
+        # Combo TiposDocumento
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM usuarios_tiposDocumento p"
+
+        curt.execute(comando)
+        print(comando)
+
+        tiposDocumento = []
+        #tiposDocumento.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            tiposDocumento.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposDocumento)
+
+        context['TiposDocumento'] = tiposDocumento
+
+        # Fin combo TiposDocumento
+
+        # Combo Centros
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM sitios_centros p"
+
+        curt.execute(comando)
+        print(comando)
+
+        centros = []
+
+        for id, nombre in curt.fetchall():
+            centros.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(tiposDocumento)
+
+        context['Centros'] = centros
+
+        # Fin combo Centros
+
+        # Combo Diagnosticos
+
+        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+        curt = miConexiont.cursor()
+
+        comando = "SELECT p.id id, p.nombre  nombre FROM clinico_diagnosticos p"
+
+        curt.execute(comando)
+        print(comando)
+
+        diagnosticos = []
+        diagnosticos.append({'id': '', 'nombre': ''})
+
+        for id, nombre in curt.fetchall():
+            diagnosticos.append({'id': id, 'nombre': nombre})
+
+        miConexiont.close()
+        print(diagnosticos)
+
+        context['Diagnosticos'] = diagnosticos
+
+        # Fin combo Diagnosticos
+
+        # FIN RUTINA ARMADO CONTEXT
+
+
+    return render(request, "admisiones/panelAdmisiones.html", context)
+
+
+
+# fin nuevo mcodigo crear admison DEF
 
 
 class crearAdmision(TemplateView):
@@ -1650,7 +2219,7 @@ class crearAdmision(TemplateView):
         # FIN RUTINA ARMADO CONTEXT
 
 
-        return render(request, "admisiones/panelHospAdmisionesBravo.html", context)
+        return render(request, "admisiones/panelAdmisiones.html", context)
 
 
 

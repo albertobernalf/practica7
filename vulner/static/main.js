@@ -139,6 +139,8 @@ function findOneUsuario1()
 
 	var documento = document.getElementById("busDocumentoSel").value;
 
+    alert("Envio a la MOdal Tipo Doc = " + tipoDoc);
+    alert("Envio a la MOdal documento = " + documento);
 
 
 	$.ajax({

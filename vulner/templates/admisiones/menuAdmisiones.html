@@ -93,8 +93,36 @@
                  <button class="btn btn-outline-success my-2 my-sm-0" type="button">ADMISIONES </button>
              </form>
 </nav>
+{% block head  %}
+<script>
+window.onload = function(){
+  var fecha = new Date(); //Fecha actual
+  var mes = fecha.getMonth()+1; //obteniendo mes
+  var dia = fecha.getDate(); //obteniendo dia
+  var ano = fecha.getFullYear(); //obteniendo año
+  if(dia<10)
+    dia='0'+dia; //agrega cero si el menor de 10
+  if(mes<10)
+    mes='0'+mes //agrega cero si el menor de 10
+  document.getElementById('busDesde').value=ano+"-"+mes+"-"+dia;
+  document.getElementById('busHasta').value=ano+"-"+mes+"-"+dia;
+}
+
+
+</script>
+
+
+{% endblock %}
+
+
+
 
 {% block content  %}
+
+
+{% endblock %}
+
+{% block footer  %}
 
 
 {% endblock %}
@@ -114,7 +142,8 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker-standalone.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
-<script>  src={% static 'js/menuAdmisiones.js' %}            </script>
+
+<script src={% static 'js/menuAdmisiones.js' %} defer >         </script>
 
 </body>
 

@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.timezone import now
 
+from smart_selects.db_fields import ChainedForeignKey
+from sitios.models import Departamentos, Ciudades
+
+
 # Create your models here.
 
 
@@ -43,6 +47,9 @@ class Usuarios(models.Model):
     centrosC = models.ForeignKey('sitios.Centros', default=1, on_delete=models.PROTECT, null=True)
     tiposUsuario = models.ForeignKey('usuarios.TiposUsuario', default=1, on_delete=models.PROTECT, null=True)
     fechaNacio = models.DateTimeField(default=now, editable=False)
+    departamentos = models.ForeignKey('sitios.Departamentos', default=1, on_delete=models.PROTECT, null=True)
+
+    ciudades = ChainedForeignKey(Ciudades, chained_field='departamentos', chained_model_field='departamentosUsuarios',  show_all=False)
     direccion = models.CharField(max_length=50)
     telefono  = models.CharField(max_length=20)
     contacto  = models.CharField(max_length=50)

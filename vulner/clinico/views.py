@@ -458,29 +458,52 @@ def crearHistoriaClinica(request):
 
                 # Fin Consigo la Especialidad de Evolucion
 
-                nueva_historia = Historia(
-                    tipoDoc= TiposDocumento.objects.get(id = tipoDoc)   ,
-                    documento=Usuarios.objects.get(documento = documento)  ,
-                    consecAdmision=1,
-                    folio=ultimofolio2,
-                    fecha=fechaRegistro,
-                    tiposFolio=TiposFolio.objects.get(id = jsontiposFolio ['tiposFolio'])   ,
-                    causasExterna=CausasExterna.objects.get(id = causasExterna),
-                    dependenciasRealizado=Dependencias.objects.get(id = dependenciasRealizado)   ,
-                    especialidades=Especialidades.objects.get(id = jsonEspecial['id'])   ,
-                    planta=Planta.objects.get(id = jsonPlanta ['planta'])   ,
-                    motivo=motivo,
-                    subjetivo=subjetivo,
-                    objetivo=objetivo,
-                    analisis=analisis,
-                    plan=plan,
-                    fechaRegistro=fechaRegistro,
-                    usuarioRegistro=Usuarios.objects.get(id = jsonUsuarioRegistro ['usuarioRegistro'])   ,
-                    estadoReg=estadoReg)
+                # Inicio grabacion Historia Clinica
 
-                nueva_historia.save()
+                miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                curt = miConexiont.cursor()
 
-                historiaId = nueva_historia.id
+                comando = "INSERT INTO clinico_Historia (tipoDoc_id , documento_id , consecAdmision, folio ,fecha , tiposFolio_id ,causasExterna_id , dependenciasRealizado_id ,especialidades_id ,planta_id, motivo , subjetivo,objetivo, analisis ,plan,fechaRegistro ,usuarioRegistro_id, estadoReg ) VALUES ('" + str(tipoDoc) + "', '" +str(documento) + "',  '" + str(consecAdmision) +  "', '" + str(ultimofolio2) + "', '" + str(fechaRegistro) + "', '" + str(tiposFolio) +"', '" + str( causasExterna) + "', '" + str( dependenciasRealizado) + "', '" + str(jsonEspecial['id']) + "', '" + str(planta) +"', '" + str(motivo) + "', '" + str(subjetivo) + "', '" + str(objetivo) + "', '" + str(analisis) + "', '" + str(plan) + "', '" + str(fechaRegistro) + "', '" + str(usuarioRegistro ) + "', '" + str(estadoReg) + "');"
+                print(comando)
+                curt.execute(comando)
+
+                n = curt.rowcount
+                print ("Registros commit = " , n)
+
+                historiaId = curt.id
+
+
+                print("el id creado es = ", historiaId)
+
+                miConexiont.commit()
+                miConexiont.close()
+
+                # Fingrabacion Historia Clinica
+
+
+                #nueva_historia = Historia(
+                #    tipoDoc= TiposDocumento.objects.get(id = tipoDoc)   ,
+                #    documento=Usuarios.objects.get(documento = documento)  ,
+                #    consecAdmision=1,
+                #    folio=ultimofolio2,
+                #    fecha=fechaRegistro,
+                #    tiposFolio=TiposFolio.objects.get(id = jsontiposFolio ['tiposFolio'])   ,
+                #    causasExterna=CausasExterna.objects.get(id = causasExterna),
+                #    dependenciasRealizado=Dependencias.objects.get(id = dependenciasRealizado)   ,
+                #    especialidades=Especialidades.objects.get(id = jsonEspecial['id'])   ,
+                #    planta=Planta.objects.get(id = jsonPlanta ['planta'])   ,
+                #    motivo=motivo,
+                #    subjetivo=subjetivo,
+                #    objetivo=objetivo,
+                #    analisis=analisis,
+                #    plan=plan,
+                #    fechaRegistro=fechaRegistro,
+                #    usuarioRegistro=Usuarios.objects.get(id = jsonUsuarioRegistro ['usuarioRegistro'])   ,
+                #    estadoReg=estadoReg)
+
+                #nueva_historia.save()
+
+                #historiaId = nueva_historia.id
                 print("Historia No : ", historiaId)
                 jsonHistoria = {'id': historiaId}
 

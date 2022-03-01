@@ -117,15 +117,15 @@ var $ = jQuery;
 
   });
 
-$(function () {
- var dateNow = new Date();
+ //$(function () {
+// var dateNow = new Date();
 
-$('#fecha').datetimepicker({
- format: 'YYYY-MM-DD hh:mm:ss',
- defaultDate:dateNow
-});
-$("#fecha").data('DateTimePicker').setLocalDate(new Date(year, month, day, 00, 01));
-  });
+//$('#fecha').datetimepicker({
+// format: 'YYYY-MM-DD hh:mm:ss',
+// defaultDate:dateNow
+//});
+//$("#fecha").data('DateTimePicker').setLocalDate(new Date(year, month, day, 00, 01));
+//  });
 
 
 

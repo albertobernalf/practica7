@@ -88,6 +88,9 @@ urlpatterns = [
     path('buscarHabitaciones/', viewsAdmisiones.buscarHabitaciones),
     path('buscarSubServicios/', viewsAdmisiones.buscarSubServicios),
     path('crearAdmision/<str:Sede>,<str:Perfil>, <str:Username>, <str:Username_id>', viewsAdmisiones.crearAdmision.as_view()),
+    path('crearAdmisionDef/', viewsAdmisiones.crearAdmisionDef),
+
+
     path('findOneUsuario/', viewsAdmisiones.UsuariosModal),
     path('guardarUsuariosModal/', viewsAdmisiones.guardarUsuariosModal),
 
