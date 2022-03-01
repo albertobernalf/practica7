@@ -41,11 +41,11 @@ urlpatterns = [
 
     # HISTORIA CLINICA
 
-    path('accesoEspecialidadMedico/historiaView/<str:documento>', viewsClinico.nuevoView.as_view()),
-    path('historia1View/', viewsClinico.historia1View),
-    path('historiaExamenesView/', viewsClinico.historiaExamenesView),
-    path('consecutivo_folios/', viewsClinico.consecutivo_folios),
-    path('buscaExamenes/', viewsClinico.buscaExamenes),
+    #path('accesoEspecialidadMedico/historiaView/<str:documento>', viewsClinico.nuevoView.as_view()),
+    #path('historia1View/', viewsClinico.historia1View),
+    #path('historiaExamenesView/', viewsClinico.historiaExamenesView),
+   # path('consecutivo_folios/', viewsClinico.consecutivo_folios),
+   # path('buscaExamenes/', viewsClinico.buscaExamenes),
     path('motivoSeñas/', viewsClinico.motivoSeñas),
     path('subjetivoSeñas/', viewsClinico.subjetivoSeñas),
     path('motivoInvidente/', viewsClinico.motivoInvidente),
@@ -54,7 +54,7 @@ urlpatterns = [
     path('reproduceAudio/', views.reproduceAudio),
     path('accesoEspecialidadMedico/<str:documento>', views.accesoEspecialidadMedico),
     path('crearHistoriaClinica/', viewsClinico.crearHistoriaClinica),
-    path('crearHistoriaClinica1/', viewsClinico.crearHistoriaClinica1.as_view()),
+    #path('crearHistoriaClinica1/', viewsClinico.crearHistoriaClinica1.as_view()),
     path('buscarAdmisionClinico/', viewsClinico.buscarAdmisionClinico),
     path('cargaPanelMedico/', viewsClinico.cargaPanelMedico),
     path('buscarAntecedentes/', viewsClinico.buscarAntecedentes),
@@ -75,7 +75,7 @@ urlpatterns = [
     path('menuAcceso/', viewsAdmisiones.menuAcceso),
     path('validaAcceso/', viewsAdmisiones.validaAcceso),
 
-    path('retornarAdmision/<str:Sede>,<str:Perfil> , <str:Username>, <str:Username_id>, <str:NombreSede>', viewsAdmisiones.retornarAdmision),
+    path('retornarAdmision/<str:Sede>, <str:Perfil> , <str:Username>, <str:Username_id>, <str:NombreSede>', viewsAdmisiones.retornarAdmision),
 
     path('salir/', viewsAdmisiones.salir),
     path('grabar1/<str:username>,<str:contrasenaAnt>,<str:contrasenaNueva>,<str:contrasenaNueva2>',
@@ -85,9 +85,10 @@ urlpatterns = [
     path('buscarAdmision/', viewsAdmisiones.buscarAdmision),
 
     path('buscarEspecialidadesMedicos/', viewsAdmisiones.buscarEspecialidadesMedicos),
+    path('buscarCiudades/', viewsAdmisiones.buscarCiudades),
     path('buscarHabitaciones/', viewsAdmisiones.buscarHabitaciones),
     path('buscarSubServicios/', viewsAdmisiones.buscarSubServicios),
-    path('crearAdmision/<str:Sede>,<str:Perfil>, <str:Username>, <str:Username_id>', viewsAdmisiones.crearAdmision.as_view()),
+    #path('crearAdmision/<str:Sede>,<str:Perfil>, <str:Username>, <str:Username_id>', viewsAdmisiones.crearAdmision.as_view()),
     path('crearAdmisionDef/', viewsAdmisiones.crearAdmisionDef),
 
 

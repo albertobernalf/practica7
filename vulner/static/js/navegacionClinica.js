@@ -25,12 +25,12 @@ formHistoriaClinica.addEventListener('submit', e=>{
              var perfil = document.getElementById("perfil").value;
              var tiposfolio = 0;
              // Medico Verificar
-             if (perfil == 6);
+             if (perfil == 1)
                 {
                 document.getElementById("tiposFolio").value=1;
                 }
                 // Enfermeria Verificar
-             if (perfil == 2);
+             if (perfil == 2)
                 {
                 document.getElementById("tiposFolio").value=2;
                 }
@@ -97,7 +97,9 @@ formHistoriaClinica.addEventListener('submit', e=>{
             		    if (serialiLab.hasOwnProperty(clave)) {
              		    // Mostrando en pantalla la clave junto a su valor
                		    //   alert("La clave es " + clave + " y el valor es " + serialiLab[clave]);
-			           	console.log (clave Primer FOR + ', ' + serialiRad[clave]);
+               		    console.log ("clave PRIMER FOR");
+
+			           	console.log (clave + ', ' + serialiRad[clave]);
                  	       envio_final = serialiLab[clave];
 
 
@@ -130,6 +132,8 @@ formHistoriaClinica.addEventListener('submit', e=>{
                           delete jsonLab['examen'];
                           delete jsonLab['cantidad'];
 
+                            alert( "Con El jSONlAB bORRADO QUEDA = " + JSON.stringify (jsonLab ));
+                             alert( "y El jSONdeflAB queda = " + JSON.stringify (jsonDefLab ));
                          inicio = 0;
 
 		            	}
@@ -171,6 +175,8 @@ formHistoriaClinica.addEventListener('submit', e=>{
                  // Fin Rutina manejo serialiLab
 
                  // Fin Laboratorio
+
+
 
                  // Inicio Radiologia
 
@@ -260,16 +266,24 @@ formHistoriaClinica.addEventListener('submit', e=>{
                  // Fin Radiologia
 
 
-
-
-
-               $.ajax({
+               $.ajax({git add
             	   type: 'POST',
  	               url: '/crearHistoriaClinica/',
   	               data: envio1,
  	      		success: function (respuesta2) {
- 	      		        //var data = JSON.parse(respuesta2);
- 	      		        alert(respuesta2);
+ 	      		        var data = JSON.parse(respuesta2);
+ 	      		        alert("con stringy = " + JSON.stringify(data))
+ 	      		        alert(data['Tipo']);
+ 	      		        alert(data['Mensaje']);
+                        document.getElementById("id_motivo").value = "";
+                        document.getElementById("id_subjetivo").value = "";
+                        document.getElementById("id_objetivo").value = "";
+                        document.getElementById("id_analisis").value = "";
+                        document.getElementById("id_plan").value = "";
+                        document.getElementById("causasExterna").value = "";
+                        document.getElementById("dependenciasRealizado").value = "";
+                        document.getElementById("diagnosticos").value = "";
+
 
 
  	      	 			$("#mensajes").html(respuesta2);

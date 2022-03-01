@@ -85,73 +85,6 @@ def motivoInvidente(request):
     return redirect('/menu/')
 
 
-def buscaExamenes(request):
-    print("Entre a Buscar Examenes Clinicos")
-
-    id = request.GET.get('id')
-    print(id)
-
-    datos = {"id": id}
-    print(datos)
-
-    return HttpResponse(json.dumps(datos))
-
-
-def consecutivo_folios(request):
-    print("Entre a Consecutivo_folios")
-    id_tipo_doc = request.POST["id_tipo_doc"]
-    documento = request.POST["documento"]
-
-    id_tipo_doc1 = TiposDocumento.objects.get(id=id_tipo_doc)
-
-    ultimofolio = Historia.objects.all().filter(id_tipo_doc=id_tipo_doc1.id).filter(documento=documento).aggregate(
-        maximo=Coalesce(Max('folio'), 0))
-    ultimofolio2 = (ultimofolio['maximo'] + 1)
-
-    datos = {"ultimofolio": ultimofolio2}
-    print(datos)
-
-    return HttpResponse(json.dumps(datos))
-
-
-def historiaExamenesView(request):
-    print("Entre por historiaExamenesView")
-    form2 = historiaExamenesForm(request.POST or None)
-    print("Esta es form2")
-    print(form2)
-    data = {}
-    if request.is_ajax():
-        if form2.is_valid():
-            print("Entere a Grabar")
-            form2.save()
-            data['Nombre'] = form2.cleaned_data.get('documento')
-    context = {'form2': form2}
-
-    # return redirect('/menu/')
-    # return render(request, 'historia_form.html', context)
-    return HttpResponse(data)
-
-
-def historia1View(request):
-    print("Entre Ajax de Historia1View")
-
-    form = historiaForm(request.POST)
-    print(form)
-    data1 = {}
-    if request.is_ajax():
-        print("Entre Ajax Historia a validadr Form")
-        if form.is_valid():
-            print("Entre a Grabar Ajax Historia")
-            form.save()
-            data1 = {'Nombre', form.cleaned_data.get('documento')}
-
-            return HttpResponse(data1)
-        else:
-            print("Formulario Ajax invalido")
-            return HttpResponse("Formulario Ajax invalido")
-    return HttpResponse("Problemas con AJAx")
-
-
 
 def motivoSeñas(request):
     print("Entre Reproduce SeÃ±as")
@@ -262,65 +195,6 @@ def center_crop(frame):
     return frame[:, start: start + h]
 
 
-class nuevoView(TemplateView):
-    print("Encontre")
-    template_name = 'historia_form.html'
-
-    def post(self, request, *args, **kwargs):
-        print("Entre POST")
-        data = {}
-        try:
-            print("Entre try")
-            if 'action' in request.POST:
-                action = request.POST['action']
-                id = request.POST['id']
-            else:
-                print("Falsa action")
-                action = False
-            print(action)
-            print(id)
-
-            action = request.POST.get('action', False)
-
-            if action == 'BuscaExamenes':
-                print("Entre Action")
-                data = []
-                for s in Examenes.objects.all().filter(id_TipoExamen=request.POST["id"]):
-                    data.append({'id': s.id, 'nombre': s.nombre})
-                    print(data[0])
-            else:
-                data[0] = "Ha ocurrido un error"
-
-            if action == 'BuscaEspecialidad':
-                print("Entre Action especialidad")
-                print(id)
-                data = []
-                for s in EspecialidadesMedicos.objects.all().filter(id_especialidad=request.POST["id"]):
-                    medico = Medicos.objects.get(nombre=s.id_medico)
-
-                    data.append({'id': s.id, 'nombre': medico.nombre})
-                    print(data[0])
-            else:
-                data[0] = "Ha ocurrido un error"
-
-        except Exception as e:
-            print("Exception")
-            data[0] = atrr(e)
-
-        print("me devuelvo con ")
-
-        return HttpResponse(json.dumps(data))
-
-    # return JsonResponse(data, safe=False)
-
-    def get_context_data(self, documento, **kwargs):
-        print("Entre a Contexto")
-        print(documento)
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Mi gran Template'
-        context['form'] = historiaForm
-        context['form2'] = historiaExamenesForm
-        return context
 
 
 def crearHistoriaClinica(request):
@@ -404,12 +278,14 @@ def crearHistoriaClinica(request):
             print("planta = ", planta)
             print("usuarioRegistro = ", usuarioRegistro)
 
+
             if (dependenciasRealizado  == '' or causasExterna == ''  or diagnosticos == '' ):
 
 
                 print("Entre GRAVES campos vacios")
-                #data = {'Mensaje': 'Favor suministrar causa Externa y/O Dependencia Realiado folio'}
-                return HttpResponse('Favor suministrar causa Externa y/O Dependencia Realiado folio')
+                data = [{'Tipo': 'Error', 'Mensaje': 'Favor suministrar causa Externa y/O Dependencia Realiado folio'}]
+                #return HttpResponse('Favor suministrar causa Externa y/O Dependencia Realiado folio')
+                return HttpResponse(data)
 
             else:
 
@@ -446,7 +322,6 @@ def crearHistoriaClinica(request):
                 print("Especial1 = " , campo)
 
                 jsontiposFolio = {'tiposFolio' : tiposFolio}
-
                 print("jsontiposFolio = ", jsontiposFolio)
                 print("jsontiposFolio = ", jsontiposFolio ['tiposFolio'])
 
@@ -463,17 +338,22 @@ def crearHistoriaClinica(request):
                 miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
                 curt = miConexiont.cursor()
 
-                comando = "INSERT INTO clinico_Historia (tipoDoc_id , documento_id , consecAdmision, folio ,fecha , tiposFolio_id ,causasExterna_id , dependenciasRealizado_id ,especialidades_id ,planta_id, motivo , subjetivo,objetivo, analisis ,plan,fechaRegistro ,usuarioRegistro_id, estadoReg ) VALUES ('" + str(tipoDoc) + "', '" +str(documento) + "',  '" + str(consecAdmision) +  "', '" + str(ultimofolio2) + "', '" + str(fechaRegistro) + "', '" + str(tiposFolio) +"', '" + str( causasExterna) + "', '" + str( dependenciasRealizado) + "', '" + str(jsonEspecial['id']) + "', '" + str(planta) +"', '" + str(motivo) + "', '" + str(subjetivo) + "', '" + str(objetivo) + "', '" + str(analisis) + "', '" + str(plan) + "', '" + str(fechaRegistro) + "', '" + str(usuarioRegistro ) + "', '" + str(estadoReg) + "');"
-                print(comando)
-                curt.execute(comando)
+                # Consigo el Id del Paciente Documento
 
+                DocumentoId = Usuarios.objects.get(documento = documento)
+                DocumentoIdFinal = DocumentoId.id
+                print ("DocumentoIdFinal", DocumentoIdFinal)
+
+
+                comando = "INSERT INTO clinico_Historia (tipoDoc_id , documento_id , consecAdmision, folio ,fecha , tiposFolio_id ,causasExterna_id , dependenciasRealizado_id ,especialidades_id ,planta_id, motivo , subjetivo,objetivo, analisis ,plan,fechaRegistro ,usuarioRegistro_id, estadoReg ) VALUES ('" + str(tipoDoc) + "', '" +str(DocumentoIdFinal) + "',  '" + str(consecAdmision) +  "', '" + str(ultimofolio2) + "', '" + str(fechaRegistro) + "', '" + str(tiposFolio) +"', '" + str( causasExterna) + "', '" + str( dependenciasRealizado) + "', '" + str(jsonEspecial['id']) + "', '" + str(planta) +"', '" + str(motivo) + "', '" + str(subjetivo) + "', '" + str(objetivo) + "', '" + str(analisis) + "', '" + str(plan) + "', '" + str(fechaRegistro) + "', '" + str(usuarioRegistro ) + "', '" + str(estadoReg) + "');"
+                print(comando)
+                resultado = curt.execute(comando)
+                print("resultado =", resultado)
                 n = curt.rowcount
                 print ("Registros commit = " , n)
+                historiaId = miConexiont.insert_id()
 
-                historiaId = curt.id
-
-
-                print("el id creado es = ", historiaId)
+                print ("El id del la hsitoria INSERTADA es ", historiaId)
 
                 miConexiont.commit()
                 miConexiont.close()
@@ -1040,225 +920,10 @@ def crearHistoriaClinica(request):
 
 
 
-        #return render(request, 'clinico/historiaclinica.html', context);
-        return render(request, 'navegacion.html', context);
 
+        return render(request, 'clinico/navegacionClinica.html', context);
 
 
-class crearHistoriaClinica1(TemplateView):
-    print("Entre a Crear Historia Clinica1")
-
-    template_name = 'clinico/historiaClinica.html'
-    print("Entre a Registrar Historia")
-
-    def post(self, request, *args, **kwargs):
-        print("Entre POST de crearHistoriaClinica1")
-        data = {}
-        context = {}
-
-        form = historiaForm(request.POST)
-
-        if self.request.is_ajax and self.request.method == "POST":
-            print("Entre Ajax")
-
-            tipoDoc = request.POST["tipoDoc"]
-            documento = request.POST["documento"]
-            consecAdmision = request.POST["consecAdmision"]
-            folio = request.POST["folio"]
-            fecha = request.POST["fecha"]
-            tiposFolio = request.POST["tiposFolio"]
-            causasExterna = request.POST["causasExterna"]
-            dependenciasRealizado = request.POST["dependenciasRealizado"]
-            especialidades = request.POST["especialidades"]
-            planta = request.POST["planta"]
-            motivo = request.POST["motivo"]
-            objetivo = request.POST["objetivo"]
-            subjetivo = request.POST["subjetivo"]
-            analisis = request.POST["analisis"]
-            plan = request.POST["plan"]
-            usuarioRegistro = request.POST["usuarioRegistro"]
-            now = datetime.now()
-            dnow = now.strftime("%Y-%m-%d %H:%M:%S")
-            print("NOW  = ", dnow)
-
-            fechaRegistro = dnow
-            estadoReg = "A"
-            print("estadoRegistro =", estadoReg)
-
-            ultimofolio = Historia.objects.all().filter(tipoDoc_id=tipoDoc).filter(
-                documento=documento).aggregate(maximo=Coalesce(Max('folio'), 0))
-            ultimofolio2 = (ultimofolio['maximo'] + 1)
-
-            print ("folio = ", ultimofolio2)
-
-
-            nueva_historia = Historia(
-                tipoDoc=tipoDoc,
-                documento=documento,
-                consecAdmision=consecAdmision,
-                folio=ultimofolio2,
-                fecha=fecha,
-                tiposFolio=tiposFolio,
-                causasExterna=causasExterna,
-                dependenciasRealizado=dependenciasRealizado,
-                especialidades=especialidades,
-                planta=planta,
-                motivo=motivo,
-                subjetivo=subjetivo,
-                objetivo=objetivo,
-                analisis=analisis,
-                plan=plan,
-                fechaRegistro=fechaRegistro,
-                usuarioRegistro=usuarioRegistro,
-                estadoReg=estadoReg)
-            nueva_historia.save
-            return HttpResponse(json.dumps(data))
-
-    def get_context_data(self, **kwargs):
-        print("Entre a Contexto Historia Clinica")
-
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Mi gran Template'
-        context['historiaForm'] = historiaForm
-        context['HistoriaExamenesCabezoteForm'] = HistoriaExamenesCabezoteForm
-
-        Sede = request.GET["Sede"]
-        Servicio = request.GET["Servicio"]
-        Perfil = request.GET["Perfil"]
-        Username = request.GET["Username"]
-        Username_id = request.GET["Username_id"]
-        TipoDocPaciente = request.GET["" \
-                                      "TipoDocPaciente"]
-        nombreSede = request.GET["nombreSede"]
-        DocumentoPaciente = request.GET["DocumentoPaciente"]
-        IngresoPaciente = request.GET["IngresoPaciente"]
-        espMedico = request.GET["espMedico"]
-
-        print("espcialidad Medico = ", espMedico)
-        print("DocumentoPaciente = ", DocumentoPaciente)
-
-        context['Sede'] = Sede
-        context['Servicio'] = Servicio
-        context['Perfil'] = Perfil
-        context['Username'] = Username
-        context['Username_id'] = Username_id
-        context['TipoDocPaciente'] = TipoDocPaciente
-        context['nombreSede'] = nombreSede
-        context['DocumentoPaciente'] = DocumentoPaciente
-        context['espMedico'] = espMedico
-        context['IngresoPaciente'] = IngresoPaciente
-
-
-
-
-        # Combo Diagnosticos
-
-
-        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
-        curt = miConexiont.cursor()
-
-        comando = "SELECT p.id id, p.nombre  nombre FROM clinico_diagnosticos p"
-
-        curt.execute(comando)
-        print(comando)
-
-        diagnosticos = []
-        diagnosticos.append({'id': '', 'nombre': ''})
-
-        for id, nombre in curt.fetchall():
-            diagnosticos.append({'id': id, 'nombre': nombre})
-
-        miConexiont.close()
-        print(diagnosticos)
-
-        context['Diagnosticos'] = diagnosticos
-
-        # Fin combo Diagnosticos
-
-        # Combo Laboratorios
-
-        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
-        curt = miConexiont.cursor()
-
-        comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='2'"
-
-        curt.execute(comando)
-        print(comando)
-
-        laboratorios = []
-        laboratorios.append({'TipoId': '' , 'id': '', 'nombre': '' })
-
-        for TipoId, id, nombre in curt.fetchall():
-            laboratorios.append({'TipoId' : TipoId, 'id': id, 'nombre': nombre})
-
-        miConexiont.close()
-        print(laboratorios)
-
-        context['Laboratorios'] = laboratorios
-
-        # Fin combo Laboratorios
-
-        # Combo Radiologia
-
-
-        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
-        curt = miConexiont.cursor()
-
-        comando = "SELECT t.id TipoId, e.id id, e.nombre nombre FROM clinico_tiposExamen t, clinico_examenes e WHERE t.id = e.TiposExamen_id and t.id ='1'"
-
-        curt.execute(comando)
-        print(comando)
-
-        radiologias = []
-        radiologias.append({'TipoId' : '', 'id': '', 'nombre': ''})
-
-        for TipoId, id, nombre in curt.fetchall():
-            radiologias.append({'TipoId' : TipoId, 'id': id, 'nombre': nombre})
-
-        miConexiont.close()
-        print(radiologias)
-
-        context['Radiologias'] = radiologias
-
-        # Fin combo Radiologia
-
-
-
-
-        # Datos Basicos del Paciente
-
-        TipoDocFinal = Historia.objects.all().filter(tipoDoc_id=TipoDocPaciente).filter(documento=documentoPaciente)
-
-        DocumentoFinal = Historia.objects.all().filter(tipoDoc_id=TipoDocPaciente).filter(documento=documentoPaciente)
-
-
-
-
-        miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
-        curt = miConexiont.cursor()
-
-        comando = "select  tipoDoc_id , tip.nombre tipnombre, documento documentoPaciente, nombre, case when genero = 'M' then 'Masculino' when genero= 'F' then 'Femenino' end as genero, cen.nombre as centro, tu.nombre as tipoUsuario, fechaNacio, direccion, telefono from usuarios_usuario u, usuarios_tiposUsuario  tu, sitios_centros cen, usuarios_tiposDocumento tip where  tip.id =u.tipoDoc_id  AND u.tipoDoc_id = '" + str(TipoDocPaciente) + "' and u.documento = '" + str(documentoPaciente) + "' and u.tiposUsuario_id = tu.id and u.centrosc_id = cen.id"
-
-        curt.execute(comando)
-        print(comando)
-
-        datosPaciente = []
-
-        for tipoDoc_id, tipnombre , documentoPaciente, nombre, genero, centro, tipoUsuario, fechaNacio, direccion, telefono  in curt.fetchall():
-            datosPaciente.append({'tipoDoc_id': tipoDoc_id, 'tipnombre' : tipnombre, 'documentoPaciente': documentoPaciente, 'nombre': nombre,'genero':genero   ,'centro':centro  , 'tipoUsuario':tipoUsuario  ,'fechaNacio': fechaNacio,'direccion': direccion, 'telefono' : telefono})
-
-        miConexiont.close()
-        print(datosPaciente)
-
-        context['DatosPaciente'] = datosPaciente
-
-
-
-
-        # Fin Datos Basicos del Paciente
-
-
-        return context
 
 
 def buscarAdmisionClinico(request):

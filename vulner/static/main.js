@@ -61,6 +61,10 @@ function AUsuario()
    var nombre = document.getElementById("nombre1").value;
 
 	var genero = document.getElementById("genero").value;
+	var departamentos = document.getElementById("departamentos").value;
+	var ciudades = document.getElementById("ciudades").value;
+
+
 	var direccion = document.getElementById("direccion").value;
 	var telefono = document.getElementById("telefono").value;
 	var contacto = document.getElementById("contacto").value;
@@ -71,7 +75,7 @@ function AUsuario()
 	$.ajax({
 		type: 'POST',
     	url: '/guardarUsuariosModal/',
-		data: {'tipoDoc':tipoDoc,'documento':documento,'nombre':nombre,'genero':genero,'direccion':direccion,'telefono':telefono, 'contacto':contacto, 'centrosc':centrosc, 'tiposUsuario':tiposUsuario},
+		data: {'tipoDoc':tipoDoc,'documento':documento,'nombre':nombre,'genero':genero,'departamentos':departamentos, 'ciudades':ciudades,'direccion':direccion,'telefono':telefono, 'contacto':contacto, 'centrosc':centrosc, 'tiposUsuario':tiposUsuario},
 		success: function (respuesta) {
 
 
@@ -161,6 +165,9 @@ function findOneUsuario1()
 				$('#nombre1').val(Usuarios.nombre);
 
 				$('#genero').val(Usuarios.genero);
+				$('#departamentos').val(Usuarios.departamento);
+				$('#ciudades').val(Usuarios.ciudad);
+
 				$('#direccion').val(Usuarios.direccion);
 				$('#telefono').val(Usuarios.telefono);
 				$('#contacto').val(Usuarios.contacto);
@@ -212,6 +219,62 @@ function findOneUsuario1()
 			 $('#usuariosModal').modal({show:true});
 
 			  });
+
+
+$(document).on('change', '#departamentos', function(event) {
+
+        alert("Entre cambio Departamento");
+
+
+       var Departamento =   $(this).val()
+
+       alert("Departamento = " + Departamento);
+
+
+
+        $.ajax({
+	           url: '/buscarCiudades/',
+	            data : {Departamento:Departamento},
+	           type: 'GET',
+	           dataType : 'json',
+
+	  		success: function (respuesta) {
+
+	  		   var options = '<option value="=================="></option>';
+
+	  		  var dato = JSON.parse(respuesta);
+
+
+                     const $id2 = document.querySelector("#ciudades");
+
+
+ 	      		     $("#ciudades").empty();
+
+
+	                 $.each(dato, function(key,value) {
+                                    options +='<option value="' + value.id + '">' + value.nombre + '</option>';
+                                    option = document.createElement("option");
+                                    option.value = value.id;
+                                    option.text = value.nombre;
+                                    $id2.appendChild(option);
+ 	      		      });
+
+
+
+
+
+                    },
+	   		    error: function (request, status, error) {
+
+	   			    $("#mensajes").html(" !  Reproduccion  con error !");
+	   	    	}
+
+	     });
+});
+
+
+
+
 
 
 $(document).on('change', '#busEspecialidad', function(event) {
