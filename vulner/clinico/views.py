@@ -279,13 +279,22 @@ def crearHistoriaClinica(request):
             print("usuarioRegistro = ", usuarioRegistro)
 
 
+
             if (dependenciasRealizado  == '' or causasExterna == ''  or diagnosticos == '' ):
 
 
+
                 print("Entre GRAVES campos vacios")
-                data = [{'Tipo': 'Error', 'Mensaje': 'Favor suministrar causa Externa y/O Dependencia Realiado folio'}]
+                data1 = {'Tipo' : '"Error', 'Mensaje': 'Favor suministrar causa Externa y/O Dependencia Realiado folio'}
+                data2 = json.dumps(data1)
+
+                data2 = data2.replace("\'", "\"")
+                data = json.loads(str(data2))
+
+
                 #return HttpResponse('Favor suministrar causa Externa y/O Dependencia Realiado folio')
-                return HttpResponse(data)
+                #return HttpResponse(data)
+                return JsonResponse(data)
 
             else:
 
@@ -352,11 +361,11 @@ def crearHistoriaClinica(request):
                 n = curt.rowcount
                 print ("Registros commit = " , n)
                 historiaId = miConexiont.insert_id()
-
-                print ("El id del la hsitoria INSERTADA es ", historiaId)
-
                 miConexiont.commit()
+
                 miConexiont.close()
+
+                print("El id del la hsitoria INSERTADA es ", historiaId)
 
                 # Fingrabacion Historia Clinica
 
@@ -411,18 +420,32 @@ def crearHistoriaClinica(request):
 
                     print(JsonDictCabezoteLab)
 
-                    # Intento guardar el cabezote de Examenes
+                    # INSERT DE cabezote de Examenes
 
-                    HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
+                    miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                    curt = miConexiont.cursor()
 
-                      historia =   Historia.objects.get(id=jsonHistoria['id']),
-                      tiposExamen =  TiposExamen.objects.get(id=JsonDictCabezoteLab['tiposExamen']),
-                      observaciones=JsonDictCabezoteLab['observaciones'],
-                      estadoReg=estadoReg)
 
-                    HistoriaExamenesCabezote1.save()
+                    comando = "INSERT INTO clinico_HistoriaExamenesCabezote (historia_id , tiposExamen_id , observaciones, estadoReg ) VALUES ('" + str(historiaId) + "', '" + str(JsonDictCabezoteLab['tiposExamen']) + "',  '" + str(JsonDictCabezoteLab['observaciones']) + "',  '" + str(estadoReg) + "');"
+                    print(comando)
+                    resultado = curt.execute(comando)
+                    cabezoteLabId = miConexiont.insert_id()
+                    miConexiont.commit()
 
-                    cabezoteLabId = HistoriaExamenesCabezote1.id
+                    miConexiont.close()
+
+
+
+                    #HistoriaExamenesCabezote1 = HistoriaExamenesCabezote(
+
+                    #historia =   Historia.objects.get(id=jsonHistoria['id']),
+                     # tiposExamen =  TiposExamen.objects.get(id=JsonDictCabezoteLab['tiposExamen']),
+                     # observaciones=JsonDictCabezoteLab['observaciones'],
+                     # estadoReg=estadoReg)
+
+                    #HistoriaExamenesCabezote1.save()
+
+                    #cabezoteLabId = HistoriaExamenesCabezote1.id
 
                     # Fin Grabacion Cabezote Laboratorios
 
@@ -433,6 +456,7 @@ def crearHistoriaClinica(request):
                     JsonDicSerialiLab = json.loads(SerialiLab)
                     print ("Diccionario seriliLab = ", JsonDicSerialiLab)
 
+
                     # Voy a iterar
                     campo = {}
                     jsoncabezoteLabId = {'cabezoteLabId' : cabezoteLabId}
@@ -442,25 +466,43 @@ def crearHistoriaClinica(request):
 
                     for x in range(0, len(JsonDicSerialiLab) ):
                       print(JsonDicSerialiLab[x])
-                      campo = JsonDicSerialiLab[x]
+                      campo1 = JsonDicSerialiLab[x]
+                      campo = json.loads(campo1)
                       print (campo['tipoExamen'])
-                      print(campo['examen'])
-                      print (campo['cantidad'])
+                      #print(campo.tipoExamen)
+                      #print(campo.examen)
+                   
+
+
+
 
                       # Grabacion Definitiva
 
-                      HistoriaExamenes1 = HistoriaExamenes(historiaExamenesCabezote = HistoriaExamenesCabezote.objects.get(id=jsoncabezoteLabId['cabezoteLabId']),
-                        procedimientos = Procedimientos.objects.get(id=campo['examen']),
-                        cantidad =  campo['cantidad'],
-                        estadoExamenes =EstadoExamenes.objects.get(id=jsonEstadoExamenes['id']),
-                        estadoReg = 'A' )
+                      #HistoriaExamenes1 = HistoriaExamenes(historiaExamenesCabezote = HistoriaExamenesCabezote.objects.get(id=jsoncabezoteLabId['cabezoteLabId']),
+                      #  procedimientos = Procedimientos.objects.get(id=campo['examen']),
+                      #  cantidad =  campo['cantidad'],
+                      #  estadoExamenes =EstadoExamenes.objects.get(id=jsonEstadoExamenes['id']),
+                      #  estadoReg = 'A' )
 
-                      HistoriaExamenes1.save()
+                      # HistoriaExamenes1.save()
 
+                      # insert detalle examenes
+
+                      miConexiont = MySQLdb.connect(host='localhost', user='root', passwd='', db='vulnerable9')
+                      curt = miConexiont.cursor()
+
+                      comando = "INSERT INTO clinico_HistoriaExamenes (historiaExamenesCabezote_id , procedimientos_id , cantidad, estadoExamenes_id, estadoReg ) VALUES ('" + str(cabezoteLabId) + "', '" + str(campo['examen']) + "',  '" + str(campo['cantidad']) + "',  '" + str(jsonEstadoExamenes['id']) + "',  '" +  str(estadoReg) + "');"
+                      print(comando)
+                      resultado = curt.execute(comando)
+                      miConexiont.commit()
+
+                      miConexiont.close()
 
                       # Fin Grabacion Detalle Laboratorios
 
                 # Fin Grabacion Laboratorios
+
+
 
                 # Grabacion Radiologia
 

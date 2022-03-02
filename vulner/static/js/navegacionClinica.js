@@ -99,7 +99,7 @@ formHistoriaClinica.addEventListener('submit', e=>{
                		    //   alert("La clave es " + clave + " y el valor es " + serialiLab[clave]);
                		    console.log ("clave PRIMER FOR");
 
-			           	console.log (clave + ', ' + serialiRad[clave]);
+			           	console.log (clave + ', ' + serialiLab[clave]);
                  	       envio_final = serialiLab[clave];
 
 
@@ -115,7 +115,7 @@ formHistoriaClinica.addEventListener('submit', e=>{
                     var jsonDefLab = [];
                     var inicio = 0;
 
-                alert("Entries = " + JSON.stringify (envio_final.entries()));
+           //     alert("Entries = " + JSON.stringify (envio_final.entries()));
 
 
      		    for(var pair of envio_final.entries()) {
@@ -123,16 +123,16 @@ formHistoriaClinica.addEventListener('submit', e=>{
                  	       if (inicio == 3)
                         {
                          // insjsonDeferto desde aqui
-                         alert("Los datos jsonLab son : ");
+                      //   alert("Los datos jsonLab son : ");
 
-                         alert( JSON.stringify (jsonLab ));
+                       //  alert( JSON.stringify (jsonLab ));
 
-                         jsonDefLab.push(jsonLab);
+                         jsonDefLab.push(JSON.stringify (jsonLab ));
                           delete jsonLab['tipoExamen'];
                           delete jsonLab['examen'];
                           delete jsonLab['cantidad'];
 
-                            alert( "Con El jSONlAB bORRADO QUEDA = " + JSON.stringify (jsonLab ));
+                         //   alert( "Con El jSONlAB bORRADO QUEDA = " + JSON.stringify (jsonLab ));
                              alert( "y El jSONdeflAB queda = " + JSON.stringify (jsonDefLab ));
                          inicio = 0;
 
@@ -266,16 +266,23 @@ formHistoriaClinica.addEventListener('submit', e=>{
                  // Fin Radiologia
 
 
-               $.ajax({git add
+               $.ajax({
             	   type: 'POST',
  	               url: '/crearHistoriaClinica/',
   	               data: envio1,
  	      		success: function (respuesta2) {
- 	      		        var data = JSON.parse(respuesta2);
- 	      		        alert("con stringy = " + JSON.stringify(data))
- 	      		        alert(data['Tipo']);
- 	      		        alert(data['Mensaje']);
-                        document.getElementById("id_motivo").value = "";
+ 	      		       // var data = JSON.parse(respuesta2);
+ 	      		        alert("con stringy = " + JSON.stringify(respuesta2))
+ 	      		        // alert(data['Tipo']);
+ 	      		        //alert(data['Mensaje']);
+
+ 	      		        alert(respuesta2.Tipo);
+ 	      		        alert(respuesta2.Mensaje);
+
+
+ 	      		        if (respuesta2.Tipo != '"Error')
+ 	      		         {
+ 	      		        document.getElementById("id_motivo").value = "";
                         document.getElementById("id_subjetivo").value = "";
                         document.getElementById("id_objetivo").value = "";
                         document.getElementById("id_analisis").value = "";
@@ -284,9 +291,18 @@ formHistoriaClinica.addEventListener('submit', e=>{
                         document.getElementById("dependenciasRealizado").value = "";
                         document.getElementById("diagnosticos").value = "";
 
+                         const $id2 = document.querySelector("#id_id_medico");
 
+ 	      		         //  $("#laboratorios1").empty();
+ 	      		         //  $("#radiologias1").empty();
+ 	      		        //   $("#terapias").empty();
+ 	      		          // $("#tiposAntecedente").empty();
+                            //$("#antecedente").empty();
+                        //$("#tiposDiagnostico").empty();
+                            //$("#diagnostico").empty();
+ 	      		        }
 
- 	      	 			$("#mensajes").html(respuesta2);
+ 	      	 			$("#mensajes").html(respuesta2.Mensaje);
 
 
  	      		},

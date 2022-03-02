@@ -583,7 +583,6 @@ def validaAcceso(request):
     return render(request, "admisiones/panelAdmisiones.html",context)
 
 
-
 def retornarAdmision(request, Sede, Perfil, Username, Username_id, NombreSede):
 
 
